@@ -1,0 +1,336 @@
+Cell_width: 10000 Cell_height: 10000
+LEFT BOT: ( 432264 169302 )
+U1 532554 246720
+U2 465743 200850
+U3 465744 260450
+Net_name: DDR_DM0 ID: 24 WCS: 1
+Pin_name: U1.AG27 ID: 72 escape_dir: LEFT coor: ( 12 10 0 ) ( 11 10 0 ) ( 10 10 0 ) ( 9 10 0 ) 
+Pin_name: U3.E7 ID: 73 escape_dir: RIGHT coor: ( 6 9 0 ) ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DM1 ID: 25 WCS: 1
+Pin_name: U1.AJ30 ID: 74 escape_dir: LEFT coor: ( 11 9 1 ) ( 10 9 1 ) ( 9 9 1 ) 
+Pin_name: U3.D3 ID: 75 escape_dir: RIGHT coor: ( 7 11 1 ) ( 7 10 1 ) ( 8 10 1 ) 
+Net_END
+Net_name: DDR_DM2 ID: 26 WCS: 1
+Pin_name: U1.Y27 ID: 76 escape_dir: BOT coor: ( 14 10 2 ) ( 14 9 2 ) ( 14 8 2 ) ( 14 7 2 ) 
+Pin_name: U2.E7 ID: 77 escape_dir: RIGHT coor: ( 6 3 2 ) ( 7 3 2 ) ( 8 3 2 ) 
+Net_END
+Net_name: DDR_DM3 ID: 27 WCS: 1
+Pin_name: U1.AC29 ID: 78 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.D3 ID: 79 escape_dir: RIGHT coor: ( 7 5 0 ) ( 8 5 0 ) 
+Net_END
+Net_name: DDR_DQ0 ID: 28 WCS: 1
+Pin_name: U1.AF23 ID: 80 escape_dir: LEFT coor: ( 12 12 2 ) ( 11 12 2 ) ( 10 12 2 ) ( 9 12 2 ) ( 12 11 2 ) ( 11 11 2 ) ( 10 11 2 ) ( 9 11 2 ) 
+Pin_name: U3.E3 ID: 81 escape_dir: RIGHT coor: ( 6 10 2 ) ( 7 10 2 ) ( 8 10 2 ) ( 6 11 2 ) ( 7 11 2 ) ( 8 11 2 ) 
+Net_END
+Net_name: DDR_DQ1 ID: 29 WCS: 1
+Pin_name: U1.AG25 ID: 82 escape_dir: LEFT coor: ( 12 11 0 ) ( 11 11 0 ) ( 10 11 0 ) ( 9 11 0 ) 
+Pin_name: U3.F7 ID: 83 escape_dir: RIGHT coor: ( 6 9 0 ) ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DQ2 ID: 30 WCS: 1
+Pin_name: U1.AG21 ID: 84 escape_dir: LEFT coor: ( 12 12 0 ) ( 11 12 0 ) ( 10 12 0 ) ( 9 12 0 ) 
+Pin_name: U3.F2 ID: 85 escape_dir: RIGHT coor: ( 6 11 0 ) ( 7 11 0 ) ( 8 11 0 ) 
+Net_END
+Net_name: DDR_DQ3 ID: 31 WCS: 0
+Pin_name: U1.AH26 ID: 86 escape_dir: LEFT coor: ( 12 11 2 ) 
+Pin_name: U3.F8 ID: 87 escape_dir: RIGHT coor: ( 6 9 2 ) 
+Net_END
+Net_name: DDR_DQ4 ID: 32 WCS: 1
+Pin_name: U1.AE23 ID: 88 escape_dir: LEFT coor: ( 12 12 0 ) ( 11 12 0 ) ( 10 12 0 ) ( 9 12 0 ) ( 12 11 0 ) ( 11 11 0 ) ( 10 11 0 ) ( 9 11 0 ) 
+Pin_name: U3.H3 ID: 89 escape_dir: RIGHT coor: ( 5 11 0 ) ( 5 10 0 ) ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DQ5 ID: 33 WCS: 1
+Pin_name: U1.AF24 ID: 90 escape_dir: LEFT coor: ( 12 11 2 ) ( 11 11 2 ) ( 10 11 2 ) ( 9 11 2 ) 
+Pin_name: U3.H8 ID: 91 escape_dir: RIGHT coor: ( 5 9 2 ) ( 6 9 2 ) ( 7 9 2 ) ( 8 9 2 ) 
+Net_END
+Net_name: DDR_DQ6 ID: 34 WCS: 1
+Pin_name: U1.AF21 ID: 92 escape_dir: LEFT coor: ( 12 12 0 ) ( 11 12 0 ) ( 10 12 0 ) ( 9 12 0 ) 
+Pin_name: U3.G2 ID: 93 escape_dir: RIGHT coor: ( 6 11 0 ) ( 7 11 0 ) ( 8 11 0 ) 
+Net_END
+Net_name: DDR_DQ7 ID: 35 WCS: 1
+Pin_name: U1.AG24 ID: 94 escape_dir: LEFT coor: ( 12 11 0 ) ( 11 11 0 ) ( 10 11 0 ) ( 9 11 0 ) 
+Pin_name: U3.H7 ID: 95 escape_dir: RIGHT coor: ( 5 9 0 ) ( 5 10 0 ) ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DQ8 ID: 36 WCS: 1
+Pin_name: U1.AG28 ID: 96 escape_dir: LEFT coor: ( 12 10 0 ) ( 11 10 0 ) ( 10 10 0 ) ( 9 10 0 ) 
+Pin_name: U3.D7 ID: 97 escape_dir: RIGHT coor: ( 7 9 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DQ9 ID: 37 WCS: 1
+Pin_name: U1.AH29 ID: 98 escape_dir: LEFT coor: ( 12 10 1 ) ( 11 10 1 ) ( 10 10 1 ) ( 9 10 1 ) 
+Pin_name: U3.C3 ID: 99 escape_dir: RIGHT coor: ( 7 11 1 ) ( 8 11 1 ) 
+Net_END
+Net_name: DDR_DQ10 ID: 38 WCS: 1
+Pin_name: U1.AE28 ID: 100 escape_dir: BOT coor: ( 12 10 0 ) ( 12 9 0 ) ( 12 8 0 ) ( 12 7 0 ) 
+Pin_name: U3.C8 ID: 101 escape_dir: RIGHT coor: ( 7 9 0 ) ( 8 9 0 ) 
+Net_END
+Net_name: DDR_DQ11 ID: 39 WCS: 1
+Pin_name: U1.AK28 ID: 102 escape_dir: LEFT coor: ( 11 10 1 ) ( 10 10 1 ) ( 9 10 1 ) 
+Pin_name: U3.C2 ID: 103 escape_dir: RIGHT coor: ( 7 11 1 ) ( 8 11 1 ) 
+Net_END
+Net_name: DDR_DQ12 ID: 40 WCS: 1
+Pin_name: U1.AF30 ID: 104 escape_dir: BOT coor: ( 12 9 0 ) ( 12 8 0 ) ( 12 7 0 ) 
+Pin_name: U3.A7 ID: 105 escape_dir: RIGHT coor: ( 8 9 0 ) 
+Net_END
+Net_name: DDR_DQ13 ID: 41 WCS: 1
+Pin_name: U1.AJ28 ID: 106 escape_dir: LEFT coor: ( 11 10 1 ) ( 10 10 1 ) ( 9 10 1 ) 
+Pin_name: U3.A2 ID: 107 escape_dir: RIGHT coor: ( 8 11 1 ) 
+Net_END
+Net_name: DDR_DQ14 ID: 42 WCS: 1
+Pin_name: U1.AF29 ID: 108 escape_dir: BOT coor: ( 12 10 0 ) ( 12 9 0 ) ( 12 8 0 ) ( 12 7 0 ) 
+Pin_name: U3.B8 ID: 109 escape_dir: RIGHT coor: ( 7 9 0 ) ( 8 9 0 ) 
+Net_END
+Net_name: DDR_DQ15 ID: 43 WCS: 1
+Pin_name: U1.AK29 ID: 110 escape_dir: LEFT coor: ( 11 10 1 ) ( 10 10 1 ) ( 9 10 1 ) 
+Pin_name: U3.A3 ID: 111 escape_dir: RIGHT coor: ( 8 10 1 ) ( 8 11 1 ) 
+Net_END
+Net_name: DDR_DQ16 ID: 44 WCS: 0
+Pin_name: U1.AE25 ID: 112 escape_dir: LEFT coor: ( 12 11 2 ) 
+Pin_name: U2.E3 ID: 113 escape_dir: RIGHT coor: ( 6 5 2 ) 
+Net_END
+Net_name: DDR_DQ17 ID: 45 WCS: 1
+Pin_name: U1.AA27 ID: 114 escape_dir: BOT coor: ( 14 10 0 ) ( 14 9 0 ) ( 14 8 0 ) ( 14 7 0 ) 
+Pin_name: U2.F7 ID: 115 escape_dir: RIGHT coor: ( 6 3 0 ) ( 7 3 0 ) ( 8 3 0 ) 
+Net_END
+Net_name: DDR_DQ18 ID: 46 WCS: 0
+Pin_name: U1.AF27 ID: 116 escape_dir: LEFT coor: ( 12 10 2 ) 
+Pin_name: U2.F2 ID: 117 escape_dir: RIGHT coor: ( 6 5 2 ) 
+Net_END
+Net_name: DDR_DQ19 ID: 47 WCS: 1
+Pin_name: U1.AB25 ID: 118 escape_dir: BOT coor: ( 13 11 1 ) ( 13 10 1 ) ( 13 9 1 ) ( 13 8 1 ) ( 13 7 1 ) 
+Pin_name: U2.F8 ID: 119 escape_dir: RIGHT coor: ( 6 3 1 ) ( 7 3 1 ) ( 8 3 1 ) 
+Net_END
+Net_name: DDR_DQ20 ID: 48 WCS: 1
+Pin_name: U1.AC27 ID: 120 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.H3 ID: 121 escape_dir: RIGHT coor: ( 5 5 0 ) ( 5 4 0 ) ( 6 4 0 ) ( 7 4 0 ) ( 8 4 0 ) 
+Net_END
+Net_name: DDR_DQ21 ID: 49 WCS: 1
+Pin_name: U1.AB26 ID: 122 escape_dir: BOT coor: ( 13 11 1 ) ( 13 10 1 ) ( 13 9 1 ) ( 13 8 1 ) ( 13 7 1 ) 
+Pin_name: U2.H8 ID: 123 escape_dir: RIGHT coor: ( 5 3 1 ) ( 6 3 1 ) ( 7 3 1 ) ( 8 3 1 ) 
+Net_END
+Net_name: DDR_DQ22 ID: 50 WCS: 1
+Pin_name: U1.AF26 ID: 124 escape_dir: LEFT coor: ( 12 10 2 ) ( 11 10 2 ) ( 10 10 2 ) ( 9 10 2 ) ( 12 11 2 ) ( 11 11 2 ) ( 10 11 2 ) ( 9 11 2 ) 
+Pin_name: U2.G2 ID: 125 escape_dir: RIGHT coor: ( 6 5 2 ) ( 7 5 2 ) ( 8 5 2 ) 
+Net_END
+Net_name: DDR_DQ23 ID: 51 WCS: 1
+Pin_name: U1.AC26 ID: 126 escape_dir: BOT coor: ( 13 11 1 ) ( 13 10 1 ) ( 13 9 1 ) ( 13 8 1 ) ( 13 7 1 ) 
+Pin_name: U2.H7 ID: 127 escape_dir: RIGHT coor: ( 5 3 1 ) ( 6 3 1 ) ( 7 3 1 ) ( 8 3 1 ) 
+Net_END
+Net_name: DDR_DQ24 ID: 52 WCS: 1
+Pin_name: U1.AB28 ID: 128 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.D7 ID: 129 escape_dir: RIGHT coor: ( 7 3 0 ) ( 7 4 0 ) ( 8 4 0 ) 
+Net_END
+Net_name: DDR_DQ25 ID: 53 WCS: 1
+Pin_name: U1.AC30 ID: 130 escape_dir: BOT coor: ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.C3 ID: 131 escape_dir: RIGHT coor: ( 7 4 0 ) ( 8 4 0 ) ( 7 5 0 ) ( 8 5 0 ) 
+Net_END
+Net_name: DDR_DQ26 ID: 54 WCS: 1
+Pin_name: U1.Y29 ID: 132 escape_dir: BOT coor: ( 14 10 0 ) ( 14 9 0 ) ( 14 8 0 ) ( 14 7 0 ) 
+Pin_name: U2.C8 ID: 133 escape_dir: RIGHT coor: ( 7 3 0 ) ( 8 3 0 ) 
+Net_END
+Net_name: DDR_DQ27 ID: 55 WCS: 1
+Pin_name: U1.AD28 ID: 134 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.C2 ID: 135 escape_dir: RIGHT coor: ( 7 5 0 ) ( 8 5 0 ) 
+Net_END
+Net_name: DDR_DQ28 ID: 56 WCS: 1
+Pin_name: U1.AA30 ID: 136 escape_dir: BOT coor: ( 14 9 0 ) ( 14 8 0 ) ( 14 7 0 ) 
+Pin_name: U2.A7 ID: 137 escape_dir: RIGHT coor: ( 8 3 0 ) 
+Net_END
+Net_name: DDR_DQ29 ID: 57 WCS: 1
+Pin_name: U1.AE29 ID: 138 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) ( 12 10 0 ) ( 12 9 0 ) ( 12 8 0 ) ( 12 7 0 ) 
+Pin_name: U2.A2 ID: 139 escape_dir: RIGHT coor: ( 8 5 0 ) 
+Net_END
+Net_name: DDR_DQ30 ID: 58 WCS: 1
+Pin_name: U1.Y30 ID: 140 escape_dir: BOT coor: ( 14 9 0 ) ( 14 8 0 ) ( 14 7 0 ) 
+Pin_name: U2.B8 ID: 141 escape_dir: RIGHT coor: ( 7 3 0 ) ( 8 3 0 ) 
+Net_END
+Net_name: DDR_DQ31 ID: 59 WCS: 1
+Pin_name: U1.AD30 ID: 142 escape_dir: BOT coor: ( 13 9 1 ) ( 13 8 1 ) ( 13 7 1 ) 
+Pin_name: U2.A3 ID: 143 escape_dir: RIGHT coor: ( 8 4 1 ) ( 8 5 1 ) 
+Net_END
+Net_name: DDR_DQS0_N ID: 60 WCS: 1
+Pin_name: U1.AG22 ID: 144 escape_dir: LEFT coor: ( 12 12 0 ) ( 11 12 0 ) ( 10 12 0 ) ( 9 12 0 ) 
+Pin_name: U3.G3 ID: 145 escape_dir: RIGHT coor: ( 6 11 0 ) ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) 
+Net_END
+Net_name: DDR_DQS0_P ID: 61 WCS: 1
+Pin_name: U1.AH22 ID: 146 escape_dir: LEFT coor: ( 12 12 0 ) ( 11 12 0 ) ( 10 12 0 ) ( 9 12 0 ) 
+Pin_name: U3.F3 ID: 147 escape_dir: RIGHT coor: ( 6 10 0 ) ( 7 10 0 ) ( 8 10 0 ) ( 6 11 0 ) ( 7 11 0 ) ( 8 11 0 ) 
+Net_END
+Net_name: DDR_DQS1_N ID: 62 WCS: 1
+Pin_name: U1.AG30 ID: 148 escape_dir: BOT coor: ( 12 9 0 ) ( 12 8 0 ) ( 12 7 0 ) 
+Pin_name: U3.B7 ID: 149 escape_dir: RIGHT coor: ( 7 9 0 ) ( 8 9 0 ) 
+Net_END
+Net_name: DDR_DQS1_P ID: 63 WCS: 1
+Pin_name: U1.AH30 ID: 150 escape_dir: LEFT coor: ( 12 9 0 ) ( 11 9 0 ) ( 10 9 0 ) ( 9 9 0 ) 
+Pin_name: U3.C7 ID: 151 escape_dir: RIGHT coor: ( 7 10 0 ) ( 8 10 0 ) ( 7 9 0 ) ( 8 9 0 ) 
+Net_END
+Net_name: DDR_DQS2_N ID: 64 WCS: 1
+Pin_name: U1.AD27 ID: 152 escape_dir: BOT coor: ( 13 10 1 ) ( 13 9 1 ) ( 13 8 1 ) ( 13 7 1 ) 
+Pin_name: U2.G3 ID: 153 escape_dir: RIGHT coor: ( 6 5 1 ) ( 7 5 1 ) ( 8 5 1 ) 
+Net_END
+Net_name: DDR_DQS2_P ID: 65 WCS: 1
+Pin_name: U1.AE26 ID: 154 escape_dir: LEFT coor: ( 12 11 2 ) ( 12 10 2 ) ( 11 10 2 ) ( 10 10 2 ) ( 9 10 2 ) 
+Pin_name: U2.F3 ID: 155 escape_dir: RIGHT coor: ( 6 4 2 ) ( 7 4 2 ) ( 8 4 2 ) ( 6 5 2 ) ( 7 5 2 ) ( 8 5 2 ) 
+Net_END
+Net_name: DDR_DQS3_N ID: 66 WCS: 1
+Pin_name: U1.AA28 ID: 156 escape_dir: BOT coor: ( 14 10 0 ) ( 14 9 0 ) ( 14 8 0 ) ( 14 7 0 ) 
+Pin_name: U2.B7 ID: 157 escape_dir: RIGHT coor: ( 7 3 0 ) ( 8 3 0 ) 
+Net_END
+Net_name: DDR_DQS3_P ID: 67 WCS: 1
+Pin_name: U1.AB29 ID: 158 escape_dir: BOT coor: ( 13 10 0 ) ( 13 9 0 ) ( 13 8 0 ) ( 13 7 0 ) 
+Pin_name: U2.C7 ID: 159 escape_dir: RIGHT coor: ( 7 3 0 ) ( 8 3 0 ) 
+Net_END
+DATA_END
+ADDR_DIR_START
+U2 U3 TOP
+U3 U2 BOT
+U3 CPU TOP
+ADDR_DIR_END
+PESUDO_PINS_START
+PESUDO_PINS_END
+ADDRESS_NETS_START
+Net_name: DDR_AD0 ID: 0 WCS: 1
+Pin_name: U1.AF17 ID: 0 escape_dir: TOP coor: ( 12 13 0 ) ( 12 14 0 ) ( 12 15 0 ) ( 12 16 0 ) 
+Pin_name: U2.N3 ID: 1 escape_dir: -1 coor: ( 4 5 0 ) 
+Pin_name: U3.N3 ID: 2 escape_dir: TOP coor: ( 4 11 0 ) ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+Net_name: DDR_AD1 ID: 1 WCS: 1
+Pin_name: U1.AJ20 ID: 3 escape_dir: LEFT coor: ( 11 12 1 ) ( 10 12 1 ) ( 9 12 1 ) 
+Pin_name: U2.P7 ID: 4 escape_dir: -1 coor: ( 3 3 1 ) ( 4 3 1 ) ( 4 4 1 ) ( 4 5 1 ) 
+Pin_name: U3.P7 ID: 5 escape_dir: TOP coor: ( 3 9 1 ) ( 4 9 1 ) ( 4 10 1 ) ( 4 11 1 ) ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD2 ID: 2 WCS: 0
+Pin_name: U1.AK15 ID: 6 escape_dir: TOP coor: ( 11 14 2 ) 
+Pin_name: U2.P3 ID: 7 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) ( 4 5 0 ) 
+Pin_name: U3.P3 ID: 8 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_AD3 ID: 3 WCS: 0
+Pin_name: U1.AH16 ID: 9 escape_dir: TOP coor: ( 12 14 2 ) 
+Pin_name: U2.N2 ID: 10 escape_dir: -1 coor: ( 4 5 2 ) ( 4 5 0 ) 
+Pin_name: U3.N2 ID: 11 escape_dir: TOP coor: ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+Net_name: DDR_AD4 ID: 4 WCS: 0
+Pin_name: U1.AH20 ID: 12 escape_dir: LEFT coor: ( 12 12 2 ) 
+Pin_name: U2.P8 ID: 13 escape_dir: -1 coor: ( 3 3 2 ) ( 3 3 1 ) ( 4 3 1 ) ( 4 4 1 ) ( 4 5 1 ) 
+Pin_name: U3.P8 ID: 14 escape_dir: TOP coor: ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD5 ID: 5 WCS: 0
+Pin_name: U1.AJ15 ID: 15 escape_dir: TOP coor: ( 11 14 2 ) 
+Pin_name: U2.P2 ID: 16 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) ( 4 5 0 ) 
+Pin_name: U3.P2 ID: 17 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_AD6 ID: 6 WCS: 0
+Pin_name: U1.AK19 ID: 18 escape_dir: LEFT coor: ( 11 13 2 ) 
+Pin_name: U2.R8 ID: 19 escape_dir: -1 coor: ( 3 3 2 ) ( 3 3 1 ) ( 3 4 1 ) ( 3 5 1 ) 
+Pin_name: U3.R8 ID: 20 escape_dir: TOP coor: ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD7 ID: 7 WCS: 0
+Pin_name: U1.AK25 ID: 21 escape_dir: LEFT coor: ( 11 11 2 ) 
+Pin_name: U2.R2 ID: 22 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) 
+Pin_name: U3.R2 ID: 23 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_AD8 ID: 8 WCS: 1
+Pin_name: U1.AE20 ID: 24 escape_dir: TOP coor: ( 13 12 1 ) ( 13 13 1 ) ( 13 14 1 ) ( 13 15 1 ) ( 13 16 1 ) ( 12 12 1 ) ( 12 13 1 ) ( 12 14 1 ) ( 12 15 1 ) ( 12 16 1 ) 
+Pin_name: U2.T8 ID: 25 escape_dir: -1 coor: ( 3 3 1 ) ( 3 4 1 ) ( 3 5 1 ) 
+Pin_name: U3.T8 ID: 26 escape_dir: TOP coor: ( 3 9 1 ) ( 3 10 1 ) ( 3 11 1 ) ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD9 ID: 9 WCS: 0
+Pin_name: U1.AH23 ID: 27 escape_dir: LEFT coor: ( 12 11 2 ) 
+Pin_name: U2.R3 ID: 28 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) 
+Pin_name: U3.R3 ID: 29 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_AD10 ID: 10 WCS: 1
+Pin_name: U1.AH25 ID: 30 escape_dir: LEFT coor: ( 12 11 1 ) ( 11 11 1 ) ( 10 11 1 ) ( 9 11 1 ) 
+Pin_name: U2.L7 ID: 31 escape_dir: -1 coor: ( 4 3 1 ) ( 5 3 1 ) ( 5 4 1 ) ( 5 5 1 ) 
+Pin_name: U3.L7 ID: 32 escape_dir: TOP coor: ( 4 9 1 ) ( 4 10 1 ) ( 4 11 1 ) ( 4 9 1 ) 
+Net_END
+Net_name: DDR_AD11 ID: 11 WCS: 1
+Pin_name: U1.AK18 ID: 33 escape_dir: LEFT coor: ( 11 13 1 ) ( 10 13 1 ) ( 9 13 1 ) 
+Pin_name: U2.R7 ID: 34 escape_dir: -1 coor: ( 3 3 1 ) ( 3 4 1 ) ( 3 5 1 ) 
+Pin_name: U3.R7 ID: 35 escape_dir: TOP coor: ( 3 9 1 ) ( 3 10 1 ) ( 3 11 1 ) ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD12 ID: 12 WCS: 1
+Pin_name: U1.AJ21 ID: 36 escape_dir: LEFT coor: ( 11 12 1 ) ( 10 12 1 ) ( 9 12 1 ) 
+Pin_name: U2.N7 ID: 37 escape_dir: -1 coor: ( 4 3 1 ) ( 4 4 1 ) ( 4 5 1 ) 
+Pin_name: U3.N7 ID: 38 escape_dir: TOP coor: ( 4 9 1 ) ( 4 10 1 ) ( 4 11 1 ) ( 4 9 1 ) 
+Net_END
+Net_name: DDR_AD13 ID: 13 WCS: 0
+Pin_name: U1.AJ24 ID: 39 escape_dir: LEFT coor: ( 11 11 2 ) 
+Pin_name: U2.T3 ID: 40 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) 
+Pin_name: U3.T3 ID: 41 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_AD14 ID: 14 WCS: 0
+Pin_name: U1.AK16 ID: 42 escape_dir: LEFT coor: ( 11 14 2 ) 
+Pin_name: U2.T7 ID: 43 escape_dir: -1 coor: ( 3 3 2 ) ( 3 3 1 ) ( 3 4 1 ) ( 3 5 1 ) 
+Pin_name: U3.T7 ID: 44 escape_dir: TOP coor: ( 3 9 1 ) 
+Net_END
+Net_name: DDR_AD15 ID: 15 WCS: 1
+Pin_name: U1.AJ23 ID: 45 escape_dir: LEFT coor: ( 11 12 1 ) ( 10 12 1 ) ( 9 12 1 ) ( 11 11 1 ) ( 10 11 1 ) ( 9 11 1 ) 
+Pin_name: U2.M7 ID: 46 escape_dir: -1 coor: ( 4 3 1 ) ( 4 4 1 ) ( 4 5 1 ) 
+Pin_name: U3.M7 ID: 47 escape_dir: TOP coor: ( 4 9 1 ) ( 4 10 1 ) ( 4 11 1 ) ( 4 9 1 ) 
+Net_END
+Net_name: DDR_BA0 ID: 16 WCS: 0
+Pin_name: U1.AH17 ID: 48 escape_dir: TOP coor: ( 12 13 2 ) 
+Pin_name: U2.M2 ID: 49 escape_dir: -1 coor: ( 4 5 2 ) ( 4 5 0 ) 
+Pin_name: U3.M2 ID: 50 escape_dir: TOP coor: ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+Net_name: DDR_BA1 ID: 17 WCS: 0
+Pin_name: U1.AK21 ID: 51 escape_dir: LEFT coor: ( 11 12 2 ) 
+Pin_name: U2.N8 ID: 52 escape_dir: -1 coor: ( 4 3 2 ) ( 4 3 1 ) ( 4 4 1 ) ( 4 5 1 ) 
+Pin_name: U3.N8 ID: 53 escape_dir: TOP coor: ( 4 9 1 ) 
+Net_END
+Net_name: DDR_BA2 ID: 18 WCS: 1
+Pin_name: U1.AF18 ID: 54 escape_dir: TOP coor: ( 12 13 0 ) ( 12 14 0 ) ( 12 15 0 ) ( 12 16 0 ) 
+Pin_name: U2.M3 ID: 55 escape_dir: -1 coor: ( 4 5 0 ) 
+Pin_name: U3.M3 ID: 56 escape_dir: TOP coor: ( 4 11 0 ) ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+Net_name: DDR_CAS_N ID: 19 WCS: 1
+Pin_name: U1.AJ18 ID: 57 escape_dir: LEFT coor: ( 11 13 0 ) ( 10 13 0 ) ( 9 13 0 ) 
+Pin_name: U2.K3 ID: 58 escape_dir: -1 coor: ( 5 5 0 ) 
+Pin_name: U3.K3 ID: 59 escape_dir: TOP coor: ( 5 11 0 ) ( 5 11 0 ) ( 5 10 0 ) ( 5 9 0 ) 
+Net_END
+Net_name: DDR_CKE ID: 20 WCS: 0
+Pin_name: U1.AK27 ID: 60 escape_dir: LEFT coor: ( 11 10 1 ) 
+Pin_name: U2.K9 ID: 61 escape_dir: -1 coor: ( 5 3 1 ) ( 5 3 2 ) ( 5 4 2 ) ( 5 5 2 ) 
+Pin_name: U3.K9 ID: 62 escape_dir: TOP coor: ( 5 9 2 ) 
+Net_END
+Net_name: DDR_CLKN ID: 21 WCS: 0
+Pin_name: U1.AH19 ID: 63 escape_dir: LEFT coor: ( 12 13 2 ) 
+Pin_name: U2.K7 ID: 64 escape_dir: -1 coor: ( 5 3 2 ) ( 5 3 1 ) ( 5 4 1 ) ( 5 5 1 ) 
+Pin_name: U3.K7 ID: 65 escape_dir: TOP coor: ( 5 9 1 ) 
+Net_END
+Net_name: DDR_CLKP ID: 22 WCS: 1
+Pin_name: U1.AG19 ID: 66 escape_dir: LEFT coor: ( 12 13 0 ) ( 11 13 0 ) ( 10 13 0 ) ( 9 13 0 ) 
+Pin_name: U2.J7 ID: 67 escape_dir: -1 coor: ( 5 3 0 ) ( 5 4 0 ) ( 5 5 0 ) 
+Pin_name: U3.J7 ID: 68 escape_dir: TOP coor: ( 5 9 0 ) ( 5 10 0 ) ( 5 11 0 ) ( 5 9 0 ) 
+Net_END
+Net_name: DDR_CS0_N ID: 23 WCS: 1
+Pin_name: U1.AG18 ID: 69 escape_dir: TOP coor: ( 12 13 0 ) ( 12 14 0 ) ( 12 15 0 ) ( 12 16 0 ) 
+Pin_name: U2.L2 ID: 70 escape_dir: -1 coor: ( 4 5 0 ) ( 5 5 0 ) 
+Pin_name: U3.L2 ID: 71 escape_dir: TOP coor: ( 4 11 0 ) ( 5 11 0 ) ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+Net_name: DDR_ODT ID: 68 WCS: 0
+Pin_name: U1.AJ26 ID: 160 escape_dir: LEFT coor: ( 11 11 1 ) 
+Pin_name: U2.K1 ID: 161 escape_dir: -1 coor: ( 5 5 1 ) ( 5 5 0 ) 
+Pin_name: U3.K1 ID: 162 escape_dir: TOP coor: ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) ( 5 11 0 ) ( 5 10 0 ) ( 5 9 0 ) 
+Net_END
+Net_name: DDR_RAS_N ID: 69 WCS: 0
+Pin_name: U1.AF20 ID: 163 escape_dir: LEFT coor: ( 12 12 2 ) 
+Pin_name: U2.J3 ID: 164 escape_dir: -1 coor: ( 5 5 2 ) ( 5 5 0 ) 
+Pin_name: U3.J3 ID: 165 escape_dir: TOP coor: ( 5 11 0 ) ( 5 10 0 ) ( 5 9 0 ) 
+Net_END
+Net_name: DDR_RST_N ID: 70 WCS: 0
+Pin_name: U1.AK24 ID: 166 escape_dir: LEFT coor: ( 11 11 2 ) 
+Pin_name: U2.T2 ID: 167 escape_dir: -1 coor: ( 3 5 2 ) ( 3 5 0 ) 
+Pin_name: U3.T2 ID: 168 escape_dir: TOP coor: ( 3 11 0 ) ( 3 10 0 ) ( 3 9 0 ) 
+Net_END
+Net_name: DDR_VREF_DQ ID: 73 WCS: 0
+Pin_name: U1.AK22 ID: 171 escape_dir: LEFT coor: ( 11 12 2 ) 
+Pin_name: U2.H1 ID: 172 escape_dir: -1 coor: ( 5 5 2 ) ( 6 5 0 ) ( 5 5 0 ) 
+Pin_name: U3.H1 ID: 173 escape_dir: TOP coor: ( 5 11 0 ) ( 5 10 0 ) ( 5 9 0 ) 
+Net_END
+Net_name: DDR_WE_N ID: 74 WCS: 0
+Pin_name: U1.AJ17 ID: 174 escape_dir: LEFT coor: ( 11 13 2 ) 
+Pin_name: U2.L3 ID: 175 escape_dir: -1 coor: ( 4 5 2 ) ( 4 5 0 ) ( 5 5 0 ) 
+Pin_name: U3.L3 ID: 176 escape_dir: TOP coor: ( 4 11 0 ) ( 4 10 0 ) ( 4 9 0 ) 
+Net_END
+ADDRESS_NETS_END

@@ -1,0 +1,8466 @@
+MG_SDC
+	signalRef:SDC_CMD
+	signalRef:SDC_DATA_0
+	signalRef:SDC_DATA_1
+	signalRef:SDC_DATA_2
+	signalRef:SDC_DATA_3
+	signalRef:SDC_DATA_4
+	signalRef:SDC_DATA_5
+	signalRef:SDC_DATA_6
+	signalRef:SDC_DATA_7
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.200
+	 Layer : 9
+	 Coor : 980.31,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.H2
+	 Layer : 0
+	 Coor : 385.83,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.182
+	 Layer : 9
+	 Coor : 625.98,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.C13
+	 Layer : 0
+	 Coor : 446.07,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB21
+	 Layer : 0
+	 Coor : 184.25,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R77.1
+	 Layer : 0
+	 Coor : 271.99,1012.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.A7
+	 Layer : 0
+	 Coor : 523.63,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.56
+	 Layer : 9
+	 Coor : 287.4,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.55
+	 Layer : 9
+	 Coor : 342.52,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E25
+	 Layer : 0
+	 Coor : 418.51,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R81.2
+	 Layer : 0
+	 Coor : 616.9,259.69
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.R20
+	 Layer : 0
+	 Coor : 280.71,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J21
+	 Layer : 0
+	 Coor : 363.39,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.166
+	 Layer : 9
+	 Coor : 271.65,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2740.2
+	 Layer : 0
+	 Coor : 70.59999999999999,1056.89
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.67
+	 Layer : 9
+	 Coor : 44.29,1035.43
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.R10
+	 Layer : 0
+	 Coor : 248.04,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.70
+	 Layer : 9
+	 Coor : 44.29,870.08
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.N3
+	 Layer : 0
+	 Coor : 308.27,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C287.1
+	 Layer : 0
+	 Coor : 96.99,516.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.B25
+	 Layer : 0
+	 Coor : 459.85,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2750.2
+	 Layer : 0
+	 Coor : 353.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.47
+	 Layer : 9
+	 Coor : 783.46,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R84.2
+	 Layer : 0
+	 Coor : 336,1056.01
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.122
+	 Layer : 9
+	 Coor : 1065.94,1338.58
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.V6
+	 Layer : 0
+	 Coor : 239.37,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C324.1
+	 Layer : 0
+	 Coor : 49.5,791.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K5
+	 Layer : 0
+	 Coor : 349.61,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H8
+	 Layer : 0
+	 Coor : 377.17,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.61
+	 Layer : 9
+	 Coor : 44.29,1366.14
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.C10
+	 Layer : 0
+	 Coor : 446.07,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB10
+	 Layer : 0
+	 Coor : 184.25,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T16
+	 Layer : 0
+	 Coor : 266.93,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.133
+	 Layer : 9
+	 Coor : 535.43,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B5
+	 Layer : 0
+	 Coor : 459.85,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.D2
+	 Layer : 0
+	 Coor : 464.57,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.213
+	 Layer : 9
+	 Coor : 200.79,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E18
+	 Layer : 0
+	 Coor : 418.51,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.165
+	 Layer : 9
+	 Coor : 200.79,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B8
+	 Layer : 0
+	 Coor : 459.85,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H6
+	 Layer : 0
+	 Coor : 385.83,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.292
+	 Layer : 9
+	 Coor : 696.85,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2948.2
+	 Layer : 0
+	 Coor : 562.99,656.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.K8
+	 Layer : 0
+	 Coor : 346.46,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C281.1
+	 Layer : 0
+	 Coor : 213.5,1001.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C325.1
+	 Layer : 0
+	 Coor : 617,116.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AC11
+	 Layer : 0
+	 Coor : 170.48,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.238
+	 Layer : 9
+	 Coor : 271.65,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.J7
+	 Layer : 0
+	 Coor : 363.39,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.194
+	 Layer : 9
+	 Coor : 555.12,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C308.1
+	 Layer : 0
+	 Coor : 623.01,743
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H13
+	 Layer : 0
+	 Coor : 377.17,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.C3
+	 Layer : 0
+	 Coor : 484.26,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E23
+	 Layer : 0
+	 Coor : 418.51,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C15
+	 Layer : 0
+	 Coor : 446.07,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W1
+	 Layer : 0
+	 Coor : 225.59,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.K5
+	 Layer : 0
+	 Coor : 346.46,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.255
+	 Layer : 9
+	 Coor : 555.12,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.U7
+	 Layer : 0
+	 Coor : 208.67,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.191
+	 Layer : 9
+	 Coor : 342.52,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.B2
+	 Layer : 0
+	 Coor : 503.94,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.108
+	 Layer : 9
+	 Coor : 1065.94,566.93
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.93
+	 Layer : 9
+	 Coor : 645.67,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.L6
+	 Layer : 0
+	 Coor : 335.83,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.63
+	 Layer : 9
+	 Coor : 44.29,1255.9
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.D3
+	 Layer : 0
+	 Coor : 464.57,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P13
+	 Layer : 0
+	 Coor : 294.49,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3179.2
+	 Layer : 0
+	 Coor : 253.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.P6
+	 Layer : 0
+	 Coor : 294.49,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T8
+	 Layer : 0
+	 Coor : 266.93,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F17
+	 Layer : 0
+	 Coor : 404.73,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B10
+	 Layer : 0
+	 Coor : 459.85,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.208
+	 Layer : 9
+	 Coor : 484.25,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.188
+	 Layer : 9
+	 Coor : 200.79,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.259
+	 Layer : 9
+	 Coor : 271.65,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.C18
+	 Layer : 0
+	 Coor : 446.07,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K1
+	 Layer : 0
+	 Coor : 349.61,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB13
+	 Layer : 0
+	 Coor : 184.25,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.B8
+	 Layer : 0
+	 Coor : 503.94,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P2
+	 Layer : 0
+	 Coor : 294.49,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T19
+	 Layer : 0
+	 Coor : 266.93,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V10
+	 Layer : 0
+	 Coor : 188.98,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J25
+	 Layer : 0
+	 Coor : 363.39,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3180.1
+	 Layer : 0
+	 Coor : 323.51,481.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A20
+	 Layer : 0
+	 Coor : 473.62,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F19
+	 Layer : 0
+	 Coor : 404.73,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C2780.2
+	 Layer : 0
+	 Coor : 318.92,442.25
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.119
+	 Layer : 9
+	 Coor : 1065.94,1173.23
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA20
+	 Layer : 0
+	 Coor : 198.03,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.Y1
+	 Layer : 0
+	 Coor : 149.61,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.T5
+	 Layer : 0
+	 Coor : 228.35,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F15
+	 Layer : 0
+	 Coor : 404.73,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA13
+	 Layer : 0
+	 Coor : 198.03,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.244
+	 Layer : 9
+	 Coor : 696.85,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.192
+	 Layer : 9
+	 Coor : 413.38,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C303.2
+	 Layer : 0
+	 Coor : 561.99,567
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.A9
+	 Layer : 0
+	 Coor : 523.63,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C315.2
+	 Layer : 0
+	 Coor : 49.5,732.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.2
+	 Layer : 9
+	 Coor : 232.28,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.220
+	 Layer : 9
+	 Coor : 696.85,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.R5
+	 Layer : 0
+	 Coor : 248.04,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.33
+	 Layer : 9
+	 Coor : 1136.81,980.31
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2953.1
+	 Layer : 0
+	 Coor : 96.99,537.6
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.123
+	 Layer : 9
+	 Coor : 1065.94,1393.7
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.195
+	 Layer : 9
+	 Coor : 625.98,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R21
+	 Layer : 0
+	 Coor : 280.71,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B3
+	 Layer : 0
+	 Coor : 459.85,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C302.1
+	 Layer : 0
+	 Coor : 428,522.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A24
+	 Layer : 0
+	 Coor : 473.62,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.279
+	 Layer : 9
+	 Coor : 555.12,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3163.1
+	 Layer : 0
+	 Coor : 621.5,925.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.F18
+	 Layer : 0
+	 Coor : 404.73,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C331.2
+	 Layer : 0
+	 Coor : 617,156.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H10
+	 Layer : 0
+	 Coor : 377.17,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C22
+	 Layer : 0
+	 Coor : 446.07,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.272
+	 Layer : 9
+	 Coor : 980.31,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.H3
+	 Layer : 0
+	 Coor : 385.83,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M23
+	 Layer : 0
+	 Coor : 322.05,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2710.2
+	 Layer : 0
+	 Coor : 123.01,810.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.G20
+	 Layer : 0
+	 Coor : 390.95,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K13
+	 Layer : 0
+	 Coor : 349.61,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.62
+	 Layer : 9
+	 Coor : 44.29,1311.02
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W25
+	 Layer : 0
+	 Coor : 225.59,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.174
+	 Layer : 9
+	 Coor : 838.58,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.P2
+	 Layer : 0
+	 Coor : 267.72,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.D3
+	 Layer : 0
+	 Coor : 432.29,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C279.1
+	 Layer : 0
+	 Coor : 173.5,1001.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K15
+	 Layer : 0
+	 Coor : 349.61,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2794.2
+	 Layer : 0
+	 Coor : 561.99,587
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.A10
+	 Layer : 0
+	 Coor : 523.63,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A12
+	 Layer : 0
+	 Coor : 473.62,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.137
+	 Layer : 9
+	 Coor : 314.96,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.66
+	 Layer : 9
+	 Coor : 44.29,1090.55
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U12
+	 Layer : 0
+	 Coor : 253.15,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F13
+	 Layer : 0
+	 Coor : 404.73,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3169.2
+	 Layer : 0
+	 Coor : 258.49,1038
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2720.2
+	 Layer : 0
+	 Coor : 123.01,904
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.10
+	 Layer : 9
+	 Coor : 673.23,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G17
+	 Layer : 0
+	 Coor : 390.95,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA15
+	 Layer : 0
+	 Coor : 198.03,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3175.2
+	 Layer : 0
+	 Coor : 304.49,501.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.139
+	 Layer : 9
+	 Coor : 204.72,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G24
+	 Layer : 0
+	 Coor : 390.95,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.Y10
+	 Layer : 0
+	 Coor : 149.61,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.43
+	 Layer : 9
+	 Coor : 1003.94,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.J19
+	 Layer : 0
+	 Coor : 363.39,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C316.1
+	 Layer : 0
+	 Coor : 49.5,692.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.D24
+	 Layer : 0
+	 Coor : 432.29,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3173.1
+	 Layer : 0
+	 Coor : 93.49,710.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C299.1
+	 Layer : 0
+	 Coor : 451.5,1078.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.J5
+	 Layer : 0
+	 Coor : 366.15,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C520.1
+	 Layer : 0
+	 Coor : 376.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.189
+	 Layer : 9
+	 Coor : 200.79,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.107
+	 Layer : 9
+	 Coor : 1065.94,511.81
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.30
+	 Layer : 9
+	 Coor : 1136.81,814.96
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C287.2
+	 Layer : 0
+	 Coor : 116.01,516.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C281.2
+	 Layer : 0
+	 Coor : 213.5,981.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2788.2
+	 Layer : 0
+	 Coor : 161,540.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.237
+	 Layer : 9
+	 Coor : 200.79,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.146
+	 Layer : 9
+	 Coor : 115.16,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.C6
+	 Layer : 0
+	 Coor : 446.07,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C327.1
+	 Layer : 0
+	 Coor : 76.99,327
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AA3
+	 Layer : 0
+	 Coor : 198.03,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2793.1
+	 Layer : 0
+	 Coor : 369.99,521.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.261
+	 Layer : 9
+	 Coor : 200.79,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.M19
+	 Layer : 0
+	 Coor : 322.05,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.8
+	 Layer : 9
+	 Coor : 562.99,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.A9
+	 Layer : 0
+	 Coor : 473.62,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C24
+	 Layer : 0
+	 Coor : 446.07,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E16
+	 Layer : 0
+	 Coor : 418.51,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H14
+	 Layer : 0
+	 Coor : 377.17,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB4
+	 Layer : 0
+	 Coor : 184.25,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J9
+	 Layer : 0
+	 Coor : 363.39,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L8
+	 Layer : 0
+	 Coor : 335.83,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.242
+	 Layer : 9
+	 Coor : 555.12,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.216
+	 Layer : 9
+	 Coor : 413.38,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.85
+	 Layer : 9
+	 Coor : 204.72,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C286.2
+	 Layer : 0
+	 Coor : 123.01,864
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD12X12
+12
+12
+ObsPad : R665.2
+	 Layer : 0
+	 Coor : 468.99,410
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2790.1
+	 Layer : 0
+	 Coor : 103.99,770.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K20
+	 Layer : 0
+	 Coor : 349.61,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.132
+	 Layer : 9
+	 Coor : 590.55,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.83
+	 Layer : 9
+	 Coor : 44.29,153.54
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.265
+	 Layer : 9
+	 Coor : 484.25,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.V6
+	 Layer : 0
+	 Coor : 188.98,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J10
+	 Layer : 0
+	 Coor : 363.39,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E12
+	 Layer : 0
+	 Coor : 418.51,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U23
+	 Layer : 0
+	 Coor : 253.15,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K9
+	 Layer : 0
+	 Coor : 349.61,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U6
+	 Layer : 0
+	 Coor : 253.15,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U18
+	 Layer : 0
+	 Coor : 253.15,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2796.1
+	 Layer : 0
+	 Coor : 273.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H9
+	 Layer : 0
+	 Coor : 377.17,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA14
+	 Layer : 0
+	 Coor : 198.03,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R76.2
+	 Layer : 0
+	 Coor : 600.99,623
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB3
+	 Layer : 0
+	 Coor : 184.25,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C282.1
+	 Layer : 0
+	 Coor : 55.2,645.09
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.13
+	 Layer : 9
+	 Coor : 838.58,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.169
+	 Layer : 9
+	 Coor : 484.25,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.J20
+	 Layer : 0
+	 Coor : 363.39,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R75.2
+	 Layer : 0
+	 Coor : 562.99,716.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C280.2
+	 Layer : 0
+	 Coor : 258.49,1058
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.G5
+	 Layer : 0
+	 Coor : 390.95,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W17
+	 Layer : 0
+	 Coor : 225.59,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C310.2
+	 Layer : 0
+	 Coor : 608.5,716.56
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : C301.2
+	 Layer : 0
+	 Coor : 389.01,541.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AC15
+	 Layer : 0
+	 Coor : 170.48,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V1
+	 Layer : 0
+	 Coor : 239.37,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB9
+	 Layer : 0
+	 Coor : 184.25,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N18
+	 Layer : 0
+	 Coor : 308.27,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.276
+	 Layer : 9
+	 Coor : 767.72,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C314.1
+	 Layer : 0
+	 Coor : 612.5,782.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.296
+	 Layer : 9
+	 Coor : 980.31,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2760.1
+	 Layer : 0
+	 Coor : 218.49,1049.9
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.111
+	 Layer : 9
+	 Coor : 1065.94,732.28
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.E8
+	 Layer : 0
+	 Coor : 444.89,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N6
+	 Layer : 0
+	 Coor : 308.27,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3183.2
+	 Layer : 0
+	 Coor : 561.99,527
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.126
+	 Layer : 9
+	 Coor : 921.26,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.271
+	 Layer : 9
+	 Coor : 909.4500000000001,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E2
+	 Layer : 0
+	 Coor : 418.51,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H19
+	 Layer : 0
+	 Coor : 377.17,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.L1
+	 Layer : 0
+	 Coor : 326.78,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R7
+	 Layer : 0
+	 Coor : 280.71,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.228
+	 Layer : 9
+	 Coor : 767.72,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC17
+	 Layer : 0
+	 Coor : 170.48,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V2
+	 Layer : 0
+	 Coor : 239.37,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R18
+	 Layer : 0
+	 Coor : 280.71,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB7
+	 Layer : 0
+	 Coor : 184.25,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA8
+	 Layer : 0
+	 Coor : 198.03,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.175
+	 Layer : 9
+	 Coor : 909.4500000000001,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K18
+	 Layer : 0
+	 Coor : 349.61,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.164
+	 Layer : 9
+	 Coor : 115.16,125.98
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AB1
+	 Layer : 0
+	 Coor : 184.25,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.P6
+	 Layer : 0
+	 Coor : 267.72,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E6
+	 Layer : 0
+	 Coor : 418.51,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J15
+	 Layer : 0
+	 Coor : 363.39,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.142
+	 Layer : 9
+	 Coor : 115.16,1338.58
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.T2
+	 Layer : 0
+	 Coor : 228.35,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C325.2
+	 Layer : 0
+	 Coor : 617,96.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T14
+	 Layer : 0
+	 Coor : 266.93,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.268
+	 Layer : 9
+	 Coor : 696.85,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.L6
+	 Layer : 0
+	 Coor : 326.78,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.190
+	 Layer : 9
+	 Coor : 271.65,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.38
+	 Layer : 9
+	 Coor : 1136.81,1255.9
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.F6
+	 Layer : 0
+	 Coor : 425.2,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M16
+	 Layer : 0
+	 Coor : 322.05,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.170
+	 Layer : 9
+	 Coor : 555.12,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.N2
+	 Layer : 0
+	 Coor : 287.41,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.298
+	 Layer : 9
+	 Coor : 909.4500000000001,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K7
+	 Layer : 0
+	 Coor : 349.61,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.F1
+	 Layer : 0
+	 Coor : 425.2,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H11
+	 Layer : 0
+	 Coor : 377.17,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F5
+	 Layer : 0
+	 Coor : 404.73,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA24
+	 Layer : 0
+	 Coor : 198.03,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.246
+	 Layer : 9
+	 Coor : 838.58,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.77
+	 Layer : 9
+	 Coor : 44.29,484.25
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.F10
+	 Layer : 0
+	 Coor : 425.2,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C294.1
+	 Layer : 0
+	 Coor : 429.51,992
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.251
+	 Layer : 9
+	 Coor : 838.58,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.P19
+	 Layer : 0
+	 Coor : 294.49,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA18
+	 Layer : 0
+	 Coor : 198.03,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.42
+	 Layer : 9
+	 Coor : 1136.81,1476.38
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2783.2
+	 Layer : 0
+	 Coor : 514.49,1052
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.127
+	 Layer : 9
+	 Coor : 866.14,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G11
+	 Layer : 0
+	 Coor : 390.95,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C324.2
+	 Layer : 0
+	 Coor : 49.5,771.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K8
+	 Layer : 0
+	 Coor : 349.61,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B4
+	 Layer : 0
+	 Coor : 459.85,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2730.2
+	 Layer : 0
+	 Coor : 601.5,905.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.N12
+	 Layer : 0
+	 Coor : 308.27,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V15
+	 Layer : 0
+	 Coor : 239.37,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.W2
+	 Layer : 0
+	 Coor : 169.3,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F16
+	 Layer : 0
+	 Coor : 404.73,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.82
+	 Layer : 9
+	 Coor : 44.29,208.66
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.V2
+	 Layer : 0
+	 Coor : 188.98,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C8
+	 Layer : 0
+	 Coor : 446.07,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V5
+	 Layer : 0
+	 Coor : 188.98,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A21
+	 Layer : 0
+	 Coor : 473.62,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C283.1
+	 Layer : 0
+	 Coor : 87.49,984
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2790.2
+	 Layer : 0
+	 Coor : 123.01,770.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K3
+	 Layer : 0
+	 Coor : 349.61,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.G6
+	 Layer : 0
+	 Coor : 405.52,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J17
+	 Layer : 0
+	 Coor : 363.39,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2670.1
+	 Layer : 0
+	 Coor : 49.5,851.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB19
+	 Layer : 0
+	 Coor : 184.25,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.247
+	 Layer : 9
+	 Coor : 909.4500000000001,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.278
+	 Layer : 9
+	 Coor : 625.98,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U10
+	 Layer : 0
+	 Coor : 253.15,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L15
+	 Layer : 0
+	 Coor : 335.83,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H18
+	 Layer : 0
+	 Coor : 377.17,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U3
+	 Layer : 0
+	 Coor : 253.15,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J3
+	 Layer : 0
+	 Coor : 363.39,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.M5
+	 Layer : 0
+	 Coor : 307.09,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V21
+	 Layer : 0
+	 Coor : 239.37,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M11
+	 Layer : 0
+	 Coor : 322.05,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C291.1
+	 Layer : 0
+	 Coor : 221.01,541.3
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AC2
+	 Layer : 0
+	 Coor : 170.48,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C25
+	 Layer : 0
+	 Coor : 446.07,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.121
+	 Layer : 9
+	 Coor : 1065.94,1283.46
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U1
+	 Layer : 0
+	 Coor : 253.15,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.75
+	 Layer : 9
+	 Coor : 44.29,594.49
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.269
+	 Layer : 9
+	 Coor : 767.72,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.K6
+	 Layer : 0
+	 Coor : 346.46,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.134
+	 Layer : 9
+	 Coor : 480.31,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.308
+	 Layer : 9
+	 Coor : 200.79,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C331.1
+	 Layer : 0
+	 Coor : 617,136.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.G2
+	 Layer : 0
+	 Coor : 390.95,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.G3
+	 Layer : 0
+	 Coor : 405.52,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.3
+	 Layer : 9
+	 Coor : 287.4,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.R7
+	 Layer : 0
+	 Coor : 248.04,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3169.1
+	 Layer : 0
+	 Coor : 277.51,1038
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.U3
+	 Layer : 0
+	 Coor : 208.67,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C315.1
+	 Layer : 0
+	 Coor : 49.5,751.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A15
+	 Layer : 0
+	 Coor : 473.62,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3182.2
+	 Layer : 0
+	 Coor : 509,541.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V13
+	 Layer : 0
+	 Coor : 239.37,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F21
+	 Layer : 0
+	 Coor : 404.73,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C329.2
+	 Layer : 0
+	 Coor : 617,220.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C289.2
+	 Layer : 0
+	 Coor : 112.51,690.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C298.1
+	 Layer : 0
+	 Coor : 451.5,992.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.D25
+	 Layer : 0
+	 Coor : 432.29,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.C5
+	 Layer : 0
+	 Coor : 484.26,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB11
+	 Layer : 0
+	 Coor : 184.25,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB20
+	 Layer : 0
+	 Coor : 184.25,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J23
+	 Layer : 0
+	 Coor : 363.39,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.B6
+	 Layer : 0
+	 Coor : 503.94,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L3
+	 Layer : 0
+	 Coor : 335.83,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.T3
+	 Layer : 0
+	 Coor : 228.35,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.215
+	 Layer : 9
+	 Coor : 342.52,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.71
+	 Layer : 9
+	 Coor : 44.29,814.96
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.C1
+	 Layer : 0
+	 Coor : 484.26,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L23
+	 Layer : 0
+	 Coor : 335.83,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.294
+	 Layer : 9
+	 Coor : 838.58,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.G2
+	 Layer : 0
+	 Coor : 405.52,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.288
+	 Layer : 9
+	 Coor : 413.38,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E10
+	 Layer : 0
+	 Coor : 418.51,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.303
+	 Layer : 9
+	 Coor : 555.12,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3177.1
+	 Layer : 0
+	 Coor : 489,522.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2783.1
+	 Layer : 0
+	 Coor : 533.51,1052
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.186
+	 Layer : 9
+	 Coor : 342.52,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.81
+	 Layer : 9
+	 Coor : 44.29,263.78
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.45
+	 Layer : 9
+	 Coor : 893.7000000000001,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2730.1
+	 Layer : 0
+	 Coor : 601.5,925.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W10
+	 Layer : 0
+	 Coor : 169.3,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.193
+	 Layer : 9
+	 Coor : 484.25,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.J9
+	 Layer : 0
+	 Coor : 366.15,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.7
+	 Layer : 9
+	 Coor : 507.87,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.M9
+	 Layer : 0
+	 Coor : 322.05,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.148
+	 Layer : 9
+	 Coor : 115.16,1007.87
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2782.2
+	 Layer : 0
+	 Coor : 562.99,676.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.F8
+	 Layer : 0
+	 Coor : 425.2,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P12
+	 Layer : 0
+	 Coor : 294.49,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.44
+	 Layer : 9
+	 Coor : 948.8200000000001,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.H24
+	 Layer : 0
+	 Coor : 377.17,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.117
+	 Layer : 9
+	 Coor : 1065.94,1062.99
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U5
+	 Layer : 0
+	 Coor : 253.15,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R11
+	 Layer : 0
+	 Coor : 280.71,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C307.1
+	 Layer : 0
+	 Coor : 581.01,819
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C282.2
+	 Layer : 0
+	 Coor : 55.2,664.11
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.120
+	 Layer : 9
+	 Coor : 1065.94,1228.34
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K2
+	 Layer : 0
+	 Coor : 349.61,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.168
+	 Layer : 9
+	 Coor : 413.38,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W12
+	 Layer : 0
+	 Coor : 225.59,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3168.1
+	 Layer : 0
+	 Coor : 153.5,1001.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3173.2
+	 Layer : 0
+	 Coor : 112.51,710.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.99
+	 Layer : 9
+	 Coor : 976.38,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.U8
+	 Layer : 0
+	 Coor : 208.67,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.Y9
+	 Layer : 0
+	 Coor : 149.61,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.96
+	 Layer : 9
+	 Coor : 811.02,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.273
+	 Layer : 9
+	 Coor : 980.31,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.M8
+	 Layer : 0
+	 Coor : 322.05,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.C4
+	 Layer : 0
+	 Coor : 484.26,248.04
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.306
+	 Layer : 9
+	 Coor : 342.52,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.285
+	 Layer : 9
+	 Coor : 200.79,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.K3
+	 Layer : 0
+	 Coor : 346.46,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.E2
+	 Layer : 0
+	 Coor : 444.89,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2680.1
+	 Layer : 0
+	 Coor : 561.99,758
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W7
+	 Layer : 0
+	 Coor : 169.3,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.178
+	 Layer : 9
+	 Coor : 909.4500000000001,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R9
+	 Layer : 0
+	 Coor : 280.71,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G3
+	 Layer : 0
+	 Coor : 390.95,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.58
+	 Layer : 9
+	 Coor : 177.16,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.26
+	 Layer : 9
+	 Coor : 1136.81,594.49
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E17
+	 Layer : 0
+	 Coor : 418.51,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.P7
+	 Layer : 0
+	 Coor : 267.72,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E21
+	 Layer : 0
+	 Coor : 418.51,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.36
+	 Layer : 9
+	 Coor : 1136.81,1145.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC4
+	 Layer : 0
+	 Coor : 170.48,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.250
+	 Layer : 9
+	 Coor : 909.4500000000001,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.P5
+	 Layer : 0
+	 Coor : 267.72,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB23
+	 Layer : 0
+	 Coor : 184.25,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A19
+	 Layer : 0
+	 Coor : 473.62,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C286.1
+	 Layer : 0
+	 Coor : 103.99,864
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T7
+	 Layer : 0
+	 Coor : 266.93,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y25
+	 Layer : 0
+	 Coor : 211.81,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K12
+	 Layer : 0
+	 Coor : 349.61,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U8
+	 Layer : 0
+	 Coor : 253.15,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U19
+	 Layer : 0
+	 Coor : 253.15,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N15
+	 Layer : 0
+	 Coor : 308.27,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.299
+	 Layer : 9
+	 Coor : 838.58,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.105
+	 Layer : 9
+	 Coor : 1065.94,401.57
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G18
+	 Layer : 0
+	 Coor : 390.95,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U7
+	 Layer : 0
+	 Coor : 253.15,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G9
+	 Layer : 0
+	 Coor : 390.95,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.P8
+	 Layer : 0
+	 Coor : 267.72,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.W5
+	 Layer : 0
+	 Coor : 169.3,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L10
+	 Layer : 0
+	 Coor : 335.83,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C326.1
+	 Layer : 0
+	 Coor : 56.94,245.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.60
+	 Layer : 9
+	 Coor : 44.29,1421.26
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C327.2
+	 Layer : 0
+	 Coor : 96.01000000000001,327
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.291
+	 Layer : 9
+	 Coor : 625.98,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.17
+	 Layer : 9
+	 Coor : 1136.81,98.42
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B15
+	 Layer : 0
+	 Coor : 459.85,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3174.2
+	 Layer : 0
+	 Coor : 106.51,1004
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C309.2
+	 Layer : 0
+	 Coor : 561.49,621
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.150
+	 Layer : 9
+	 Coor : 115.16,897.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B18
+	 Layer : 0
+	 Coor : 459.85,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B13
+	 Layer : 0
+	 Coor : 459.85,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G6
+	 Layer : 0
+	 Coor : 390.95,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H1
+	 Layer : 0
+	 Coor : 377.17,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N8
+	 Layer : 0
+	 Coor : 308.27,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C332.2
+	 Layer : 0
+	 Coor : 92.06,185
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : C3177.2
+	 Layer : 0
+	 Coor : 489,541.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3167.2
+	 Layer : 0
+	 Coor : 193.5,981.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB24
+	 Layer : 0
+	 Coor : 184.25,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.187
+	 Layer : 9
+	 Coor : 271.65,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G19
+	 Layer : 0
+	 Coor : 390.95,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C337.1
+	 Layer : 0
+	 Coor : 620,479.03
+	 Type : KM0P8S
+		 Width : 0.8
+		 Height : 0.8
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.80
+	 Layer : 9
+	 Coor : 44.29,318.9
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W23
+	 Layer : 0
+	 Coor : 225.59,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.37
+	 Layer : 9
+	 Coor : 1136.81,1200.79
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R700.1
+	 Layer : 0
+	 Coor : 82.01000000000001,933
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.1
+	 Layer : 9
+	 Coor : 177.16,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3171.2
+	 Layer : 0
+	 Coor : 123.01,964
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C300.1
+	 Layer : 0
+	 Coor : 429.51,1012
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.G8
+	 Layer : 0
+	 Coor : 390.95,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC21
+	 Layer : 0
+	 Coor : 170.48,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C2
+	 Layer : 0
+	 Coor : 446.07,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2953.2
+	 Layer : 0
+	 Coor : 116.01,537.6
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.209
+	 Layer : 9
+	 Coor : 413.38,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3172.2
+	 Layer : 0
+	 Coor : 123.01,884
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.11
+	 Layer : 9
+	 Coor : 728.35,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.305
+	 Layer : 9
+	 Coor : 413.38,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.25
+	 Layer : 9
+	 Coor : 1136.81,539.37
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.V9
+	 Layer : 0
+	 Coor : 239.37,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V7
+	 Layer : 0
+	 Coor : 239.37,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K23
+	 Layer : 0
+	 Coor : 349.61,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H15
+	 Layer : 0
+	 Coor : 377.17,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L11
+	 Layer : 0
+	 Coor : 335.83,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.218
+	 Layer : 9
+	 Coor : 555.12,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.57
+	 Layer : 9
+	 Coor : 232.28,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R69.1
+	 Layer : 0
+	 Coor : 49.5,910.51
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.263
+	 Layer : 9
+	 Coor : 342.52,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.248
+	 Layer : 9
+	 Coor : 980.31,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3170.1
+	 Layer : 0
+	 Coor : 333.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.L2
+	 Layer : 0
+	 Coor : 326.78,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B12
+	 Layer : 0
+	 Coor : 459.85,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.K10
+	 Layer : 0
+	 Coor : 346.46,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3166.2
+	 Layer : 0
+	 Coor : 123.01,790.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C278.1
+	 Layer : 0
+	 Coor : 313.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.180
+	 Layer : 9
+	 Coor : 767.72,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.245
+	 Layer : 9
+	 Coor : 767.72,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.143
+	 Layer : 9
+	 Coor : 115.16,1283.46
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA16
+	 Layer : 0
+	 Coor : 198.03,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A25
+	 Layer : 0
+	 Coor : 473.62,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R82.1
+	 Layer : 0
+	 Coor : 435.51,410.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.31
+	 Layer : 9
+	 Coor : 1136.81,870.08
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.D4
+	 Layer : 0
+	 Coor : 464.57,248.04
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C326.2
+	 Layer : 0
+	 Coor : 92.06,245.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.P23
+	 Layer : 0
+	 Coor : 294.49,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J14
+	 Layer : 0
+	 Coor : 363.39,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.B3
+	 Layer : 0
+	 Coor : 503.94,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.27
+	 Layer : 9
+	 Coor : 1136.81,649.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.198
+	 Layer : 9
+	 Coor : 838.58,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C293.2
+	 Layer : 0
+	 Coor : 471.5,1034.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.F10
+	 Layer : 0
+	 Coor : 404.73,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.J10
+	 Layer : 0
+	 Coor : 366.15,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P8
+	 Layer : 0
+	 Coor : 294.49,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C20
+	 Layer : 0
+	 Coor : 446.07,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.295
+	 Layer : 9
+	 Coor : 909.4500000000001,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.M17
+	 Layer : 0
+	 Coor : 322.05,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.9
+	 Layer : 9
+	 Coor : 618.11,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.235
+	 Layer : 9
+	 Coor : 271.65,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K19
+	 Layer : 0
+	 Coor : 349.61,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2789.1
+	 Layer : 0
+	 Coor : 103.99,924
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.G5
+	 Layer : 0
+	 Coor : 405.52,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L25
+	 Layer : 0
+	 Coor : 335.83,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.E3
+	 Layer : 0
+	 Coor : 444.89,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T21
+	 Layer : 0
+	 Coor : 266.93,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.217
+	 Layer : 9
+	 Coor : 484.25,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.274
+	 Layer : 9
+	 Coor : 909.4500000000001,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E20
+	 Layer : 0
+	 Coor : 418.51,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C336.1
+	 Layer : 0
+	 Coor : 56.94,148.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.AC20
+	 Layer : 0
+	 Coor : 170.48,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P24
+	 Layer : 0
+	 Coor : 294.49,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R80.1
+	 Layer : 0
+	 Coor : 49.5,830.51
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.J6
+	 Layer : 0
+	 Coor : 366.15,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y3
+	 Layer : 0
+	 Coor : 211.81,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T1
+	 Layer : 0
+	 Coor : 266.93,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A23
+	 Layer : 0
+	 Coor : 473.62,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C9
+	 Layer : 0
+	 Coor : 446.07,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B1
+	 Layer : 0
+	 Coor : 459.85,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC5
+	 Layer : 0
+	 Coor : 170.48,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U15
+	 Layer : 0
+	 Coor : 253.15,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2795.2
+	 Layer : 0
+	 Coor : 96.01000000000001,353.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.100
+	 Layer : 9
+	 Coor : 1065.94,125.98
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.V10
+	 Layer : 0
+	 Coor : 239.37,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.249
+	 Layer : 9
+	 Coor : 980.31,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.M7
+	 Layer : 0
+	 Coor : 307.09,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.P10
+	 Layer : 0
+	 Coor : 267.72,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB8
+	 Layer : 0
+	 Coor : 184.25,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C500.2
+	 Layer : 0
+	 Coor : 181,540.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C290.1
+	 Layer : 0
+	 Coor : 103.99,844
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.32
+	 Layer : 9
+	 Coor : 1136.81,925.2000000000001
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R10
+	 Layer : 0
+	 Coor : 280.71,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA10
+	 Layer : 0
+	 Coor : 198.03,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.U6
+	 Layer : 0
+	 Coor : 208.67,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.241
+	 Layer : 9
+	 Coor : 484.25,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.M9
+	 Layer : 0
+	 Coor : 307.09,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC1
+	 Layer : 0
+	 Coor : 170.48,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.D2
+	 Layer : 0
+	 Coor : 432.29,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.19
+	 Layer : 9
+	 Coor : 1136.81,208.66
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R78.2
+	 Layer : 0
+	 Coor : 356,1036.99
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.P15
+	 Layer : 0
+	 Coor : 294.49,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L21
+	 Layer : 0
+	 Coor : 335.83,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R25
+	 Layer : 0
+	 Coor : 280.71,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C298.2
+	 Layer : 0
+	 Coor : 451.5,972.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD22X20
+22
+20
+ObsPad : C2780.1
+	 Layer : 0
+	 Coor : 283.8,442.25
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U16.M8
+	 Layer : 0
+	 Coor : 307.09,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.202
+	 Layer : 9
+	 Coor : 909.4500000000001,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.T12
+	 Layer : 0
+	 Coor : 266.93,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.28
+	 Layer : 9
+	 Coor : 1136.81,704.72
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.23
+	 Layer : 9
+	 Coor : 1136.81,429.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.C6
+	 Layer : 0
+	 Coor : 484.26,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.J3
+	 Layer : 0
+	 Coor : 366.15,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E19
+	 Layer : 0
+	 Coor : 418.51,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C321.1
+	 Layer : 0
+	 Coor : 233.5,991.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C311.2
+	 Layer : 0
+	 Coor : 562.49,736.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.138
+	 Layer : 9
+	 Coor : 259.84,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R23
+	 Layer : 0
+	 Coor : 280.71,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.232
+	 Layer : 9
+	 Coor : 484.25,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.B7
+	 Layer : 0
+	 Coor : 503.94,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.253
+	 Layer : 9
+	 Coor : 696.85,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3178.1
+	 Layer : 0
+	 Coor : 581.01,547
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD12X12
+12
+12
+ObsPad : R78.1
+	 Layer : 0
+	 Coor : 356,1056.01
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.B5
+	 Layer : 0
+	 Coor : 503.94,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2789.2
+	 Layer : 0
+	 Coor : 123.01,924
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C297.1
+	 Layer : 0
+	 Coor : 429.51,972
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A14
+	 Layer : 0
+	 Coor : 473.62,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.159
+	 Layer : 9
+	 Coor : 115.16,401.57
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.L24
+	 Layer : 0
+	 Coor : 335.83,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M18
+	 Layer : 0
+	 Coor : 322.05,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R77.2
+	 Layer : 0
+	 Coor : 291.01,1012.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A18
+	 Layer : 0
+	 Coor : 473.62,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA4
+	 Layer : 0
+	 Coor : 198.03,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.286
+	 Layer : 9
+	 Coor : 271.65,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.J2
+	 Layer : 0
+	 Coor : 366.15,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W15
+	 Layer : 0
+	 Coor : 225.59,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W11
+	 Layer : 0
+	 Coor : 225.59,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.A2
+	 Layer : 0
+	 Coor : 523.63,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.155
+	 Layer : 9
+	 Coor : 115.16,622.05
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B7
+	 Layer : 0
+	 Coor : 459.85,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.162
+	 Layer : 9
+	 Coor : 115.16,236.22
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.N20
+	 Layer : 0
+	 Coor : 308.27,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G25
+	 Layer : 0
+	 Coor : 390.95,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M7
+	 Layer : 0
+	 Coor : 322.05,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y2
+	 Layer : 0
+	 Coor : 211.81,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2786.2
+	 Layer : 0
+	 Coor : 562.99,696.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V5
+	 Layer : 0
+	 Coor : 239.37,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.B4
+	 Layer : 0
+	 Coor : 503.94,248.04
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N25
+	 Layer : 0
+	 Coor : 308.27,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.239
+	 Layer : 9
+	 Coor : 342.52,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.R6
+	 Layer : 0
+	 Coor : 248.04,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G15
+	 Layer : 0
+	 Coor : 390.95,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.22
+	 Layer : 9
+	 Coor : 1136.81,374.01
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA5
+	 Layer : 0
+	 Coor : 198.03,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.280
+	 Layer : 9
+	 Coor : 484.25,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA19
+	 Layer : 0
+	 Coor : 198.03,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.53
+	 Layer : 9
+	 Coor : 452.75,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2797.2
+	 Layer : 0
+	 Coor : 448.5,541.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T24
+	 Layer : 0
+	 Coor : 266.93,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.301
+	 Layer : 9
+	 Coor : 696.85,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.N5
+	 Layer : 0
+	 Coor : 287.41,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W5
+	 Layer : 0
+	 Coor : 225.59,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.N3
+	 Layer : 0
+	 Coor : 287.41,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C332.1
+	 Layer : 0
+	 Coor : 56.94,185
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.P7
+	 Layer : 0
+	 Coor : 294.49,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.102
+	 Layer : 9
+	 Coor : 1065.94,236.22
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.290
+	 Layer : 9
+	 Coor : 555.12,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.P16
+	 Layer : 0
+	 Coor : 294.49,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K24
+	 Layer : 0
+	 Coor : 349.61,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B11
+	 Layer : 0
+	 Coor : 459.85,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V7
+	 Layer : 0
+	 Coor : 188.98,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N24
+	 Layer : 0
+	 Coor : 308.27,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C305.1
+	 Layer : 0
+	 Coor : 293.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.258
+	 Layer : 9
+	 Coor : 342.52,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C302.2
+	 Layer : 0
+	 Coor : 428,541.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.240
+	 Layer : 9
+	 Coor : 413.38,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W8
+	 Layer : 0
+	 Coor : 225.59,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H10
+	 Layer : 0
+	 Coor : 385.83,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C23
+	 Layer : 0
+	 Coor : 446.07,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P11
+	 Layer : 0
+	 Coor : 294.49,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L13
+	 Layer : 0
+	 Coor : 335.83,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.88
+	 Layer : 9
+	 Coor : 370.08,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C285.2
+	 Layer : 0
+	 Coor : 132.99,1024.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.J8
+	 Layer : 0
+	 Coor : 366.15,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R5
+	 Layer : 0
+	 Coor : 280.71,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T25
+	 Layer : 0
+	 Coor : 266.93,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.144
+	 Layer : 9
+	 Coor : 115.16,1228.34
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R15
+	 Layer : 0
+	 Coor : 280.71,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.171
+	 Layer : 9
+	 Coor : 625.98,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD22X20
+22
+20
+ObsPad : C313.1
+	 Layer : 0
+	 Coor : 601.5,880.56
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.252
+	 Layer : 9
+	 Coor : 767.72,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC9
+	 Layer : 0
+	 Coor : 170.48,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.140
+	 Layer : 9
+	 Coor : 115.16,1448.82
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.D5
+	 Layer : 0
+	 Coor : 464.57,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C301.1
+	 Layer : 0
+	 Coor : 369.99,541.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.104
+	 Layer : 9
+	 Coor : 1065.94,346.46
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3158.1
+	 Layer : 0
+	 Coor : 534.51,991.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.152
+	 Layer : 9
+	 Coor : 115.16,787.4
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R3
+	 Layer : 0
+	 Coor : 280.71,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N16
+	 Layer : 0
+	 Coor : 308.27,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F9
+	 Layer : 0
+	 Coor : 404.73,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R17
+	 Layer : 0
+	 Coor : 280.71,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G7
+	 Layer : 0
+	 Coor : 390.95,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.129
+	 Layer : 9
+	 Coor : 755.9,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C328.2
+	 Layer : 0
+	 Coor : 96.01000000000001,214
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.P9
+	 Layer : 0
+	 Coor : 267.72,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3160.2
+	 Layer : 0
+	 Coor : 581.5,905.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.R2
+	 Layer : 0
+	 Coor : 280.71,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R660.2
+	 Layer : 0
+	 Coor : 59,479.99
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.124
+	 Layer : 9
+	 Coor : 1065.94,1448.82
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.H3
+	 Layer : 0
+	 Coor : 377.17,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.W1
+	 Layer : 0
+	 Coor : 169.3,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K21
+	 Layer : 0
+	 Coor : 349.61,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C296.2
+	 Layer : 0
+	 Coor : 514.99,1012
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C288.2
+	 Layer : 0
+	 Coor : 112.51,750.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A6
+	 Layer : 0
+	 Coor : 473.62,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.74
+	 Layer : 9
+	 Coor : 44.29,649.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.V18
+	 Layer : 0
+	 Coor : 239.37,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P1
+	 Layer : 0
+	 Coor : 294.49,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F23
+	 Layer : 0
+	 Coor : 404.73,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.225
+	 Layer : 9
+	 Coor : 980.31,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.H16
+	 Layer : 0
+	 Coor : 377.17,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T20
+	 Layer : 0
+	 Coor : 266.93,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.84
+	 Layer : 9
+	 Coor : 44.29,98.42
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.210
+	 Layer : 9
+	 Coor : 342.52,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.236
+	 Layer : 9
+	 Coor : 200.79,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R700.2
+	 Layer : 0
+	 Coor : 62.99,933
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.U13
+	 Layer : 0
+	 Coor : 253.15,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.101
+	 Layer : 9
+	 Coor : 1065.94,181.1
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R82.2
+	 Layer : 0
+	 Coor : 416.49,410.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W19
+	 Layer : 0
+	 Coor : 225.59,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G21
+	 Layer : 0
+	 Coor : 390.95,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C328.1
+	 Layer : 0
+	 Coor : 76.99,214
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.B2
+	 Layer : 0
+	 Coor : 459.85,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3165.2
+	 Layer : 0
+	 Coor : 75.2,664.31
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3176.1
+	 Layer : 0
+	 Coor : 369.99,501.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W9
+	 Layer : 0
+	 Coor : 225.59,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.T10
+	 Layer : 0
+	 Coor : 228.35,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W7
+	 Layer : 0
+	 Coor : 225.59,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R74.2
+	 Layer : 0
+	 Coor : 561.99,799
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.136
+	 Layer : 9
+	 Coor : 370.08,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.N1
+	 Layer : 0
+	 Coor : 287.41,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.R3
+	 Layer : 0
+	 Coor : 248.04,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P14
+	 Layer : 0
+	 Coor : 294.49,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.153
+	 Layer : 9
+	 Coor : 115.16,732.28
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC24
+	 Layer : 0
+	 Coor : 170.48,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G13
+	 Layer : 0
+	 Coor : 390.95,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C318.2
+	 Layer : 0
+	 Coor : 97.01000000000001,605.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W24
+	 Layer : 0
+	 Coor : 225.59,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.157
+	 Layer : 9
+	 Coor : 115.16,511.81
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.G1
+	 Layer : 0
+	 Coor : 405.52,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3179.1
+	 Layer : 0
+	 Coor : 253.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB12
+	 Layer : 0
+	 Coor : 184.25,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R19
+	 Layer : 0
+	 Coor : 280.71,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C334.2
+	 Layer : 0
+	 Coor : 329.51,410
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.201
+	 Layer : 9
+	 Coor : 980.31,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.97
+	 Layer : 9
+	 Coor : 866.14,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R81.1
+	 Layer : 0
+	 Coor : 616.9,278.71
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.T7
+	 Layer : 0
+	 Coor : 228.35,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C4
+	 Layer : 0
+	 Coor : 446.07,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.L3
+	 Layer : 0
+	 Coor : 326.78,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.177
+	 Layer : 9
+	 Coor : 980.31,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.18
+	 Layer : 9
+	 Coor : 1136.81,153.54
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.A3
+	 Layer : 0
+	 Coor : 473.62,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2791.1
+	 Layer : 0
+	 Coor : 469,522.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.U5
+	 Layer : 0
+	 Coor : 208.67,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC23
+	 Layer : 0
+	 Coor : 170.48,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R80.2
+	 Layer : 0
+	 Coor : 49.5,811.49
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+SMD22X20
+22
+20
+ObsPad : C336.2
+	 Layer : 0
+	 Coor : 92.06,148.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.64
+	 Layer : 9
+	 Coor : 44.29,1200.79
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.E5
+	 Layer : 0
+	 Coor : 444.89,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V19
+	 Layer : 0
+	 Coor : 239.37,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.197
+	 Layer : 9
+	 Coor : 767.72,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.V8
+	 Layer : 0
+	 Coor : 239.37,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.E7
+	 Layer : 0
+	 Coor : 444.89,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C313.2
+	 Layer : 0
+	 Coor : 601.5,845.4400000000001
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.A4
+	 Layer : 0
+	 Coor : 473.62,880.3200000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W10
+	 Layer : 0
+	 Coor : 225.59,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB14
+	 Layer : 0
+	 Coor : 184.25,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N7
+	 Layer : 0
+	 Coor : 308.27,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC13
+	 Layer : 0
+	 Coor : 170.48,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.277
+	 Layer : 9
+	 Coor : 696.85,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.G9
+	 Layer : 0
+	 Coor : 405.52,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2770.1
+	 Layer : 0
+	 Coor : 103.99,944
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.281
+	 Layer : 9
+	 Coor : 413.38,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E1
+	 Layer : 0
+	 Coor : 418.51,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C333.2
+	 Layer : 0
+	 Coor : 354.94,415
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.167
+	 Layer : 9
+	 Coor : 342.52,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.F12
+	 Layer : 0
+	 Coor : 404.73,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3164.1
+	 Layer : 0
+	 Coor : 95.2,645.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W3
+	 Layer : 0
+	 Coor : 169.3,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A17
+	 Layer : 0
+	 Coor : 473.62,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.12
+	 Layer : 9
+	 Coor : 783.46,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.29
+	 Layer : 9
+	 Coor : 1136.81,759.84
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.141
+	 Layer : 9
+	 Coor : 115.16,1393.7
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.110
+	 Layer : 9
+	 Coor : 1065.94,677.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.161
+	 Layer : 9
+	 Coor : 115.16,291.34
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E13
+	 Layer : 0
+	 Coor : 418.51,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.260
+	 Layer : 9
+	 Coor : 200.79,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.L7
+	 Layer : 0
+	 Coor : 335.83,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G1
+	 Layer : 0
+	 Coor : 390.95,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.C2
+	 Layer : 0
+	 Coor : 484.26,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V24
+	 Layer : 0
+	 Coor : 239.37,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3175.1
+	 Layer : 0
+	 Coor : 323.51,501.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.F7
+	 Layer : 0
+	 Coor : 404.73,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K25
+	 Layer : 0
+	 Coor : 349.61,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M12
+	 Layer : 0
+	 Coor : 322.05,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M1
+	 Layer : 0
+	 Coor : 322.05,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F8
+	 Layer : 0
+	 Coor : 404.73,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.49
+	 Layer : 9
+	 Coor : 673.23,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.231
+	 Layer : 9
+	 Coor : 555.12,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.L1
+	 Layer : 0
+	 Coor : 335.83,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.206
+	 Layer : 9
+	 Coor : 625.98,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2961.2
+	 Layer : 0
+	 Coor : 112.51,730.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD22X20
+22
+20
+ObsPad : C310.1
+	 Layer : 0
+	 Coor : 608.5,681.4400000000001
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.D1
+	 Layer : 0
+	 Coor : 432.29,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.297
+	 Layer : 9
+	 Coor : 980.31,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD12X12
+12
+12
+ObsPad : R69.2
+	 Layer : 0
+	 Coor : 49.5,891.49
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T11
+	 Layer : 0
+	 Coor : 266.93,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.230
+	 Layer : 9
+	 Coor : 625.98,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC3
+	 Layer : 0
+	 Coor : 170.48,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.282
+	 Layer : 9
+	 Coor : 342.52,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.A11
+	 Layer : 0
+	 Coor : 473.62,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2750.1
+	 Layer : 0
+	 Coor : 353.5,991.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C279.2
+	 Layer : 0
+	 Coor : 173.5,981.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.C19
+	 Layer : 0
+	 Coor : 446.07,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.J7
+	 Layer : 0
+	 Coor : 366.15,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V23
+	 Layer : 0
+	 Coor : 239.37,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB22
+	 Layer : 0
+	 Coor : 184.25,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.94
+	 Layer : 9
+	 Coor : 700.79,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2951.2
+	 Layer : 0
+	 Coor : 106.01,1024
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.L18
+	 Layer : 0
+	 Coor : 335.83,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.264
+	 Layer : 9
+	 Coor : 413.38,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.52
+	 Layer : 9
+	 Coor : 507.87,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.G8
+	 Layer : 0
+	 Coor : 405.52,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA23
+	 Layer : 0
+	 Coor : 198.03,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H7
+	 Layer : 0
+	 Coor : 385.83,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W13
+	 Layer : 0
+	 Coor : 225.59,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T13
+	 Layer : 0
+	 Coor : 266.93,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.116
+	 Layer : 9
+	 Coor : 1065.94,1007.87
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3176.2
+	 Layer : 0
+	 Coor : 389.01,501.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3168.2
+	 Layer : 0
+	 Coor : 153.5,981.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.183
+	 Layer : 9
+	 Coor : 555.12,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B16
+	 Layer : 0
+	 Coor : 459.85,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.24
+	 Layer : 9
+	 Coor : 1136.81,484.25
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.U9
+	 Layer : 0
+	 Coor : 208.67,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M3
+	 Layer : 0
+	 Coor : 322.05,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L5
+	 Layer : 0
+	 Coor : 335.83,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C14
+	 Layer : 0
+	 Coor : 446.07,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V8
+	 Layer : 0
+	 Coor : 188.98,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.147
+	 Layer : 9
+	 Coor : 115.16,1062.99
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C330.2
+	 Layer : 0
+	 Coor : 617,179.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.300
+	 Layer : 9
+	 Coor : 767.72,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2951.1
+	 Layer : 0
+	 Coor : 86.99,1024
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.J1
+	 Layer : 0
+	 Coor : 363.39,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L2
+	 Layer : 0
+	 Coor : 335.83,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H9
+	 Layer : 0
+	 Coor : 385.83,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.K9
+	 Layer : 0
+	 Coor : 346.46,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2740.1
+	 Layer : 0
+	 Coor : 70.59999999999999,1075.91
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.78
+	 Layer : 9
+	 Coor : 44.29,429.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.135
+	 Layer : 9
+	 Coor : 425.2,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD22X20
+22
+20
+ObsPad : C335.2
+	 Layer : 0
+	 Coor : 92.06,94.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.212
+	 Layer : 9
+	 Coor : 200.79,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E24
+	 Layer : 0
+	 Coor : 418.51,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC8
+	 Layer : 0
+	 Coor : 170.48,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P25
+	 Layer : 0
+	 Coor : 294.49,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V12
+	 Layer : 0
+	 Coor : 239.37,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC6
+	 Layer : 0
+	 Coor : 170.48,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.L5
+	 Layer : 0
+	 Coor : 326.78,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N19
+	 Layer : 0
+	 Coor : 308.27,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3180.2
+	 Layer : 0
+	 Coor : 304.49,481.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.92
+	 Layer : 9
+	 Coor : 590.55,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K16
+	 Layer : 0
+	 Coor : 349.61,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.54
+	 Layer : 9
+	 Coor : 397.64,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C304.1
+	 Layer : 0
+	 Coor : 323.01,521.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.J12
+	 Layer : 0
+	 Coor : 363.39,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.6
+	 Layer : 9
+	 Coor : 452.75,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.35
+	 Layer : 9
+	 Coor : 1136.81,1090.55
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.275
+	 Layer : 9
+	 Coor : 838.58,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B22
+	 Layer : 0
+	 Coor : 459.85,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H6
+	 Layer : 0
+	 Coor : 377.17,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.76
+	 Layer : 9
+	 Coor : 44.29,539.37
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.T9
+	 Layer : 0
+	 Coor : 266.93,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R76.1
+	 Layer : 0
+	 Coor : 620.01,623
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H23
+	 Layer : 0
+	 Coor : 377.17,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.86
+	 Layer : 9
+	 Coor : 259.84,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA2
+	 Layer : 0
+	 Coor : 198.03,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.R1
+	 Layer : 0
+	 Coor : 248.04,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC12
+	 Layer : 0
+	 Coor : 170.48,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.14
+	 Layer : 9
+	 Coor : 893.7000000000001,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U9
+	 Layer : 0
+	 Coor : 253.15,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M21
+	 Layer : 0
+	 Coor : 322.05,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C720.2
+	 Layer : 0
+	 Coor : 95.01000000000001,120.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.20
+	 Layer : 9
+	 Coor : 1136.81,263.78
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2788.1
+	 Layer : 0
+	 Coor : 161,521.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.U10
+	 Layer : 0
+	 Coor : 208.67,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.Y2
+	 Layer : 0
+	 Coor : 149.61,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B19
+	 Layer : 0
+	 Coor : 459.85,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V1
+	 Layer : 0
+	 Coor : 188.98,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P5
+	 Layer : 0
+	 Coor : 294.49,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C335.1
+	 Layer : 0
+	 Coor : 56.94,94.5
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : C3182.1
+	 Layer : 0
+	 Coor : 509,522.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C297.2
+	 Layer : 0
+	 Coor : 410.49,972
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AC7
+	 Layer : 0
+	 Coor : 170.48,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C720.1
+	 Layer : 0
+	 Coor : 75.99,120.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AA1
+	 Layer : 0
+	 Coor : 198.03,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R13
+	 Layer : 0
+	 Coor : 280.71,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.307
+	 Layer : 9
+	 Coor : 271.65,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C280.1
+	 Layer : 0
+	 Coor : 277.51,1058
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T10
+	 Layer : 0
+	 Coor : 266.93,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB16
+	 Layer : 0
+	 Coor : 184.25,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C294.2
+	 Layer : 0
+	 Coor : 410.49,992
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD12X12
+12
+12
+ObsPad : R74.1
+	 Layer : 0
+	 Coor : 581.01,799
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+SMD12X12
+12
+12
+ObsPad : R665.1
+	 Layer : 0
+	 Coor : 488.01,410
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.T23
+	 Layer : 0
+	 Coor : 266.93,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J5
+	 Layer : 0
+	 Coor : 363.39,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J16
+	 Layer : 0
+	 Coor : 363.39,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R75.1
+	 Layer : 0
+	 Coor : 582.01,716.5
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.154
+	 Layer : 9
+	 Coor : 115.16,677.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2792.1
+	 Layer : 0
+	 Coor : 323.01,541.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C300.2
+	 Layer : 0
+	 Coor : 410.49,1012
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.39
+	 Layer : 9
+	 Coor : 1136.81,1311.02
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA6
+	 Layer : 0
+	 Coor : 198.03,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C311.1
+	 Layer : 0
+	 Coor : 581.51,736.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3181.2
+	 Layer : 0
+	 Coor : 389.01,481.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V3
+	 Layer : 0
+	 Coor : 239.37,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC19
+	 Layer : 0
+	 Coor : 170.48,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U2
+	 Layer : 0
+	 Coor : 253.15,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.50
+	 Layer : 9
+	 Coor : 618.11,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2781.1
+	 Layer : 0
+	 Coor : 133.5,1003.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V16
+	 Layer : 0
+	 Coor : 239.37,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J11
+	 Layer : 0
+	 Coor : 363.39,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2670.2
+	 Layer : 0
+	 Coor : 49.5,871.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V20
+	 Layer : 0
+	 Coor : 239.37,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.T9
+	 Layer : 0
+	 Coor : 228.35,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3158.2
+	 Layer : 0
+	 Coor : 515.49,991.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.E9
+	 Layer : 0
+	 Coor : 418.51,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.73
+	 Layer : 9
+	 Coor : 44.29,704.72
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2784.2
+	 Layer : 0
+	 Coor : 561.5,905.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.176
+	 Layer : 9
+	 Coor : 980.31,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C293.1
+	 Layer : 0
+	 Coor : 471.5,1015.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.106
+	 Layer : 9
+	 Coor : 1065.94,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.266
+	 Layer : 9
+	 Coor : 555.12,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K6
+	 Layer : 0
+	 Coor : 349.61,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H8
+	 Layer : 0
+	 Coor : 385.83,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N2
+	 Layer : 0
+	 Coor : 308.27,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA17
+	 Layer : 0
+	 Coor : 198.03,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.F3
+	 Layer : 0
+	 Coor : 425.2,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J24
+	 Layer : 0
+	 Coor : 363.39,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2795.1
+	 Layer : 0
+	 Coor : 76.99,353.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.A1
+	 Layer : 0
+	 Coor : 473.62,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A16
+	 Layer : 0
+	 Coor : 473.62,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.304
+	 Layer : 9
+	 Coor : 484.25,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.A22
+	 Layer : 0
+	 Coor : 473.62,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R660.1
+	 Layer : 0
+	 Coor : 59,499.01
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.V14
+	 Layer : 0
+	 Coor : 239.37,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.16
+	 Layer : 9
+	 Coor : 1003.94,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.U16
+	 Layer : 0
+	 Coor : 253.15,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C312.1
+	 Layer : 0
+	 Coor : 568.5,880.56
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : C334.1
+	 Layer : 0
+	 Coor : 310.49,410
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.226
+	 Layer : 9
+	 Coor : 909.4500000000001,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.M6
+	 Layer : 0
+	 Coor : 307.09,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2690.2
+	 Layer : 0
+	 Coor : 580.51,778.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W9
+	 Layer : 0
+	 Coor : 169.3,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.219
+	 Layer : 9
+	 Coor : 625.98,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C288.1
+	 Layer : 0
+	 Coor : 93.49,750.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.P10
+	 Layer : 0
+	 Coor : 294.49,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F20
+	 Layer : 0
+	 Coor : 404.73,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T18
+	 Layer : 0
+	 Coor : 266.93,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C295.1
+	 Layer : 0
+	 Coor : 429.51,1032
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.233
+	 Layer : 9
+	 Coor : 413.38,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.H20
+	 Layer : 0
+	 Coor : 377.17,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.H5
+	 Layer : 0
+	 Coor : 385.83,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U21
+	 Layer : 0
+	 Coor : 253.15,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.U2
+	 Layer : 0
+	 Coor : 208.67,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N21
+	 Layer : 0
+	 Coor : 308.27,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B6
+	 Layer : 0
+	 Coor : 459.85,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E8
+	 Layer : 0
+	 Coor : 418.51,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T2
+	 Layer : 0
+	 Coor : 266.93,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB18
+	 Layer : 0
+	 Coor : 184.25,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.184
+	 Layer : 9
+	 Coor : 484.25,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.A2
+	 Layer : 0
+	 Coor : 473.62,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C318.1
+	 Layer : 0
+	 Coor : 77.99,605.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.E7
+	 Layer : 0
+	 Coor : 418.51,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.130
+	 Layer : 9
+	 Coor : 700.79,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.R8
+	 Layer : 0
+	 Coor : 248.04,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.293
+	 Layer : 9
+	 Coor : 767.72,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.68
+	 Layer : 9
+	 Coor : 44.29,980.31
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AB17
+	 Layer : 0
+	 Coor : 184.25,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H5
+	 Layer : 0
+	 Coor : 377.17,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P18
+	 Layer : 0
+	 Coor : 294.49,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.243
+	 Layer : 9
+	 Coor : 625.98,834.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W18
+	 Layer : 0
+	 Coor : 225.59,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.21
+	 Layer : 9
+	 Coor : 1136.81,318.9
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.B17
+	 Layer : 0
+	 Coor : 459.85,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M13
+	 Layer : 0
+	 Coor : 322.05,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R1
+	 Layer : 0
+	 Coor : 280.71,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.B9
+	 Layer : 0
+	 Coor : 503.94,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.196
+	 Layer : 9
+	 Coor : 696.85,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.M5
+	 Layer : 0
+	 Coor : 322.05,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N13
+	 Layer : 0
+	 Coor : 308.27,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2700.2
+	 Layer : 0
+	 Coor : 377,1031.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+SMD12X12
+12
+12
+ObsPad : R83.2
+	 Layer : 0
+	 Coor : 122,561.99
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.B10
+	 Layer : 0
+	 Coor : 503.94,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2786.1
+	 Layer : 0
+	 Coor : 582.01,696.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.B9
+	 Layer : 0
+	 Coor : 459.85,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V17
+	 Layer : 0
+	 Coor : 239.37,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N23
+	 Layer : 0
+	 Coor : 308.27,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.R2
+	 Layer : 0
+	 Coor : 248.04,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.199
+	 Layer : 9
+	 Coor : 909.4500000000001,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.N10
+	 Layer : 0
+	 Coor : 308.27,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G16
+	 Layer : 0
+	 Coor : 390.95,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y24
+	 Layer : 0
+	 Coor : 211.81,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E15
+	 Layer : 0
+	 Coor : 418.51,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C700.2
+	 Layer : 0
+	 Coor : 617,76.51000000000001
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.131
+	 Layer : 9
+	 Coor : 645.67,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+SMD22X20
+22
+20
+ObsPad : C333.1
+	 Layer : 0
+	 Coor : 390.06,415
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.125
+	 Layer : 9
+	 Coor : 976.38,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.T1
+	 Layer : 0
+	 Coor : 228.35,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N11
+	 Layer : 0
+	 Coor : 308.27,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C307.2
+	 Layer : 0
+	 Coor : 561.99,819
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2760.2
+	 Layer : 0
+	 Coor : 237.51,1049.9
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.K11
+	 Layer : 0
+	 Coor : 349.61,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J6
+	 Layer : 0
+	 Coor : 363.39,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F25
+	 Layer : 0
+	 Coor : 404.73,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W6
+	 Layer : 0
+	 Coor : 225.59,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2784.1
+	 Layer : 0
+	 Coor : 561.5,925.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.C7
+	 Layer : 0
+	 Coor : 446.07,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2792.2
+	 Layer : 0
+	 Coor : 303.99,541.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H21
+	 Layer : 0
+	 Coor : 377.17,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A8
+	 Layer : 0
+	 Coor : 473.62,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.A3
+	 Layer : 0
+	 Coor : 523.63,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.203
+	 Layer : 9
+	 Coor : 838.58,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.T15
+	 Layer : 0
+	 Coor : 266.93,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C314.2
+	 Layer : 0
+	 Coor : 612.5,763.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.R6
+	 Layer : 0
+	 Coor : 280.71,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.41
+	 Layer : 9
+	 Coor : 1136.81,1421.26
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.E10
+	 Layer : 0
+	 Coor : 444.89,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.65
+	 Layer : 9
+	 Coor : 44.29,1145.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C278.2
+	 Layer : 0
+	 Coor : 313.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3162.2
+	 Layer : 0
+	 Coor : 451.5,1031.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.H1
+	 Layer : 0
+	 Coor : 385.83,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.G10
+	 Layer : 0
+	 Coor : 405.52,129.93
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P17
+	 Layer : 0
+	 Coor : 294.49,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3172.1
+	 Layer : 0
+	 Coor : 103.99,884
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W8
+	 Layer : 0
+	 Coor : 169.3,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L20
+	 Layer : 0
+	 Coor : 335.83,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3183.1
+	 Layer : 0
+	 Coor : 581.01,527
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.E9
+	 Layer : 0
+	 Coor : 444.89,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U24
+	 Layer : 0
+	 Coor : 253.15,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.302
+	 Layer : 9
+	 Coor : 625.98,1307.09
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.D1
+	 Layer : 0
+	 Coor : 464.57,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.98
+	 Layer : 9
+	 Coor : 921.26,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.G23
+	 Layer : 0
+	 Coor : 390.95,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F3
+	 Layer : 0
+	 Coor : 404.73,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.221
+	 Layer : 9
+	 Coor : 767.72,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.A1
+	 Layer : 0
+	 Coor : 523.63,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N17
+	 Layer : 0
+	 Coor : 308.27,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M14
+	 Layer : 0
+	 Coor : 322.05,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3167.1
+	 Layer : 0
+	 Coor : 193.5,1001.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2690.1
+	 Layer : 0
+	 Coor : 561.49,778.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.283
+	 Layer : 9
+	 Coor : 271.65,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.U1
+	 Layer : 0
+	 Coor : 208.67,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U20
+	 Layer : 0
+	 Coor : 253.15,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C12
+	 Layer : 0
+	 Coor : 446.07,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2781.2
+	 Layer : 0
+	 Coor : 133.5,984.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.227
+	 Layer : 9
+	 Coor : 838.58,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.P9
+	 Layer : 0
+	 Coor : 294.49,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3162.1
+	 Layer : 0
+	 Coor : 451.5,1012.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.E6
+	 Layer : 0
+	 Coor : 444.89,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M6
+	 Layer : 0
+	 Coor : 322.05,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.79
+	 Layer : 9
+	 Coor : 44.29,374.01
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.185
+	 Layer : 9
+	 Coor : 413.38,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.D6
+	 Layer : 0
+	 Coor : 464.57,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L9
+	 Layer : 0
+	 Coor : 335.83,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.95
+	 Layer : 9
+	 Coor : 755.9,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2710.1
+	 Layer : 0
+	 Coor : 103.99,810.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.112
+	 Layer : 9
+	 Coor : 1065.94,787.4
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C308.2
+	 Layer : 0
+	 Coor : 603.99,743
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.J18
+	 Layer : 0
+	 Coor : 363.39,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M24
+	 Layer : 0
+	 Coor : 322.05,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W20
+	 Layer : 0
+	 Coor : 225.59,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB6
+	 Layer : 0
+	 Coor : 184.25,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3165.1
+	 Layer : 0
+	 Coor : 75.2,645.29
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.267
+	 Layer : 9
+	 Coor : 625.98,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.C1
+	 Layer : 0
+	 Coor : 446.07,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA7
+	 Layer : 0
+	 Coor : 198.03,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.M1
+	 Layer : 0
+	 Coor : 307.09,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.149
+	 Layer : 9
+	 Coor : 115.16,952.75
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.181
+	 Layer : 9
+	 Coor : 696.85,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.179
+	 Layer : 9
+	 Coor : 838.58,362.2
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C337.2
+	 Layer : 0
+	 Coor : 620,419.97
+	 Type : KM0P8S
+		 Width : 0.8
+		 Height : 0.8
+ObsPad : C309.1
+	 Layer : 0
+	 Coor : 580.51,621
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W2
+	 Layer : 0
+	 Coor : 225.59,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3160.1
+	 Layer : 0
+	 Coor : 581.5,925.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3170.2
+	 Layer : 0
+	 Coor : 333.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.40
+	 Layer : 9
+	 Coor : 1136.81,1366.14
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.M3
+	 Layer : 0
+	 Coor : 307.09,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.59
+	 Layer : 9
+	 Coor : 44.29,1476.38
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R14
+	 Layer : 0
+	 Coor : 280.71,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C329.1
+	 Layer : 0
+	 Coor : 617,239.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AA9
+	 Layer : 0
+	 Coor : 198.03,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB2
+	 Layer : 0
+	 Coor : 184.25,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3174.1
+	 Layer : 0
+	 Coor : 87.49,1004
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.P1
+	 Layer : 0
+	 Coor : 267.72,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA12
+	 Layer : 0
+	 Coor : 198.03,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N9
+	 Layer : 0
+	 Coor : 308.27,811.42
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C292.2
+	 Layer : 0
+	 Coor : 513.49,971.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.C17
+	 Layer : 0
+	 Coor : 446.07,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T6
+	 Layer : 0
+	 Coor : 266.93,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C16
+	 Layer : 0
+	 Coor : 446.07,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T17
+	 Layer : 0
+	 Coor : 266.93,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.M2
+	 Layer : 0
+	 Coor : 307.09,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2791.2
+	 Layer : 0
+	 Coor : 469,541.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.89
+	 Layer : 9
+	 Coor : 425.2,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2720.1
+	 Layer : 0
+	 Coor : 103.99,904
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.158
+	 Layer : 9
+	 Coor : 115.16,456.69
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.W16
+	 Layer : 0
+	 Coor : 225.59,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G10
+	 Layer : 0
+	 Coor : 390.95,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A13
+	 Layer : 0
+	 Coor : 473.62,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.214
+	 Layer : 9
+	 Coor : 271.65,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.90
+	 Layer : 9
+	 Coor : 480.31,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.204
+	 Layer : 9
+	 Coor : 767.72,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.H12
+	 Layer : 0
+	 Coor : 377.17,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.A5
+	 Layer : 0
+	 Coor : 523.63,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.E1
+	 Layer : 0
+	 Coor : 444.89,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA25
+	 Layer : 0
+	 Coor : 198.03,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C290.2
+	 Layer : 0
+	 Coor : 123.01,844
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.L12
+	 Layer : 0
+	 Coor : 335.83,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.145
+	 Layer : 9
+	 Coor : 115.16,1173.23
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.163
+	 Layer : 9
+	 Coor : 115.16,181.1
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3181.1
+	 Layer : 0
+	 Coor : 369.99,481.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AC25
+	 Layer : 0
+	 Coor : 170.48,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L16
+	 Layer : 0
+	 Coor : 335.83,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.46
+	 Layer : 9
+	 Coor : 838.58,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C316.2
+	 Layer : 0
+	 Coor : 49.5,712.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.C5
+	 Layer : 0
+	 Coor : 446.07,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.J1
+	 Layer : 0
+	 Coor : 366.15,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.114
+	 Layer : 9
+	 Coor : 1065.94,897.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.223
+	 Layer : 9
+	 Coor : 909.4500000000001,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AC18
+	 Layer : 0
+	 Coor : 170.48,687.4
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2794.1
+	 Layer : 0
+	 Coor : 581.01,587
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W21
+	 Layer : 0
+	 Coor : 225.59,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V9
+	 Layer : 0
+	 Coor : 188.98,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.289
+	 Layer : 9
+	 Coor : 484.25,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3159.2
+	 Layer : 0
+	 Coor : 471.5,972.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H7
+	 Layer : 0
+	 Coor : 377.17,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.4
+	 Layer : 9
+	 Coor : 342.52,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.207
+	 Layer : 9
+	 Coor : 555.12,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.N6
+	 Layer : 0
+	 Coor : 287.41,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.K2
+	 Layer : 0
+	 Coor : 346.46,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3166.1
+	 Layer : 0
+	 Coor : 103.99,790.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.F24
+	 Layer : 0
+	 Coor : 404.73,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.118
+	 Layer : 9
+	 Coor : 1065.94,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.F9
+	 Layer : 0
+	 Coor : 425.2,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD22X20
+22
+20
+ObsPad : C312.2
+	 Layer : 0
+	 Coor : 568.5,845.4400000000001
+	 Type : SMD22X20
+		 Width : 22.0
+		 Height : 20.0
+ObsPad : U14.L14
+	 Layer : 0
+	 Coor : 335.83,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B23
+	 Layer : 0
+	 Coor : 459.85,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C321.2
+	 Layer : 0
+	 Coor : 233.5,971.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.W14
+	 Layer : 0
+	 Coor : 225.59,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.160
+	 Layer : 9
+	 Coor : 115.16,346.46
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.J8
+	 Layer : 0
+	 Coor : 363.39,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C21
+	 Layer : 0
+	 Coor : 446.07,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A7
+	 Layer : 0
+	 Coor : 473.62,838.98
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N1
+	 Layer : 0
+	 Coor : 308.27,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C299.2
+	 Layer : 0
+	 Coor : 451.5,1058.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.J2
+	 Layer : 0
+	 Coor : 363.39,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y1
+	 Layer : 0
+	 Coor : 211.81,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C330.1
+	 Layer : 0
+	 Coor : 617,199.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.128
+	 Layer : 9
+	 Coor : 811.02,1459.64
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.A4
+	 Layer : 0
+	 Coor : 523.63,248.04
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.R9
+	 Layer : 0
+	 Coor : 248.04,149.61
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.257
+	 Layer : 9
+	 Coor : 413.38,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.173
+	 Layer : 9
+	 Coor : 767.72,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.87
+	 Layer : 9
+	 Coor : 314.96,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.284
+	 Layer : 9
+	 Coor : 200.79,1118.11
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C291.2
+	 Layer : 0
+	 Coor : 201.99,541.3
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.B1
+	 Layer : 0
+	 Coor : 503.94,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC16
+	 Layer : 0
+	 Coor : 170.48,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T3
+	 Layer : 0
+	 Coor : 266.93,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AB5
+	 Layer : 0
+	 Coor : 184.25,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M20
+	 Layer : 0
+	 Coor : 322.05,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AA22
+	 Layer : 0
+	 Coor : 198.03,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M25
+	 Layer : 0
+	 Coor : 322.05,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.L19
+	 Layer : 0
+	 Coor : 335.83,673.62
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3161.2
+	 Layer : 0
+	 Coor : 514.49,1032
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.109
+	 Layer : 9
+	 Coor : 1065.94,622.05
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.262
+	 Layer : 9
+	 Coor : 271.65,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.69
+	 Layer : 9
+	 Coor : 44.29,925.2000000000001
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.F2
+	 Layer : 0
+	 Coor : 404.73,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B21
+	 Layer : 0
+	 Coor : 459.85,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M15
+	 Layer : 0
+	 Coor : 322.05,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.K1
+	 Layer : 0
+	 Coor : 346.46,307.09
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G14
+	 Layer : 0
+	 Coor : 390.95,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K14
+	 Layer : 0
+	 Coor : 349.61,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2948.1
+	 Layer : 0
+	 Coor : 582.01,656.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.151
+	 Layer : 9
+	 Coor : 115.16,842.52
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.E14
+	 Layer : 0
+	 Coor : 418.51,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.K10
+	 Layer : 0
+	 Coor : 349.61,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.113
+	 Layer : 9
+	 Coor : 1065.94,842.52
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.F14
+	 Layer : 0
+	 Coor : 404.73,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.B14
+	 Layer : 0
+	 Coor : 459.85,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R83.1
+	 Layer : 0
+	 Coor : 122,581.01
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.W6
+	 Layer : 0
+	 Coor : 169.3,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E11
+	 Layer : 0
+	 Coor : 418.51,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.172
+	 Layer : 9
+	 Coor : 696.85,267.71
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.229
+	 Layer : 9
+	 Coor : 696.85,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.K17
+	 Layer : 0
+	 Coor : 349.61,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F11
+	 Layer : 0
+	 Coor : 404.73,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.287
+	 Layer : 9
+	 Coor : 342.52,1212.6
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2782.1
+	 Layer : 0
+	 Coor : 582.01,676.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AA11
+	 Layer : 0
+	 Coor : 198.03,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC10
+	 Layer : 0
+	 Coor : 170.48,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2680.2
+	 Layer : 0
+	 Coor : 581.01,758
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C3163.2
+	 Layer : 0
+	 Coor : 621.5,905.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H25
+	 Layer : 0
+	 Coor : 377.17,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.F6
+	 Layer : 0
+	 Coor : 404.73,852.76
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C292.1
+	 Layer : 0
+	 Coor : 532.51,971.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.F7
+	 Layer : 0
+	 Coor : 425.2,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+SMD12X12
+12
+12
+ObsPad : R84.1
+	 Layer : 0
+	 Coor : 336,1036.99
+	 Type : SMD12X12
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C700.1
+	 Layer : 0
+	 Coor : 617,57.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.B24
+	 Layer : 0
+	 Coor : 459.85,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.256
+	 Layer : 9
+	 Coor : 484.25,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.34
+	 Layer : 9
+	 Coor : 1136.81,1035.43
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C3171.1
+	 Layer : 0
+	 Coor : 103.99,964
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.H2
+	 Layer : 0
+	 Coor : 377.17,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.E3
+	 Layer : 0
+	 Coor : 418.51,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.222
+	 Layer : 9
+	 Coor : 838.58,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C289.1
+	 Layer : 0
+	 Coor : 93.49,690.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C295.2
+	 Layer : 0
+	 Coor : 410.49,1032
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.F1
+	 Layer : 0
+	 Coor : 404.73,921.65
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.48
+	 Layer : 9
+	 Coor : 728.35,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.A6
+	 Layer : 0
+	 Coor : 523.63,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC14
+	 Layer : 0
+	 Coor : 170.48,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.P3
+	 Layer : 0
+	 Coor : 267.72,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A10
+	 Layer : 0
+	 Coor : 473.62,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3161.1
+	 Layer : 0
+	 Coor : 533.51,1032
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C285.1
+	 Layer : 0
+	 Coor : 152.01,1024.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.T6
+	 Layer : 0
+	 Coor : 228.35,208.67
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C305.2
+	 Layer : 0
+	 Coor : 293.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2961.1
+	 Layer : 0
+	 Coor : 93.49,730.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.91
+	 Layer : 9
+	 Coor : 535.43,115.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.AA21
+	 Layer : 0
+	 Coor : 198.03,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P3
+	 Layer : 0
+	 Coor : 294.49,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.V3
+	 Layer : 0
+	 Coor : 188.98,267.72
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2793.2
+	 Layer : 0
+	 Coor : 389.01,521.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.B20
+	 Layer : 0
+	 Coor : 459.85,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.15
+	 Layer : 9
+	 Coor : 948.8200000000001,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.224
+	 Layer : 9
+	 Coor : 980.31,645.67
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.115
+	 Layer : 9
+	 Coor : 1065.94,952.75
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.156
+	 Layer : 9
+	 Coor : 115.16,566.93
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.G7
+	 Layer : 0
+	 Coor : 405.52,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U11
+	 Layer : 0
+	 Coor : 253.15,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.P21
+	 Layer : 0
+	 Coor : 294.49,646.06
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U16.F5
+	 Layer : 0
+	 Coor : 425.2,228.35
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.H17
+	 Layer : 0
+	 Coor : 377.17,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.A5
+	 Layer : 0
+	 Coor : 473.62,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.D23
+	 Layer : 0
+	 Coor : 432.29,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C304.2
+	 Layer : 0
+	 Coor : 303.99,521.5
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.5
+	 Layer : 9
+	 Coor : 397.64,44.29
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C520.2
+	 Layer : 0
+	 Coor : 376.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB15
+	 Layer : 0
+	 Coor : 184.25,728.74
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V25
+	 Layer : 0
+	 Coor : 239.37,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.270
+	 Layer : 9
+	 Coor : 838.58,1023.62
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.L17
+	 Layer : 0
+	 Coor : 335.83,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N5
+	 Layer : 0
+	 Coor : 308.27,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.C11
+	 Layer : 0
+	 Coor : 446.07,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3164.2
+	 Layer : 0
+	 Coor : 95.2,664.51
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.P20
+	 Layer : 0
+	 Coor : 294.49,659.84
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.72
+	 Layer : 9
+	 Coor : 44.29,759.84
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C2700.1
+	 Layer : 0
+	 Coor : 377,1011.99
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.R24
+	 Layer : 0
+	 Coor : 280.71,604.73
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.N14
+	 Layer : 0
+	 Coor : 308.27,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.Y23
+	 Layer : 0
+	 Coor : 211.81,618.5
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.234
+	 Layer : 9
+	 Coor : 342.52,740.16
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.K7
+	 Layer : 0
+	 Coor : 346.46,188.98
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3159.1
+	 Layer : 0
+	 Coor : 471.5,992.01
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.U25
+	 Layer : 0
+	 Coor : 253.15,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.M10
+	 Layer : 0
+	 Coor : 322.05,797.64
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.V11
+	 Layer : 0
+	 Coor : 239.37,783.86
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.103
+	 Layer : 9
+	 Coor : 1065.94,291.34
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R8
+	 Layer : 0
+	 Coor : 280.71,825.2000000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.J13
+	 Layer : 0
+	 Coor : 363.39,756.3
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.AC22
+	 Layer : 0
+	 Coor : 170.48,632.28
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C3178.2
+	 Layer : 0
+	 Coor : 561.99,547
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.AB25
+	 Layer : 0
+	 Coor : 184.25,590.9500000000001
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C283.2
+	 Layer : 0
+	 Coor : 106.51,984
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.U17
+	 Layer : 0
+	 Coor : 253.15,701.18
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.U14
+	 Layer : 0
+	 Coor : 253.15,742.52
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.R16
+	 Layer : 0
+	 Coor : 280.71,714.96
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.51
+	 Layer : 9
+	 Coor : 562.99,1530.51
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : C303.1
+	 Layer : 0
+	 Coor : 581.01,567
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2770.2
+	 Layer : 0
+	 Coor : 123.01,944
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.M2
+	 Layer : 0
+	 Coor : 322.05,907.87
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C2797.1
+	 Layer : 0
+	 Coor : 448.5,522.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.F2
+	 Layer : 0
+	 Coor : 425.2,287.41
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.211
+	 Layer : 9
+	 Coor : 271.65,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.205
+	 Layer : 9
+	 Coor : 696.85,551.18
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U14.R12
+	 Layer : 0
+	 Coor : 280.71,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C296.1
+	 Layer : 0
+	 Coor : 534.01,1012
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U16.T8
+	 Layer : 0
+	 Coor : 228.35,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.T5
+	 Layer : 0
+	 Coor : 266.93,866.54
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+KM1P2X0P9
+1P2
+0P9
+ObsPad : U18.254
+	 Layer : 9
+	 Coor : 625.98,929.13
+	 Type : KM1P2X0P9
+		 Width : 1.2
+		 Height : 0.9
+ObsPad : U16.A8
+	 Layer : 0
+	 Coor : 523.63,169.3
+	 Type : KM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.G12
+	 Layer : 0
+	 Coor : 390.95,770.08
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : C500.1
+	 Layer : 0
+	 Coor : 181,521.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : C2796.2
+	 Layer : 0
+	 Coor : 273.5,972.49
+	 Type : SMD12S
+		 Width : 12.0
+		 Height : 12.0
+ObsPad : U14.C3
+	 Layer : 0
+	 Coor : 446.07,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+ObsPad : U14.W3
+	 Layer : 0
+	 Coor : 225.59,894.1
+	 Type : KM0P22C_SM0P25C
+		 Width : 0.25
+		 Height : 0.25
+MAX_LAYER: 10
+{'BOTTOM': 9, 'S9': 8, 'S2': 1, 'S3': 2, 'S8': 7, 'S4': 3, 'TOP': 0, 'S6': 5, 'S7': 6, 'S5': 4}
