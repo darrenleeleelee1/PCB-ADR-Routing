@@ -22,14 +22,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
+
 # Function to parse the .adr file and extract nets and pins data
 def parse_adr(content):
     """
     Parses the contents of an .adr file and extracts the nets and pin information.
-    
+
     Parameters:
         content (list of str): The lines of the .adr file as a list of strings.
-        
+
     Returns:
         dict: A dictionary with net names as keys and lists of components and their pins as values.
     """
@@ -56,15 +57,16 @@ def parse_adr(content):
                 nets[current_net].append({'component': component_info, 'x': x, 'y': y})
     return nets
 
+
 # Function to normalize coordinates
 def normalize_coordinates(nets):
     """
     Normalizes the coordinates of the pins to fit within a unit square, which helps
     in plotting them on a consistent scale.
-    
+
     Parameters:
         nets (dict): The dictionary of nets with component and pin information.
-        
+
     Returns:
         dict: The updated dictionary with normalized coordinates.
     """
@@ -80,11 +82,12 @@ def normalize_coordinates(nets):
 
     return nets
 
+
 # Function to plot the nets with smaller circles and save as an image file
 def plot_nets(nets, output_file_path):
     """
     Plots the nets with components represented as small circles and saves the figure to a file.
-    
+
     Parameters:
         nets (dict): The dictionary of nets with component and pin information.
         output_file_path (str): The path to the output image file.
@@ -106,7 +109,7 @@ def plot_nets(nets, output_file_path):
             # Reduce the circle size further to avoid overlap
             circle = plt.Circle((x, y), 0.003, fill=False, edgecolor=color, lw=1)
             ax.add_patch(circle)
-    
+
     # Set limits to include all points
     margin = 0.01
     ax.set_xlim(-margin, 1 + margin)
@@ -122,7 +125,8 @@ def plot_nets(nets, output_file_path):
     plt.tight_layout()
     plt.savefig(output_file_path, dpi=300, facecolor=ax.get_facecolor())
     plt.close()
-    
+
+
 # Main execution part
 if __name__ == '__main__':
     # Check if two arguments are passed
