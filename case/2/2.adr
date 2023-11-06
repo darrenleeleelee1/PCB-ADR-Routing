@@ -1,3 +1,4 @@
+3-pin nets: 31
 NetName: DDR_ACT_N
     U45.AJ30 4789.83,3528.77
     U61.L3 4718.05,2895.89
@@ -122,8 +123,3 @@ NetName: VDD_DDR_VREF
     U45.Y24 4636.28,3759.09
     U61.M1 4655.06,2864.39
     U109.M1 4276.98,2864.39
-3-pin nets: 31
-Occurrences of each pin:
-U45 : 33
-U61 : 30
-U109 : 30

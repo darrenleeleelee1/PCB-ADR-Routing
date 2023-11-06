@@ -1,0 +1,6 @@
+[n]-pin nets: [Number of n-pin nets]
+NetName: [Net Identifier]
+    [Component].[Pin] [X Coordinate],[Y Coordinate]
+    [Component].[Pin] [X Coordinate],[Y Coordinate]
+    ...
+...

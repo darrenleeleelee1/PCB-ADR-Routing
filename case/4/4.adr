@@ -1,3 +1,4 @@
+3-pin nets: 46
 NetName: DRAM0_A0
     U3.N3 1017.85,1290.61
     U4.N3 1017.85,1841.79
@@ -182,14 +183,8 @@ NetName: DRAM1_WE#
     U5.L3 1080.84,2857.54
     U6.L3 1080.84,2306.36
     U50.J4 1919.42,2207.93
-3-pin nets: 46
-Occurrences of each pin:
-U3 : 23
-U4 : 23
-U50 : 46
-U5 : 23
-U6 : 23
 
+4-pin nets: 2
 NetName: DRAM0_VREF
     U3.H1 1175.33,1353.6
     U3.M8 1049.34,1133.13
@@ -200,9 +195,3 @@ NetName: DRAM1_VREF
     U5.M8 1049.34,2700.06
     U6.H1 1175.33,2369.35
     U6.M8 1049.34,2148.88
-4-pin nets: 2
-Occurrences of each pin:
-U3 : 2
-U4 : 2
-U5 : 2
-U6 : 2

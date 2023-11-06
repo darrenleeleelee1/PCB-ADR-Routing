@@ -1,3 +1,4 @@
+3-pin nets: 29
 NetName: DDR_ADDR[0]
     U45.AB31 4815.42,3707.91
     U61.N3 5278.57,2897.79
@@ -114,8 +115,3 @@ NetName: VDD_DDR_PLL
     U45.AA24 4636.28,3733.5
     U45.AD20 4533.92,3656.73
     U45.AD23 4610.69,3656.73
-3-pin nets: 29
-Occurrences of each pin:
-U45 : 31
-U61 : 28
-U64 : 28
