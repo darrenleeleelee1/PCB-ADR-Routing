@@ -4,7 +4,7 @@ Script: count_net.py
 Description: Parses a netlist file, categorizes nets by pin count, and prints information based on verbosity level.
 Usage: ./count_net.py <case.netlist> [verbose={0, 1, 2}]
        - <case.netlist>: Path to the netlist file.
-       - verbose: Verbosity level (default=0). 
+       - verbose: Verbosity level (default=0).
            0: Prints only net counts.
            1: Prints net counts and pin occurrences in nets.
            2: Prints net counts, pin occurrences, and full netlist categorized by pin count.
@@ -13,6 +13,7 @@ Example: ./count_net.py ../2/2.netlist 1
 import sys
 import os
 from collections import defaultdict
+
 
 def parse_netlist(file_path, verbose=0):
     if not os.path.exists(file_path):
@@ -77,6 +78,7 @@ def parse_netlist(file_path, verbose=0):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
+
 def main():
     if len(sys.argv) == 2:
         print(f"Input netlist: {sys.argv[1]}")
@@ -86,6 +88,7 @@ def main():
         parse_netlist(sys.argv[1], int(sys.argv[2]))
     else:
         print("Not enough command-line arguments provided.")
+
 
 if __name__ == "__main__":
     main()
