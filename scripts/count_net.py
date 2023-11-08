@@ -32,7 +32,10 @@ def parse_netlist(file_path, verbose=0):
 
         for line in lines:
             stripped_line = line.strip()
-
+            
+            if stripped_line.startswith('#'):
+                continue
+            
             if stripped_line.startswith('NetName'):
                 net_name = stripped_line.split()[1]
                 pin_data = []
@@ -66,8 +69,10 @@ def parse_netlist(file_path, verbose=0):
                 for net_info in nets_info[pin_count]:
                     net, pins = net_info
                     print(f"NetName: {net}")
+                    print(f"PIN START")
                     for pin in pins:
                         print(f"    {pin}")
+                    print(f"PIN END")
             print(f"{pin_count}-pin nets: {net_categories[pin_count]}")
             if verbose >= 1:
                 print("Occurrences of each pin:")

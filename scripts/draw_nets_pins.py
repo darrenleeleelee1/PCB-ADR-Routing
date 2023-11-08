@@ -47,6 +47,8 @@ def parse_adr(content):
         if net_match:
             pin_count, net_count = map(int, net_match.groups())
             current_net = None
+        elif line.startswith('#') or line.startswith('PIN'):
+            continue
         elif line.startswith('NetName:'):
             current_net = line.split('NetName:')[1].strip()
             nets[current_net] = []
