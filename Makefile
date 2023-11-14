@@ -1,18 +1,24 @@
 EXE = ADRouter
 
-.PHONY: build
-build: cmake-build
-	cd build && make
 
-.PHONY: cmake-build
+.PHONY: build
+build:
+	cd build && make -j8
+
+.PHONY: cmake-build-verbose
+verbose:
+	cd build && cmake -DCMAKE_BUILD_TYPE=Verbose .. && make -j8
+
+.PHONY: cmake-build-debug
 cmake-build:
 	mkdir -p build
-	cd build && cmake -DCMAKE_BUILD_TYPE=debug ..
+	cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j8
 
-PHONY: cmake-release
+
+.PHONY: cmake-build-release
 cmake-release:
 	mkdir -p build
-	cd build && cmake -DCMAKE_BUILD_TYPE=release .. && make
+	cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8
 
 .PHONY: clean
 clean:

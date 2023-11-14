@@ -4,11 +4,15 @@ project(ADRouter)
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0")
+set(CMAKE_CXX_FLAGS_VERBOSE "-Wall -Wextra -g -O0 -DVERBOSE")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3")
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE release)
+  set(CMAKE_BUILD_TYPE Release)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Verbose")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_VERBOSE}")
 endif()
+
 
 include_directories(inc)
 file(GLOB SOURCES "src/*.cpp")
