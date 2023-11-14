@@ -28,6 +28,10 @@ clean:
 clean_out:
 	rm outputs/*
 
+.PHONY: clang-format
+clang-format:
+	find . -name '*.cpp' -or -name '*.hpp' | xargs clang-format -i --style=file
+
 .PHONY: flake8
 flake8:
 	$@
