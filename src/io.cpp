@@ -60,11 +60,11 @@ void ADRParser::parse(DataManager &data_manager)
 
                 if (data_manager.components().find(comp_name) == data_manager.components().end())
                 {
-                    data_manager.components().emplace(comp_name, Component(comp_name));
+                    data_manager.components().emplace(comp_name, std::make_shared<Component>(comp_name));
                 }
 
-                data_manager.components().at(comp_name).addPin(pin_name, x, y);
-                net.addPin(data_manager.components().at(comp_name).pins().at(pin_name));
+                data_manager.components().at(comp_name)->addPin(pin_name, x, y);
+                net.addPin(data_manager.components().at(comp_name)->pins().at(pin_name));
             }
         }
     }

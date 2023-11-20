@@ -6,17 +6,18 @@ build:
 	cd build && make -j8
 
 .PHONY: cmake-build-verbose
-verbose:
+cmake-build-verbose:
+	mkdir -p build
 	cd build && cmake -DCMAKE_BUILD_TYPE=Verbose .. && make -j8
 
 .PHONY: cmake-build-debug
-cmake-build:
+cmake-build-debug:
 	mkdir -p build
 	cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j8
 
 
 .PHONY: cmake-build-release
-cmake-release:
+cmake-build-release:
 	mkdir -p build
 	cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8
 

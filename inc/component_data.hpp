@@ -4,10 +4,12 @@
 #ifdef VERBOSE
 #include <iostream>
 #endif
+#include <cmath>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 class Coordinate
 {
 private:
@@ -18,7 +20,7 @@ private:
 public:
     // Constructor
     Coordinate() = default;
-    Coordinate(double x, double y, double z)
+    Coordinate(double x, double y, int z)
         : m_x(x)
         , m_y(y)
         , m_z(z)
@@ -37,6 +39,10 @@ public:
     const int &z() const { return m_z; }
     int &z() { return m_z; }
 
+    bool isCloseTo(const Coordinate &other, double tolerance = 5e-2) const
+    {
+        return m_z == other.z() && std::abs(m_x - other.x()) < tolerance && std::abs(m_y - other.y()) < tolerance;
+    }
 #ifdef VERBOSE
     std::string printCoordinate() const
     {
@@ -44,6 +50,7 @@ public:
     }
 #endif
 };
+
 class Pin
 {
 private:
@@ -53,7 +60,7 @@ private:
 public:
     //  Constructor
     Pin() = default;
-    Pin(const std::string &name, double x, double y, double z)
+    Pin(const std::string &name, double x, double y, int z)
         : m_name(name)
         , m_coordinate{x, y, z}
     {
@@ -67,11 +74,73 @@ public:
     Coordinate &coordinate() { return m_coordinate; }
 };
 
+class Tile
+{
+private:
+    std::shared_ptr<Pin> m_bottom_left_pin;
+    std::shared_ptr<Pin> m_bottom_right_pin;
+    std::shared_ptr<Pin> m_top_right_pin;
+    std::shared_ptr<Pin> m_top_left_pin;
+    Coordinate m_bottom_left;
+    double m_tile_witdh;
+    double m_tile_height;
+
+public:
+    // Constructor
+    Tile()
+        : m_bottom_left_pin(nullptr)
+        , m_bottom_right_pin(nullptr)
+        , m_top_right_pin(nullptr)
+        , m_top_left_pin(nullptr)
+    {
+    }
+    // Constructor with m_bottom_left, m_tile_width, m_tile_height
+    Tile(const Coordinate &bottom_left, double tile_width, double tile_height)
+        : m_bottom_left_pin(nullptr)
+        , m_bottom_right_pin(nullptr)
+        , m_top_right_pin(nullptr)
+        , m_top_left_pin(nullptr)
+        , m_bottom_left(bottom_left)
+        , m_tile_witdh(tile_width)
+        , m_tile_height(tile_height)
+    {
+    }
+
+    // Accessor for bottom_left_pin
+    const std::shared_ptr<Pin> &bottom_left_pin() const { return m_bottom_left_pin; }
+    std::shared_ptr<Pin> &bottom_left_pin() { return m_bottom_left_pin; }
+
+    // Accessor for bottom_right_pin
+    const std::shared_ptr<Pin> &bottom_right_pin() const { return m_bottom_right_pin; }
+    std::shared_ptr<Pin> &bottom_right_pin() { return m_bottom_right_pin; }
+
+    // Accessor for top_right_pin
+    const std::shared_ptr<Pin> &top_right_pin() const { return m_top_right_pin; }
+    std::shared_ptr<Pin> &top_right_pin() { return m_top_right_pin; }
+
+    // Accessor for top_left_pin
+    const std::shared_ptr<Pin> &top_left_pin() const { return m_top_left_pin; }
+    std::shared_ptr<Pin> &top_left_pin() { return m_top_left_pin; }
+
+    // Accessor for bottom_left
+    const Coordinate &bottom_left() const { return m_bottom_left; }
+    Coordinate &bottom_left() { return m_bottom_left; }
+
+    // Accessor for tile_width
+    const double &tile_width() const { return m_tile_witdh; }
+    double &tile_width() { return m_tile_witdh; }
+
+    // Accessor for tile_height
+    const double &tile_height() const { return m_tile_height; }
+    double &tile_height() { return m_tile_height; }
+};
+
 class Component
 {
 private:
     std::string m_name;
     std::unordered_map<std::string, std::shared_ptr<Pin>> m_pins;
+    std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> m_tiles;
 
 public:
     Component() = default;
@@ -91,92 +160,20 @@ public:
         m_pins[pin_name] = std::make_shared<Pin>(Pin{pin_name, x, y, 0});
     }
 
+    // Accessor for tiles
+    const std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> &tiles() const { return m_tiles; }
+    std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> &tiles() { return m_tiles; }
+
     // Method to find the extreme points: bottom left and top right of the bounding rectangle
-    std::pair<Coordinate, Coordinate> findExtremePoints() const
-    {
-        double min_x = std::numeric_limits<double>::max();
-        double min_y = std::numeric_limits<double>::max();
-        double max_x = std::numeric_limits<double>::lowest();
-        double max_y = std::numeric_limits<double>::lowest();
-
-        for (const auto &pair : m_pins)
-        {
-            auto &pin = pair.second;
-            min_x = std::min(min_x, pin->coordinate().x());
-            min_y = std::min(min_y, pin->coordinate().y());
-            max_x = std::max(max_x, pin->coordinate().x());
-            max_y = std::max(max_y, pin->coordinate().y());
-        }
-
-        Coordinate bottom_left{min_x, min_y, 0};
-        Coordinate top_right{max_x, max_y, 0};
-
-        return {bottom_left, top_right};
-    }
-
-    double calculateMinNonZeroXOffset(double y_tolerance = 0.5) const
-    {
-        double min_offset = std::numeric_limits<double>::max();
-        for (const auto &pin1 : m_pins)
-        {
-            for (const auto &pin2 : m_pins)
-            {
-                if (pin1.first != pin2.first)
-                {
-                    double y_diff = std::abs(pin1.second->coordinate().y() - pin2.second->coordinate().y());
-                    if (y_diff <= y_tolerance)
-                    { // Check if y difference is within tolerance
-                        double x_offset = std::abs(pin1.second->coordinate().x() - pin2.second->coordinate().x());
-                        if (x_offset > 0)
-                        {
-                            min_offset = std::min(min_offset, x_offset);
-                        }
-                    }
-                }
-            }
-        }
-        return min_offset == std::numeric_limits<double>::max() ? 0.0 : min_offset;
-    }
-
-    double calculateMinNonZeroYOffset(double x_tolerance = 0.5) const
-    {
-        double min_offset = std::numeric_limits<double>::max();
-        for (const auto &pin1 : m_pins)
-        {
-            for (const auto &pin2 : m_pins)
-            {
-                if (pin1.first != pin2.first)
-                {
-                    double x_diff = std::abs(pin1.second->coordinate().x() - pin2.second->coordinate().x());
-                    if (x_diff <= x_tolerance)
-                    { // Check if x difference is within tolerance
-                        double y_offset = std::abs(pin1.second->coordinate().y() - pin2.second->coordinate().y());
-                        if (y_offset > 0)
-                        {
-                            min_offset = std::min(min_offset, y_offset);
-                        }
-                    }
-                }
-            }
-        }
-        return min_offset == std::numeric_limits<double>::max() ? 0.0 : min_offset;
-    }
+    std::pair<Coordinate, Coordinate> findExtremePoints() const;
+    double calculateMinNonZeroXOffset(double y_tolerance = 0.5) const;
+    double calculateMinNonZeroYOffset(double x_tolerance = 0.5) const;
+    void splitingTiles(size_t num_layers);
 
 #ifdef VERBOSE
-    void printComponent() const
-    {
-        std::cout << "Component Name: " << m_name << std::endl;
-        std::cout << "Pins:" << std::endl;
-        for (const auto &pair : m_pins)
-        {
-            std::cout << "Pin Name: " << pair.first << " " << pair.second->coordinate().printCoordinate() << std::endl;
-        }
-        std::cout << "Minimum Non-Zero X Offset: " << calculateMinNonZeroXOffset() << std::endl;
-        std::cout << "Minimum Non-Zero Y Offset: " << calculateMinNonZeroYOffset() << std::endl;
-        auto extreme_points = findExtremePoints();
-        std::cout << "Bottom Left: " << extreme_points.first.printCoordinate() << std::endl;
-        std::cout << "Top Right: " << extreme_points.second.printCoordinate() << std::endl;
-    }
+    void printTiles() const;
+
+    void printComponent() const;
 #endif
 };
 
@@ -225,7 +222,7 @@ class DataManager
 {
 private:
     Netlist m_netlist;
-    std::unordered_map<std::string, Component> m_components;
+    std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
     std::unordered_map<std::string, int> m_layers;
 
 public:
@@ -234,33 +231,15 @@ public:
     Netlist &netlist() { return m_netlist; }
 
     // Accessor for components
-    const std::unordered_map<std::string, Component> &components() const { return m_components; }
-    std::unordered_map<std::string, Component> &components() { return m_components; }
+    const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
+    std::unordered_map<std::string, std::shared_ptr<Component>> &components() { return m_components; }
 
     // Accessor for layers
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
+
 #ifdef VERBOSE
-    void printDataManager(int verbose = 0) const
-    {
-        std::cout << "Number of Nets: " << m_netlist.num_nets() << std::endl;
-        std::cout << "Number of Components: " << m_components.size() << std::endl;
-        if (verbose > 0)
-        {
-            for (auto i : m_components)
-            {
-                i.second.printComponent();
-            }
-        }
-        std::cout << "Number of Layers: " << m_layers.size() << std::endl;
-        if (verbose > 0)
-        {
-            for (auto i : m_layers)
-            {
-                std::cout << "Layer Name: " << i.first << " Layer Number: " << i.second << std::endl;
-            }
-        }
-    }
+    void printDataManager(int verbose = 0) const;
 #endif
 };
 

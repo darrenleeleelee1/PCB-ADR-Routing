@@ -40,16 +40,35 @@ class ParserManager
 {
 private:
     std::unique_ptr<DataManager> m_data_manager;
+    std::vector<std::unique_ptr<IParser>> m_parsers;
 
 public:
     explicit ParserManager(std::unique_ptr<DataManager> data_manager)
         : m_data_manager(std::move(data_manager))
     {
     }
+
+    // Access for data_manager
     const DataManager &data_manager() const { return *m_data_manager; }
     DataManager &data_manager() { return *m_data_manager; }
+    // Access for parsers
+    const std::vector<std::unique_ptr<IParser>> &parsers() const { return m_parsers; }
+    std::vector<std::unique_ptr<IParser>> &parsers() { return m_parsers; }
+
+    // Add a parser
+    void addParser(std::unique_ptr<IParser> parser) { m_parsers.push_back(std::move(parser)); }
 
     void run(IParser &parser) { parser.parse(*m_data_manager); }
+    void run()
+    {
+        for (auto &parser : m_parsers) parser->parse(*m_data_manager);
+    }
+
+    void splitingTiles()
+    {
+        for (auto &component : m_data_manager->components())
+            component.second->splitingTiles(m_data_manager->layers().size());
+    }
 };
 
 #endif // IO_HPP

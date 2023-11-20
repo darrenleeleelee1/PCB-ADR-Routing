@@ -24,7 +24,7 @@ add_executable(ADRouter ${SOURCES})
 # target_link_libraries(YourExecutableName library_name)
 
 # Copy the executable to the bin directory after a release build
-if(CMAKE_BUILD_TYPE STREQUAL "release")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
   add_custom_command(TARGET ADRouter POST_BUILD
                      COMMAND ${CMAKE_COMMAND} -E copy
                              $<TARGET_FILE:ADRouter>
