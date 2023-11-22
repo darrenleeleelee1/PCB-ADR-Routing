@@ -39,12 +39,12 @@ public:
 class ParserManager
 {
 private:
-    std::unique_ptr<DataManager> m_data_manager;
+    std::shared_ptr<DataManager> m_data_manager;
     std::vector<std::unique_ptr<IParser>> m_parsers;
 
 public:
-    explicit ParserManager(std::unique_ptr<DataManager> data_manager)
-        : m_data_manager(std::move(data_manager))
+    explicit ParserManager(std::shared_ptr<DataManager> data_manager)
+        : m_data_manager(data_manager)
     {
     }
 
@@ -62,12 +62,6 @@ public:
     void run()
     {
         for (auto &parser : m_parsers) parser->parse(*m_data_manager);
-    }
-
-    void splitingTiles()
-    {
-        for (auto &component : m_data_manager->components())
-            component.second->splitingTiles(m_data_manager->layers().size());
     }
 };
 

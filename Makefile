@@ -36,3 +36,4 @@ clang-format:
 .PHONY: flake8
 flake8:
 	$@
+

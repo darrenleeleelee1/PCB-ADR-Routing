@@ -94,6 +94,7 @@ void Component::splitingTiles(size_t num_layers)
     double tile_height = calculateMinNonZeroYOffset();
     double tolerance_width = tile_width / 5.0;
     double tolerance_height = tile_height / 5.0;
+
     // Adjust extreme points to include the peripheral layer
     Coordinate adjusted_bottom_left = extreme_points.first;
     adjusted_bottom_left.x() -= tile_width;
@@ -107,8 +108,8 @@ void Component::splitingTiles(size_t num_layers)
     double bounding_width = adjusted_top_right.x() - adjusted_bottom_left.x();
     double bounding_height = adjusted_top_right.y() - adjusted_bottom_left.y();
 
-    int num_tiles_x = std::ceil(bounding_width / (tile_width / 2));
-    int num_tiles_y = std::ceil(bounding_height / (tile_height / 2));
+    int num_tiles_x = std::ceil(bounding_width / tile_width);
+    int num_tiles_y = std::ceil(bounding_height / tile_height);
 
     // Initialize the tiles vector, tiles[num_layers][num_tiles_x][num_tiles_y]
     m_tiles.resize(num_layers);
@@ -128,8 +129,8 @@ void Component::splitingTiles(size_t num_layers)
             for (int j = 0; j < num_tiles_y; ++j)
             {
                 // Calculate the corners of the tile
-                double x = adjusted_bottom_left.x() + i * (tile_width / 2);
-                double y = adjusted_bottom_left.y() + j * (tile_height / 2);
+                double x = adjusted_bottom_left.x() + i * tile_width;
+                double y = adjusted_bottom_left.y() + j * tile_height;
                 Coordinate bottom_left{x, y, static_cast<int>(k)};
                 Coordinate bottom_right{x + tile_width, y, static_cast<int>(k)};
                 Coordinate top_left{x, y + tile_height, static_cast<int>(k)};
@@ -137,18 +138,21 @@ void Component::splitingTiles(size_t num_layers)
 
                 m_tiles[k][i][j] = std::make_shared<Tile>(bottom_left, tile_width, tile_height);
 
-                // Find and assign the corner pins
-                for (const auto &pin_pair : m_pins)
+                if (k == 0)
                 {
-                    auto pin = pin_pair.second;
-                    if (pin->coordinate().isCloseTo(bottom_left, tolerance_width))
-                        m_tiles[k][i][j]->bottom_left_pin() = pin;
-                    else if (pin->coordinate().isCloseTo(bottom_right, tolerance_width))
-                        m_tiles[k][i][j]->bottom_right_pin() = pin;
-                    else if (pin->coordinate().isCloseTo(top_left, tolerance_height))
-                        m_tiles[k][i][j]->top_left_pin() = pin;
-                    else if (pin->coordinate().isCloseTo(top_right, tolerance_height))
-                        m_tiles[k][i][j]->top_right_pin() = pin;
+                    // Assigning corner pins
+                    for (const auto &pin_pair : m_pins)
+                    {
+                        auto pin = pin_pair.second;
+                        if (pin->coordinate().isCloseTo(bottom_left, tolerance_width))
+                            m_tiles[k][i][j]->setPin(PinNodePosition::BottomLeft, pin);
+                        else if (pin->coordinate().isCloseTo(bottom_right, tolerance_width))
+                            m_tiles[k][i][j]->setPin(PinNodePosition::BottomRight, pin);
+                        else if (pin->coordinate().isCloseTo(top_left, tolerance_height))
+                            m_tiles[k][i][j]->setPin(PinNodePosition::TopLeft, pin);
+                        else if (pin->coordinate().isCloseTo(top_right, tolerance_height))
+                            m_tiles[k][i][j]->setPin(PinNodePosition::TopRight, pin);
+                    }
                 }
             }
         }
@@ -156,9 +160,14 @@ void Component::splitingTiles(size_t num_layers)
 }
 
 #ifdef VERBOSE
+
 void Component::printTiles() const
 {
-    std::cout << "Tiles:" << std::endl;
+    // Adjust extreme points to include the peripheral layer
+    Coordinate adjusted_bottom_left = findExtremePoints().first;
+    adjusted_bottom_left.x() -= calculateMinNonZeroXOffset();
+    adjusted_bottom_left.y() -= calculateMinNonZeroYOffset();
+    std::cout << "Tiles start from: " << adjusted_bottom_left.printCoordinate() << std::endl;
     for (size_t k = 0; k < m_tiles.size(); ++k)
     {
         std::cout << "Layer " << k << ":" << std::endl;
@@ -171,18 +180,31 @@ void Component::printTiles() const
                 {
                     std::cout << "Tile [" << i << "][" << j
                               << "] Bottom Left: " << tile->bottom_left().printCoordinate() << std::endl;
-                    if (tile->bottom_left_pin())
-                        std::cout << " - Bottom Left Pin: " << tile->bottom_left_pin()->name() << std::endl;
-                    if (tile->bottom_right_pin())
-                        std::cout << " - Bottom Right Pin: " << tile->bottom_right_pin()->name() << std::endl;
-                    if (tile->top_left_pin())
-                        std::cout << " - Top Left Pin: " << tile->top_left_pin()->name() << std::endl;
-                    if (tile->top_right_pin())
-                        std::cout << " - Top Right Pin: " << tile->top_right_pin()->name() << std::endl;
+
+                    // Loop through all pin positions
+                    for (int pos = static_cast<int>(PinNodePosition::BottomLeft);
+                         pos <= static_cast<int>(PinNodePosition::TopLeft);
+                         ++pos)
+                    {
+                        auto pin = tile->getPin(static_cast<PinNodePosition>(pos));
+                        if (pin)
+                        {
+                            std::string position;
+                            switch (static_cast<PinNodePosition>(pos))
+                            {
+                            case BottomLeft: position = "BottomLeft"; break;
+                            case BottomRight: position = "BottomRight"; break;
+                            case TopRight: position = "TopRight"; break;
+                            case TopLeft: position = "TopLeft"; break;
+                            default: position = "Unknown"; break;
+                            }
+                            std::cout << position << " - " << pin->name() << std::endl;
+                        }
+                    }
                 }
             }
         }
-        // break; // Only print the first layer
+        break; // Only print the first layer
     }
 }
 
@@ -194,12 +216,13 @@ void Component::printComponent() const
     {
         std::cout << "Pin Name: " << pair.first << " " << pair.second->coordinate().printCoordinate() << std::endl;
     }
-    std::cout << "Minimum Non-Zero X Offset: " << calculateMinNonZeroXOffset() << std::endl;
-    std::cout << "Minimum Non-Zero Y Offset: " << calculateMinNonZeroYOffset() << std::endl;
+    std::cout << "Minimum Non-Zero X Offset(Tile Width): " << calculateMinNonZeroXOffset() << std::endl;
+    std::cout << "Minimum Non-Zero Y Offset(Tile Height): " << calculateMinNonZeroYOffset() << std::endl;
     auto extreme_points = findExtremePoints();
     std::cout << "Bottom Left: " << extreme_points.first.printCoordinate() << std::endl;
     std::cout << "Top Right: " << extreme_points.second.printCoordinate() << std::endl;
-    std::cout << "Bounding Width: " << extreme_points.second.x() - extreme_points.first.x() << std::endl;
+    std::cout << "Bounding Box Width: " << extreme_points.second.x() - extreme_points.first.x() << std::endl;
+    std::cout << "Bounding Box Height: " << extreme_points.second.y() - extreme_points.first.y() << std::endl;
 }
 #endif
 
@@ -222,6 +245,12 @@ void DataManager::printDataManager(int verbose) const
         {
             std::cout << "Layer Name: " << i.first << " Layer Number: " << i.second << std::endl;
         }
+    }
+    for (auto i : m_components)
+    {
+        std::cout << i.first << ":\t";
+        std::cout << "Number of of Tiles(Width * Height): " << i.second->tiles().at(0).size() << " * "
+                  << i.second->tiles().at(0).at(0).size() << std::endl;
     }
     if (verbose > 0)
     {

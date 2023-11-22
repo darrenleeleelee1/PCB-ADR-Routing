@@ -74,65 +74,55 @@ public:
     Coordinate &coordinate() { return m_coordinate; }
 };
 
+enum PinNodePosition
+{
+    BottomLeft = 0,
+    BottomRight = 1,
+    TopRight = 2,
+    TopLeft = 3
+};
+
+enum TileNodePosition
+{
+    North = 0,
+    East = 1,
+    South = 2,
+    West = 3,
+    Center = 4
+};
+
 class Tile
 {
 private:
-    std::shared_ptr<Pin> m_bottom_left_pin;
-    std::shared_ptr<Pin> m_bottom_right_pin;
-    std::shared_ptr<Pin> m_top_right_pin;
-    std::shared_ptr<Pin> m_top_left_pin;
+    std::array<std::shared_ptr<Pin>, 4> m_pins; // Array to store 4 pin positions
     Coordinate m_bottom_left;
-    double m_tile_witdh;
+    double m_tile_width;
     double m_tile_height;
 
 public:
-    // Constructor
+    // Constructors
     Tile()
-        : m_bottom_left_pin(nullptr)
-        , m_bottom_right_pin(nullptr)
-        , m_top_right_pin(nullptr)
-        , m_top_left_pin(nullptr)
+        : m_tile_width(0.0)
+        , m_tile_height(0.0)
     {
     }
-    // Constructor with m_bottom_left, m_tile_width, m_tile_height
+
     Tile(const Coordinate &bottom_left, double tile_width, double tile_height)
-        : m_bottom_left_pin(nullptr)
-        , m_bottom_right_pin(nullptr)
-        , m_top_right_pin(nullptr)
-        , m_top_left_pin(nullptr)
-        , m_bottom_left(bottom_left)
-        , m_tile_witdh(tile_width)
+        : m_bottom_left(bottom_left)
+        , m_tile_width(tile_width)
         , m_tile_height(tile_height)
     {
     }
 
-    // Accessor for bottom_left_pin
-    const std::shared_ptr<Pin> &bottom_left_pin() const { return m_bottom_left_pin; }
-    std::shared_ptr<Pin> &bottom_left_pin() { return m_bottom_left_pin; }
+    // Accessor for pins
+    const std::shared_ptr<Pin> &getPin(PinNodePosition position) const { return m_pins[position]; }
 
-    // Accessor for bottom_right_pin
-    const std::shared_ptr<Pin> &bottom_right_pin() const { return m_bottom_right_pin; }
-    std::shared_ptr<Pin> &bottom_right_pin() { return m_bottom_right_pin; }
+    void setPin(PinNodePosition position, std::shared_ptr<Pin> pin) { m_pins[position] = pin; }
 
-    // Accessor for top_right_pin
-    const std::shared_ptr<Pin> &top_right_pin() const { return m_top_right_pin; }
-    std::shared_ptr<Pin> &top_right_pin() { return m_top_right_pin; }
-
-    // Accessor for top_left_pin
-    const std::shared_ptr<Pin> &top_left_pin() const { return m_top_left_pin; }
-    std::shared_ptr<Pin> &top_left_pin() { return m_top_left_pin; }
-
-    // Accessor for bottom_left
+    // Accessors for bottom_left, tile_width, and tile_height
     const Coordinate &bottom_left() const { return m_bottom_left; }
-    Coordinate &bottom_left() { return m_bottom_left; }
-
-    // Accessor for tile_width
-    const double &tile_width() const { return m_tile_witdh; }
-    double &tile_width() { return m_tile_witdh; }
-
-    // Accessor for tile_height
-    const double &tile_height() const { return m_tile_height; }
-    double &tile_height() { return m_tile_height; }
+    double tile_width() const { return m_tile_width; }
+    double tile_height() const { return m_tile_height; }
 };
 
 class Component
@@ -238,6 +228,10 @@ public:
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
 
+    void splitingTiles()
+    {
+        for (auto &component : m_components) component.second->splitingTiles(m_layers.size());
+    }
 #ifdef VERBOSE
     void printDataManager(int verbose = 0) const;
 #endif
