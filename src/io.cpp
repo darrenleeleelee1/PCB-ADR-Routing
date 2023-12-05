@@ -8,7 +8,7 @@ ADRParser::ADRParser(const std::string &filename)
     file.open(filename);
     if (!file.is_open())
     {
-        throw std::runtime_error("Could not open file");
+        throw std::runtime_error("Could not open " + filename);
     }
 }
 
@@ -58,13 +58,13 @@ void ADRParser::parse(DataManager &data_manager)
                 double x = std::stod(coords.substr(0, comma_pos));
                 double y = std::stod(coords.substr(comma_pos + 1));
 
-                if (data_manager.components().find(comp_name) == data_manager.components().end())
+                if (data_manager.component2idx().find(comp_name) == data_manager.component2idx().end())
                 {
-                    data_manager.components().emplace(comp_name, std::make_shared<Component>(comp_name));
+                    throw std::runtime_error("Component " + comp_name + " found in .adr file but not in .odr file");
                 }
 
-                data_manager.components().at(comp_name)->addPin(pin_name, x, y);
-                net.addPin(data_manager.components().at(comp_name)->pins().at(pin_name));
+                data_manager.getComponent(comp_name)->addPin(pin_name, x, y);
+                net.addPin(data_manager.getComponent(comp_name)->pins().at(pin_name));
             }
         }
     }
@@ -75,7 +75,7 @@ LayerParser::LayerParser(const std::string &filename)
     file.open(filename);
     if (!file.is_open())
     {
-        throw std::runtime_error("Could not open file");
+        throw std::runtime_error("Could not open " + filename);
     }
 }
 
@@ -122,5 +122,66 @@ void LayerParser::parse(DataManager &data_manager)
 
         data_manager.layers().emplace(layer_name, layer_number);
         // data_manager.layers()[layer_name] = layer_number;
+    }
+}
+
+OrderParser::OrderParser(const std::string &filename)
+{
+    file.open(filename);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Could not open " + filename);
+    }
+}
+
+OrderParser::~OrderParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
+
+void OrderParser::parse(DataManager &data_manager)
+{
+    std::string line;
+
+    auto getDirectionEnum = [](const std::string &direction) -> TileNodePosition {
+        if (direction == "North")
+            return TileNodePosition::North;
+        else if (direction == "East")
+            return TileNodePosition::East;
+        else if (direction == "South")
+            return TileNodePosition::South;
+        else if (direction == "West")
+            return TileNodePosition::West;
+        else
+            throw std::runtime_error("Invalid direction in order file");
+    };
+
+    while (std::getline(file, line))
+    {
+        if (line.empty() || isdigit(line[0]))
+            continue; // Skip number lines and empty lines
+
+        std::string comp_name = line.substr(0, line.find(':'));
+
+        data_manager.addComponent(comp_name);
+
+        for (size_t i = 0; i < 2; ++i)
+        {
+            std::getline(file, line);
+            std::istringstream iss(line);
+            std::string directionType, direction;
+            iss >> directionType;
+            while (iss >> direction)
+            {
+                TileNodePosition tmp = getDirectionEnum(direction);
+                if (directionType == "In:")
+                    data_manager.getComponent(comp_name)->in_directions().at(static_cast<size_t>(tmp)) = true;
+                else if (directionType == "Out:")
+                    data_manager.getComponent(comp_name)->out_directions().at(static_cast<size_t>(tmp)) = true;
+            }
+        }
     }
 }

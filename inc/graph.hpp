@@ -2,91 +2,106 @@
 #define GRAPH_HPP
 
 #include "component_data.hpp"
-enum class PinType
-{
-    Regular,
-    Missing
-};
+// clang-format off
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/successive_shortest_path_nonnegative_weights.hpp>
+#include <boost/graph/find_flow_cost.hpp>
+// clang-format on
+#ifdef VERBOSE
+#include <iostream>
+#endif
 
 enum class TileType
 {
-    Regular,
+    North,
+    East,
+    South,
+    West,
+    Center,
     Via
 };
 
-class Node
+class VertexProperties
 {
 private:
-    int m_id;
-    int m_capacity;
-    std::shared_ptr<Tile> m_source_tile;
+    Coordinate m_coordinate;
 
 public:
     // Constructor
-    Node()
-        : m_capacity(-1)
+    VertexProperties() = default;
+    VertexProperties(Coordinate coordinate)
+        : m_coordinate(coordinate)
     {
     }
-    Node(int id, int capacity, std::shared_ptr<Tile> source_tile)
-        : m_id(id)
-        , m_capacity(capacity)
-        , m_source_tile(source_tile)
-    {
-    }
-    // Access for id
-    const int &id() const { return m_id; }
-    int &id() { return m_id; }
 
-    // Access for capacity
-    const int &capacity() const { return m_capacity; }
-    int &capacity() { return m_capacity; }
-
-    // Access for source_tile
-    const std::shared_ptr<Tile> &source_tile() const { return m_source_tile; }
-    std::shared_ptr<Tile> &source_tile() { return m_source_tile; }
+    // Access for coordinate
+    const Coordinate &coordinate() const { return m_coordinate; }
+    Coordinate &coordinate() { return m_coordinate; }
 };
 
-class PinNode : public Node
+// PinVertex
+class PinVertex : public VertexProperties
 {
 private:
-    PinType type;
-    PinNodePosition position;
-    std::shared_ptr<Pin> m_source_pin;
+    std::string m_name;
 
 public:
-    // Constructor with Node constructor
-    PinNode(PinType type,
-            PinNodePosition position,
-            std::shared_ptr<Pin> source_pin,
-            int id,
-            int capacity,
-            std::shared_ptr<Tile> source_tile)
-        : Node(id, capacity, source_tile)
-        , type(type)
-        , position(position)
-        , m_source_pin(source_pin)
+    // Constructor
+    PinVertex() = default;
+    PinVertex(Coordinate coordinate, std::string name)
+        : VertexProperties(coordinate)
+        , m_name(name)
     {
     }
+
+    // Access for name
+    const std::string &name() const { return m_name; }
+    std::string &name() { return m_name; }
 };
 
-class TileNode : public Node
+// TileVertex
+class TileVertex : public VertexProperties
 {
 private:
-    TileType type;
-    TileNodePosition position;
+    TileType m_type;
 
 public:
-    TileNode(TileType type, TileNodePosition position)
-        : type(type)
-        , position(position)
+    // Constructor
+    TileVertex() = default;
+    TileVertex(Coordinate coordinate, TileType type)
+        : VertexProperties(coordinate)
+        , m_type(type)
     {
     }
+
+    // Access for type
+    const TileType &type() const { return m_type; }
+    TileType &type() { return m_type; }
 };
 
 class GraphManager
 {
 private:
     std::shared_ptr<DataManager> m_data_manager;
+    // clang-format off
+    typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
+         boost::directedS> Traits;
+    typedef boost::adjacency_list<boost::vecS, boost::vecS,
+        boost::directedS, VertexProperties,
+        boost::property<boost::edge_capacity_t, long,
+            boost::property<boost::edge_residual_capacity_t, long,
+                boost::property<boost::edge_reverse_t, Traits::edge_descriptor,
+                    boost::property<boost::edge_weight_t, long>>>>> Graph;
+    // clang-format on
+
+    Graph m_g;
+    std::vector<Traits::vertex_descriptor> m_vertices;
+    std::vector<Traits::edge_descriptor> m_edges;
+    boost::property_map<Graph, boost::edge_capacity_t>::type m_edge_capacity = get(boost::edge_capacity, m_g);
+    boost::property_map<Graph, boost::edge_weight_t>::type m_edge_weight = get(boost::edge_weight, m_g);
+    boost::property_map<Graph, boost::edge_residual_capacity_t>::type m_edge_residual_capacity =
+        get(boost::edge_residual_capacity, m_g);
+    boost::property_map<Graph, boost::edge_reverse_t>::type m_edge_reverse = get(boost::edge_reverse, m_g);
 
 public:
     // Constructor
@@ -98,7 +113,12 @@ public:
     const DataManager &data_manager() const { return *m_data_manager; }
     DataManager &data_manager() { return *m_data_manager; }
 
-    void initialNodes();
+    // Access for graph
+    const Graph &graph() const { return m_g; }
+    Graph &graph() { return m_g; }
+
+    // Methods for building graph
+    void buildGraph();
 };
 
 #endif // GRAPH_HPP

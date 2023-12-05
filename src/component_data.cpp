@@ -192,10 +192,10 @@ void Component::printTiles() const
                             std::string position;
                             switch (static_cast<PinNodePosition>(pos))
                             {
-                            case BottomLeft: position = "BottomLeft"; break;
-                            case BottomRight: position = "BottomRight"; break;
-                            case TopRight: position = "TopRight"; break;
-                            case TopLeft: position = "TopLeft"; break;
+                            case PinNodePosition::BottomLeft: position = "BottomLeft"; break;
+                            case PinNodePosition::BottomRight: position = "BottomRight"; break;
+                            case PinNodePosition::TopRight: position = "TopRight"; break;
+                            case PinNodePosition::TopLeft: position = "TopLeft"; break;
                             default: position = "Unknown"; break;
                             }
                             std::cout << position << " - " << pin->name() << std::endl;
@@ -235,7 +235,7 @@ void DataManager::printDataManager(int verbose) const
     {
         for (auto i : m_components)
         {
-            i.second->printComponent();
+            i->printComponent();
         }
     }
     std::cout << "Number of Layers: " << m_layers.size() << std::endl;
@@ -246,18 +246,18 @@ void DataManager::printDataManager(int verbose) const
             std::cout << "Layer Name: " << i.first << " Layer Number: " << i.second << std::endl;
         }
     }
-    for (auto i : m_components)
+    for (auto i : m_component2idx)
     {
-        std::cout << i.first << ":\t";
-        std::cout << "Number of of Tiles(Width * Height): " << i.second->tiles().at(0).size() << " * "
-                  << i.second->tiles().at(0).at(0).size() << std::endl;
+        std::cout << i.first << "(" << i.second << "): \t";
+        std::cout << "Number of of Tiles(Width * Height): " << getComponent(i.second)->tiles().at(0).size() << " * "
+                  << getComponent(i.second)->tiles().at(0).at(0).size() << std::endl;
     }
     if (verbose > 0)
     {
-        for (auto i : m_components)
+        for (auto i : m_component2idx)
         {
-            std::cout << "Component Name: " << i.first << std::endl;
-            i.second->printTiles();
+            std::cout << "Component Name: " << i.first << "(" << i.second << ")" << std::endl;
+            getComponent(i.second)->printTiles();
         }
     }
 }

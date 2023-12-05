@@ -74,7 +74,7 @@ public:
     Coordinate &coordinate() { return m_coordinate; }
 };
 
-enum PinNodePosition
+enum class PinNodePosition
 {
     BottomLeft = 0,
     BottomRight = 1,
@@ -82,7 +82,7 @@ enum PinNodePosition
     TopLeft = 3
 };
 
-enum TileNodePosition
+enum class TileNodePosition
 {
     North = 0,
     East = 1,
@@ -95,6 +95,7 @@ class Tile
 {
 private:
     std::array<std::shared_ptr<Pin>, 4> m_pins; // Array to store 4 pin positions
+    std::array<int, 4> m_pins_node_idx; // Array to store 4 pin positions
     Coordinate m_bottom_left;
     double m_tile_width;
     double m_tile_height;
@@ -115,14 +116,24 @@ public:
     }
 
     // Accessor for pins
-    const std::shared_ptr<Pin> &getPin(PinNodePosition position) const { return m_pins[position]; }
+    const std::shared_ptr<Pin> &getPin(PinNodePosition position) const { return m_pins[static_cast<size_t>(position)]; }
+    void setPin(PinNodePosition position, std::shared_ptr<Pin> pin) { m_pins[static_cast<size_t>(position)] = pin; }
 
-    void setPin(PinNodePosition position, std::shared_ptr<Pin> pin) { m_pins[position] = pin; }
+    // Accessor for pins_node_idx
+    const int &getPinNodeIdx(PinNodePosition position) const { return m_pins_node_idx[static_cast<size_t>(position)]; }
+    void setPinNodeIdx(PinNodePosition position, int idx) { m_pins_node_idx[static_cast<size_t>(position)] = idx; }
 
-    // Accessors for bottom_left, tile_width, and tile_height
+    // Accessor for bottom_left
     const Coordinate &bottom_left() const { return m_bottom_left; }
+    Coordinate &bottom_left() { return m_bottom_left; }
+
+    // Accessor for tile_width
     double tile_width() const { return m_tile_width; }
+    double &tile_width() { return m_tile_width; }
+
+    // Accessor for tile_height
     double tile_height() const { return m_tile_height; }
+    double &tile_height() { return m_tile_height; }
 };
 
 class Component
@@ -131,11 +142,15 @@ private:
     std::string m_name;
     std::unordered_map<std::string, std::shared_ptr<Pin>> m_pins;
     std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> m_tiles;
+    std::vector<bool> m_in_directions;
+    std::vector<bool> m_out_directions;
 
 public:
     Component() = default;
     Component(const std::string &name)
         : m_name(name)
+        , m_in_directions(4, false)
+        , m_out_directions(4, false)
     {
     }
     // Accessor for name
@@ -153,6 +168,14 @@ public:
     // Accessor for tiles
     const std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> &tiles() const { return m_tiles; }
     std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> &tiles() { return m_tiles; }
+
+    // Accessor for in_direction
+    const std::vector<bool> &in_directions() const { return m_in_directions; }
+    std::vector<bool> &in_directions() { return m_in_directions; }
+
+    // Accessor for out_direction
+    const std::vector<bool> &out_directions() const { return m_out_directions; }
+    std::vector<bool> &out_directions() { return m_out_directions; }
 
     // Method to find the extreme points: bottom left and top right of the bounding rectangle
     std::pair<Coordinate, Coordinate> findExtremePoints() const;
@@ -212,7 +235,8 @@ class DataManager
 {
 private:
     Netlist m_netlist;
-    std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
+    std::vector<std::shared_ptr<Component>> m_components;
+    std::unordered_map<std::string, size_t> m_component2idx;
     std::unordered_map<std::string, int> m_layers;
 
 public:
@@ -221,16 +245,42 @@ public:
     Netlist &netlist() { return m_netlist; }
 
     // Accessor for components
-    const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
-    std::unordered_map<std::string, std::shared_ptr<Component>> &components() { return m_components; }
+    const std::vector<std::shared_ptr<Component>> &components() const { return m_components; }
+    std::vector<std::shared_ptr<Component>> &components() { return m_components; }
+    std::shared_ptr<Component> getComponent(size_t index) const { return m_components.at(index); }
+
+    std::shared_ptr<Component> getComponent(const std::string &name) const
+    {
+        auto it = m_component2idx.find(name);
+        if (it != m_component2idx.end())
+        {
+            return getComponent(it->second); // Reuse the numeric index function
+        }
+        return nullptr;
+    }
+
+    // Accessor for component2idx
+    const std::unordered_map<std::string, size_t> &component2idx() const { return m_component2idx; }
+    std::unordered_map<std::string, size_t> &component2idx() { return m_component2idx; }
 
     // Accessor for layers
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
-
+    void addComponent(std::string comp_name)
+    {
+        if (m_component2idx.find(comp_name) == m_component2idx.end())
+        {
+            m_component2idx.emplace(comp_name, m_component2idx.size());
+            m_components.push_back(std::make_shared<Component>(comp_name));
+        }
+        else
+        {
+            throw std::runtime_error("Add Component error, component `" + comp_name + "` already exists");
+        }
+    }
     void splitingTiles()
     {
-        for (auto &component : m_components) component.second->splitingTiles(m_layers.size());
+        for (auto &component : m_components) component->splitingTiles(m_layers.size());
     }
 #ifdef VERBOSE
     void printDataManager(int verbose = 0) const;

@@ -36,6 +36,18 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
+class OrderParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit OrderParser(const std::string &filename);
+    ~OrderParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
 class ParserManager
 {
 private:
