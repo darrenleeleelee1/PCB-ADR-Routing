@@ -85,7 +85,18 @@ double Component::calculateMinNonZeroYOffset(double x_tolerance) const
     return result;
 }
 
-void Component::splitingTiles(size_t num_layers)
+void Component::initialIdxVectors(size_t num_layers)
+{
+    m_pin_start_idx.resize(num_layers);
+    m_tile_start_idx.resize(num_layers);
+    for (size_t i = 0; i < num_layers; ++i)
+    {
+        m_pin_start_idx[i] = 0;
+        m_tile_start_idx[i] = 0;
+    }
+}
+
+void Component::initialAndSplitingTiles(size_t num_layers)
 {
     // Calculate the number of tiles in x and y direction
     auto extreme_points = findExtremePoints();
@@ -223,6 +234,17 @@ void Component::printComponent() const
     std::cout << "Top Right: " << extreme_points.second.printCoordinate() << std::endl;
     std::cout << "Bounding Box Width: " << extreme_points.second.x() - extreme_points.first.x() << std::endl;
     std::cout << "Bounding Box Height: " << extreme_points.second.y() - extreme_points.first.y() << std::endl;
+    std::cout << "Pin start indexs: \n";
+    for (size_t k = 0; k < m_pin_start_idx.size(); ++k)
+    {
+        std::cout << "Layer " << k << " :" << m_pin_start_idx.at(k) << ", ";
+    }
+    std::cout << std::endl;
+    std::cout << "Tile start indexs: \n";
+    for (size_t k = 0; k < m_pin_start_idx.size(); ++k)
+    {
+        std::cout << "Layer " << k << " :" << m_tile_start_idx.at(k) << ", ";
+    }
 }
 #endif
 

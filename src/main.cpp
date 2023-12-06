@@ -16,20 +16,28 @@ int main(int argc, char const *argv[])
     // Parser order is matter, Orders: OrderParser, ADRParser, LayerParser
     ParserManager parser_manager(data_manager);
 
-    parser_manager.addParser(std::make_unique<OrderParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.odr"));
-    // parser_manager.addParser(std::make_unique<OrderParser>("/DATA/darren/PCB/PCB-ADR-Routing/outputs/baby.odr"));
+    // OrderParser
+    // parser_manager.addParser(std::make_unique<OrderParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.odr"));
+    parser_manager.addParser(std::make_unique<OrderParser>("/DATA/darren/PCB/PCB-ADR-Routing/outputs/baby.odr"));
 
-    parser_manager.addParser(std::make_unique<ADRParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.adr"));
-    // parser_manager.addParser(std::make_unique<ADRParser>("/DATA/darren/PCB/PCB-ADR-Routing/outputs/baby.adr"));
+    // ADRParser
+    // parser_manager.addParser(std::make_unique<ADRParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.adr"));
+    parser_manager.addParser(std::make_unique<ADRParser>("/DATA/darren/PCB/PCB-ADR-Routing/outputs/baby.adr"));
 
-    parser_manager.addParser(std::make_unique<LayerParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.layer"));
+    // LayerParser
+    // parser_manager.addParser(std::make_unique<LayerParser>("/DATA/darren/PCB/PCB-ADR-Routing/case/2/2.layer"));
+    parser_manager.addParser(std::make_unique<LayerParser>("/DATA/darren/PCB/PCB-ADR-Routing/outputs/baby.layer"));
 
     parser_manager.run();
 
-    data_manager->splitingTiles();
+    data_manager->initialComponents();
+
+    GraphManager graph_manager(data_manager);
+    graph_manager.buildGraph();
 
 #ifdef VERBOSE
     parser_manager.data_manager().printDataManager(0);
+    graph_manager.outputVerticesToJson("/DATA/darren/PCB/PCB-ADR-Routing/outputs/vertices.json");
 #endif
 
     printlog("--------------------------------------------------------");

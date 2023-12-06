@@ -31,6 +31,23 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
                              ${CMAKE_SOURCE_DIR}/bin/$<TARGET_FILE_NAME:ADRouter>)
 endif()
 
+include(FetchContent)
+
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.10.5  # or whichever version you prefer
+)
+
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+    FetchContent_Populate(json)
+    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+target_link_libraries(ADRouter PRIVATE nlohmann_json::nlohmann_json)
+
+
+
 # How to use?
 # For a release build:`cmake -DCMAKE_BUILD_TYPE=release ..`
 # For a debug build: `cmake -DCMAKE_BUILD_TYPE=debug ..`

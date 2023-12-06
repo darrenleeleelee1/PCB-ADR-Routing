@@ -9,17 +9,10 @@
 // clang-format on
 #ifdef VERBOSE
 #include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 #endif
-
-enum class TileType
-{
-    North,
-    East,
-    South,
-    West,
-    Center,
-    Via
-};
 
 class VertexProperties
 {
@@ -33,6 +26,7 @@ public:
         : m_coordinate(coordinate)
     {
     }
+    virtual ~VertexProperties() = default;
 
     // Access for coordinate
     const Coordinate &coordinate() const { return m_coordinate; }
@@ -63,20 +57,20 @@ public:
 class TileVertex : public VertexProperties
 {
 private:
-    TileType m_type;
+    TileNodePosition m_type;
 
 public:
     // Constructor
     TileVertex() = default;
-    TileVertex(Coordinate coordinate, TileType type)
+    TileVertex(Coordinate coordinate, TileNodePosition type)
         : VertexProperties(coordinate)
         , m_type(type)
     {
     }
 
     // Access for type
-    const TileType &type() const { return m_type; }
-    TileType &type() { return m_type; }
+    const TileNodePosition &type() const { return m_type; }
+    TileNodePosition &type() { return m_type; }
 };
 
 class GraphManager
@@ -87,7 +81,7 @@ private:
     typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
          boost::directedS> Traits;
     typedef boost::adjacency_list<boost::vecS, boost::vecS,
-        boost::directedS, VertexProperties,
+        boost::directedS, std::shared_ptr<VertexProperties>,
         boost::property<boost::edge_capacity_t, long,
             boost::property<boost::edge_residual_capacity_t, long,
                 boost::property<boost::edge_reverse_t, Traits::edge_descriptor,
@@ -119,6 +113,9 @@ public:
 
     // Methods for building graph
     void buildGraph();
+#ifdef VERBOSE
+    void outputVerticesToJson(const std::string &filePath);
+#endif
 };
 
 #endif // GRAPH_HPP

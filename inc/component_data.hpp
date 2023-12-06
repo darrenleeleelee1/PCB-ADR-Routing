@@ -88,7 +88,8 @@ enum class TileNodePosition
     East = 1,
     South = 2,
     West = 3,
-    Center = 4
+    Center = 4,
+    Via = 5
 };
 
 class Tile
@@ -134,6 +135,51 @@ public:
     // Accessor for tile_height
     double tile_height() const { return m_tile_height; }
     double &tile_height() { return m_tile_height; }
+
+    Coordinate getPinCornerCoordinate(PinNodePosition pos)
+    {
+        switch (pos)
+        {
+        case PinNodePosition::BottomLeft: return m_bottom_left;
+        case PinNodePosition::BottomRight:
+            return Coordinate{m_bottom_left.x() + m_tile_width, m_bottom_left.y(), m_bottom_left.z()};
+        case PinNodePosition::TopRight:
+            return Coordinate{m_bottom_left.x() + m_tile_width, m_bottom_left.y() + m_tile_height, m_bottom_left.z()};
+        case PinNodePosition::TopLeft:
+            return Coordinate{m_bottom_left.x(), m_bottom_left.y() + m_tile_height, m_bottom_left.z()};
+        default: throw std::invalid_argument("Invalid PinNodePosition");
+        }
+    }
+
+    Coordinate getPinCornerCoordinate(int pos) { return getPinCornerCoordinate(static_cast<PinNodePosition>(pos)); }
+
+    Coordinate getTileVertexCoordinate(TileNodePosition pos)
+    {
+        // Define the offsets as 1/10th of the tile's width and height
+        double offsetX = m_tile_width / 10.0;
+        double offsetY = m_tile_height / 10.0;
+
+        switch (pos)
+        {
+        case TileNodePosition::North:
+            return Coordinate{
+                m_bottom_left.x() + m_tile_width / 2, m_bottom_left.y() + m_tile_height - offsetY, m_bottom_left.z()};
+        case TileNodePosition::East:
+            return Coordinate{
+                m_bottom_left.x() + m_tile_width - offsetX, m_bottom_left.y() + m_tile_height / 2, m_bottom_left.z()};
+        case TileNodePosition::South:
+            return Coordinate{m_bottom_left.x() + m_tile_width / 2, m_bottom_left.y() + offsetY, m_bottom_left.z()};
+        case TileNodePosition::West:
+            return Coordinate{m_bottom_left.x() + offsetX, m_bottom_left.y() + m_tile_height / 2, m_bottom_left.z()};
+        case TileNodePosition::Center:
+        case TileNodePosition::Via:
+            return Coordinate{
+                m_bottom_left.x() + m_tile_width / 2, m_bottom_left.y() + m_tile_height / 2, m_bottom_left.z()};
+        default: throw std::invalid_argument("Invalid TileNodePosition");
+        }
+    }
+
+    Coordinate getTileVertexCoordinate(int pos) { return getTileVertexCoordinate(static_cast<TileNodePosition>(pos)); }
 };
 
 class Component
@@ -144,6 +190,8 @@ private:
     std::vector<std::vector<std::vector<std::shared_ptr<Tile>>>> m_tiles;
     std::vector<bool> m_in_directions;
     std::vector<bool> m_out_directions;
+    std::vector<size_t> m_pin_start_idx;
+    std::vector<size_t> m_tile_start_idx;
 
 public:
     Component() = default;
@@ -177,11 +225,26 @@ public:
     const std::vector<bool> &out_directions() const { return m_out_directions; }
     std::vector<bool> &out_directions() { return m_out_directions; }
 
+    // Accessor for pin_start_idx
+    const std::vector<size_t> &pin_start_idx() const { return m_pin_start_idx; }
+    std::vector<size_t> &pin_start_idx() { return m_pin_start_idx; }
+
+    // Accessor for tile_start_idx
+    const std::vector<size_t> &tile_start_idx() const { return m_tile_start_idx; }
+    std::vector<size_t> &tile_start_idx() { return m_tile_start_idx; }
+
     // Method to find the extreme points: bottom left and top right of the bounding rectangle
     std::pair<Coordinate, Coordinate> findExtremePoints() const;
     double calculateMinNonZeroXOffset(double y_tolerance = 0.5) const;
     double calculateMinNonZeroYOffset(double x_tolerance = 0.5) const;
-    void splitingTiles(size_t num_layers);
+
+    void initialAndSplitingTiles(size_t num_layers);
+    void initialIdxVectors(size_t num_layers);
+    void initial(size_t num_layers)
+    {
+        initialAndSplitingTiles(num_layers);
+        initialIdxVectors(num_layers);
+    }
 
 #ifdef VERBOSE
     void printTiles() const;
@@ -278,9 +341,12 @@ public:
             throw std::runtime_error("Add Component error, component `" + comp_name + "` already exists");
         }
     }
-    void splitingTiles()
+    void initialComponents()
     {
-        for (auto &component : m_components) component->splitingTiles(m_layers.size());
+        for (auto &component : m_components)
+        {
+            component->initial(m_layers.size());
+        }
     }
 #ifdef VERBOSE
     void printDataManager(int verbose = 0) const;
