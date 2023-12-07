@@ -18,11 +18,6 @@ include_directories(inc)
 file(GLOB SOURCES "src/*.cpp")
 add_executable(ADRouter ${SOURCES})
 
-# Uncomment and edit the following lines if you have other directories or libraries to include
-# add_subdirectory(tests)
-# add_subdirectory(tools)
-# target_link_libraries(YourExecutableName library_name)
-
 # Copy the executable to the bin directory after a release build
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   add_custom_command(TARGET ADRouter POST_BUILD
@@ -31,6 +26,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
                              ${CMAKE_SOURCE_DIR}/bin/$<TARGET_FILE_NAME:ADRouter>)
 endif()
 
+
+# Add the json library
 include(FetchContent)
 
 FetchContent_Declare(
@@ -45,7 +42,24 @@ if(NOT json_POPULATED)
     add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 target_link_libraries(ADRouter PRIVATE nlohmann_json::nlohmann_json)
+# End of json library
 
+
+# Google Test integration
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+# Test directories
+add_subdirectory(tests/component_data)
+
+# Uncomment and edit the following lines if you have other directories or libraries to include
+# add_subdirectory(tools)
+# target_link_libraries(YourExecutableName library_name)
 
 
 # How to use?

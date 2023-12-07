@@ -29,10 +29,12 @@ import sys
 import matplotlib.pyplot as plt
 import networkx as nx
 
+
 def read_vertex_data(input_path):
     """Reads and returns the vertex data from a JSON file."""
     with open(input_path, 'r') as file:
         return json.load(file)
+
 
 def create_graph(vertices_data):
     """Creates and returns a graph from the given vertex data."""
@@ -41,7 +43,7 @@ def create_graph(vertices_data):
     for vertex in vertices_data:
         vertex_id = (vertex['coordinate']['x'], vertex['coordinate']['y'])
         vertex_type = vertex['type']
-        
+
         # Add the node
         G.add_node(vertex_id, type=vertex_type)
 
@@ -52,6 +54,7 @@ def create_graph(vertices_data):
             G.nodes[vertex_id]['tileType'] = vertex.get('tileType', '')
 
     return G
+
 
 def draw_graph(G, output_path):
     """Draws the graph and saves it to the specified output path."""
@@ -79,7 +82,12 @@ def draw_graph(G, output_path):
         nx.draw_networkx_nodes(G, pos, node_shape=shape, nodelist=[node], node_color=color)
 
     # Draw the labels for PinVertex and TileVertex
-    labels = {node: G.nodes[node].get('name', G.nodes[node].get('tileType', '')) for node in G.nodes() if G.nodes[node]['type'] in ['PinVertex', 'TileVertex']}
+    labels = {
+        node: G.nodes[node].get('name', G.nodes[node].get('tileType', ''))
+        for node in G.nodes()
+        if G.nodes[node]['type'] in ['PinVertex', 'TileVertex']
+    }
+
     nx.draw_networkx_labels(G, pos, labels, font_size=10)
 
     # Adjust plot
@@ -89,6 +97,7 @@ def draw_graph(G, output_path):
     # Save the plot
     plt.savefig(output_path, format='png')
     plt.close()
+
 
 def main():
     if len(sys.argv) != 3:
@@ -106,6 +115,7 @@ def main():
 
     # Draw the graph and save it
     draw_graph(G, output_path)
+
 
 if __name__ == "__main__":
     main()

@@ -2,14 +2,13 @@
 #include "graph.hpp"
 #include "io.hpp"
 #include "log.hpp"
-using namespace utils;
 
 int main(int argc, char const *argv[])
 {
     std::cout << std::boolalpha;
-    printlog("--------------------------------------------------------");
-    printlog("          ADR Signal for PCB Routing Project            ");
-    printlog("--------------------------------------------------------");
+    utils::printlog("--------------------------------------------------------");
+    utils::printlog("          ADR Signal for PCB Routing Project            ");
+    utils::printlog("--------------------------------------------------------");
 
     std::shared_ptr<DataManager> data_manager = std::make_shared<DataManager>();
 
@@ -40,8 +39,8 @@ int main(int argc, char const *argv[])
     graph_manager.outputVerticesToJson("/DATA/darren/PCB/PCB-ADR-Routing/outputs/vertices.json");
 #endif
 
-    printlog("--------------------------------------------------------");
-    printlog("                     Terminated...                      ");
-    printlog("--------------------------------------------------------");
+    utils::printlog("--------------------------------------------------------");
+    utils::printlog("                     Terminated...                      ");
+    utils::printlog("--------------------------------------------------------");
     return 0;
 }

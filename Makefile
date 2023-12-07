@@ -31,7 +31,7 @@ clean_out:
 
 .PHONY: clang-format
 clang-format:
-	find . -name '*.cpp' -or -name '*.hpp' | xargs clang-format -i --style=file
+	find . -name '*.cpp' -or -name '*.hpp' | grep -v '^./build/' | xargs clang-format -i --style=file
 
 .PHONY: flake8
 flake8:
