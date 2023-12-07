@@ -5,13 +5,14 @@ on: [push, pull_request]
 jobs:
   clang-format:
     runs-on: ubuntu-latest
+
+    container: 
+      image: darrenleeleelee1/clang-format:9.0.0
+
     steps:
     - uses: actions/checkout@v3
-    - name: Check available versions of clang-format
-      run: apt-cache madison clang-format
-
-    - name: Install Clang-Format
-      run: sudo apt-get install -y clang-format
+    - name: Check clang-format version
+      run: clang-format --version
 
     - name: Run Clang-Format
       run: |
