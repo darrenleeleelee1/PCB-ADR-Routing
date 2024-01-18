@@ -50,24 +50,38 @@ public:
     }
 #endif
 };
-
+class Net;
 class Pin
 {
 private:
     std::string m_name;
+    std::shared_ptr<Net> m_net;
     Coordinate m_coordinate;
 
 public:
-    //  Constructor
+    // Constructor
     Pin() = default;
+
     Pin(const std::string &name, double x, double y, int z)
         : m_name(name)
         , m_coordinate{x, y, z}
     {
     }
+    // Constructor with m_net
+    Pin(const std::string &name, std::shared_ptr<Net> net, double x, double y, int z)
+        : m_name(name)
+        , m_net(net)
+        , m_coordinate{x, y, z}
+    {
+    }
+
     // Accessor for name
     const std::string &name() const { return m_name; }
     std::string &name() { return m_name; }
+
+    // Accessor for net
+    const std::shared_ptr<Net> &net() const { return m_net; }
+    std::shared_ptr<Net> &net() { return m_net; }
 
     // Accessor for coordinate
     const Coordinate &coordinate() const { return m_coordinate; }
@@ -208,9 +222,9 @@ public:
     // Accessor for pins
     const std::unordered_map<std::string, std::shared_ptr<Pin>> &pins() const { return m_pins; }
     // Method for add pins
-    void addPin(const std::string &pin_name, double x, double y)
+    void addPin(const std::string &pin_name, std::shared_ptr<Net> net, double x, double y)
     {
-        m_pins[pin_name] = std::make_shared<Pin>(Pin{pin_name, x, y, 0});
+        m_pins[pin_name] = std::make_shared<Pin>(Pin{pin_name, net, x, y, 0});
     }
 
     // Accessor for tiles

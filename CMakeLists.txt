@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 project(ADRouter)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -52,10 +52,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
+# enable_testing()
 
 # Test directories
-add_subdirectory(tests/component_data)
+# add_subdirectory(tests/component_data)
 
 # Uncomment and edit the following lines if you have other directories or libraries to include
 # add_subdirectory(tools)

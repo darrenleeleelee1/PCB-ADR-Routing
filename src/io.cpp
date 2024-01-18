@@ -33,8 +33,9 @@ void ADRParser::parse(DataManager &data_manager)
 
         if (line.find("NetName:") != std::string::npos)
         {
-            Net net;
-            net.net_name() = line.substr(line.find(":") + 2);
+            // Net net;
+            std::shared_ptr<Net> net = std::make_shared<Net>();
+            net->net_name() = line.substr(line.find(":") + 2);
 
             while (std::getline(file, line))
             {
@@ -63,8 +64,8 @@ void ADRParser::parse(DataManager &data_manager)
                     throw std::runtime_error("Component " + comp_name + " found in .adr file but not in .odr file");
                 }
 
-                data_manager.getComponent(comp_name)->addPin(pin_name, x, y);
-                net.addPin(data_manager.getComponent(comp_name)->pins().at(pin_name));
+                data_manager.getComponent(comp_name)->addPin(pin_name, net, x, y);
+                net->addPin(data_manager.getComponent(comp_name)->pins().at(pin_name));
             }
         }
     }

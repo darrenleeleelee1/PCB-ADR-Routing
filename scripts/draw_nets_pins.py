@@ -133,7 +133,7 @@ def plot_nets(nets, output_file_path):
 if __name__ == '__main__':
     # Check if two arguments are passed
     if len(sys.argv) != 3:
-        print("Usage: ./draw <input path> <output path>")
+        print("Usage: ./draw_nets_pins <input path> <output path>")
         sys.exit(1)  # Exit if not the correct number of arguments
 
     adr_file_path = sys.argv[1]  # First argument is the input path

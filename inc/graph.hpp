@@ -37,20 +37,20 @@ public:
 class PinVertex : public VertexProperties
 {
 private:
-    std::string m_name;
+    std::shared_ptr<Pin> m_pin;
 
 public:
     // Constructor
     PinVertex() = default;
-    PinVertex(Coordinate coordinate, std::string name)
+    PinVertex(Coordinate coordinate, std::shared_ptr<Pin> pin)
         : VertexProperties(coordinate)
-        , m_name(name)
+        , m_pin(pin)
     {
     }
 
-    // Access for name
-    const std::string &name() const { return m_name; }
-    std::string &name() { return m_name; }
+    // Access for pin
+    const std::shared_ptr<Pin> &pin() const { return m_pin; }
+    std::shared_ptr<Pin> &pin() { return m_pin; }
 };
 
 // TileVertex

@@ -29,7 +29,7 @@ void GraphManager::buildGraph()
                         {
                             auto v = boost::add_vertex(m_g);
                             m_vertices.emplace_back(v);
-                            m_g[v] = std::make_shared<PinVertex>(tile->getPinCornerCoordinate(pos), pin->name());
+                            m_g[v] = std::make_shared<PinVertex>(tile->getPinCornerCoordinate(pos), pin);
                         }
                         else
                         {
@@ -58,7 +58,7 @@ void GraphManager::buildGraph()
                             {
                                 auto v = boost::add_vertex(m_g);
                                 m_vertices.emplace_back(v);
-                                m_g[v] = std::make_shared<PinVertex>(tile->getPinCornerCoordinate(pos), pin->name());
+                                m_g[v] = std::make_shared<PinVertex>(tile->getPinCornerCoordinate(pos), pin);
                             }
                             else
                             {
@@ -142,7 +142,7 @@ void GraphManager::outputVerticesToJson(const std::string &filePath)
             if (auto pin_vertex = std::dynamic_pointer_cast<PinVertex>(vprop))
             {
                 vertex_json["type"] = "PinVertex";
-                vertex_json["name"] = pin_vertex->name();
+                vertex_json["name"] = pin_vertex->pin()->net()->net_name();
             }
             else if (auto tile_vertex = std::dynamic_pointer_cast<TileVertex>(vprop))
             {

@@ -64,6 +64,9 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "unordered_set": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "forward_list": "cpp",
+        "valarray": "cpp",
+        "variant": "cpp"
     }
 }
