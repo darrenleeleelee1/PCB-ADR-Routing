@@ -67,6 +67,7 @@
         "*.ipp": "cpp",
         "forward_list": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "regex": "cpp"
     }
 }

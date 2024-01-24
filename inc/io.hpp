@@ -36,18 +36,6 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
-class OrderParser : public IParser
-{
-private:
-    std::ifstream file;
-
-public:
-    explicit OrderParser(const std::string &filename);
-    ~OrderParser() override;
-
-    void parse(DataManager &data_manager) override;
-};
-
 class ParserManager
 {
 private:
@@ -63,6 +51,7 @@ public:
     // Access for data_manager
     const DataManager &data_manager() const { return *m_data_manager; }
     DataManager &data_manager() { return *m_data_manager; }
+
     // Access for parsers
     const std::vector<std::unique_ptr<IParser>> &parsers() const { return m_parsers; }
     std::vector<std::unique_ptr<IParser>> &parsers() { return m_parsers; }
@@ -70,10 +59,12 @@ public:
     // Add a parser
     void addParser(std::unique_ptr<IParser> parser) { m_parsers.push_back(std::move(parser)); }
 
+    // Run all parsers
     void run(IParser &parser) { parser.parse(*m_data_manager); }
-    void run()
+    bool run()
     {
         for (auto &parser : m_parsers) parser->parse(*m_data_manager);
+        return true;
     }
 };
 

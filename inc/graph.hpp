@@ -1,121 +1,57 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-
-#include "component_data.hpp"
 // clang-format off
+#include "component_data.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/successive_shortest_path_nonnegative_weights.hpp>
 #include <boost/graph/find_flow_cost.hpp>
+#include <vector>
+using namespace boost;
+#define INF 1e9
+typedef adjacency_list_traits<vecS, vecS, directedS> Traits;
+typedef adjacency_list<vecS, vecS, directedS, no_property,
+        property<edge_capacity_t, long,
+            property<edge_residual_capacity_t, long,
+                property<edge_reverse_t, Traits::edge_descriptor,
+                    property<edge_weight_t, long>>>>> Graph;
 // clang-format on
-#ifdef VERBOSE
-#include <iostream>
-#include <fstream>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-#endif
-
-class VertexProperties
-{
-private:
-    Coordinate m_coordinate;
-
-public:
-    // Constructor
-    VertexProperties() = default;
-    VertexProperties(Coordinate coordinate)
-        : m_coordinate(coordinate)
-    {
-    }
-    virtual ~VertexProperties() = default;
-
-    // Access for coordinate
-    const Coordinate &coordinate() const { return m_coordinate; }
-    Coordinate &coordinate() { return m_coordinate; }
-};
-
-// PinVertex
-class PinVertex : public VertexProperties
-{
-private:
-    std::shared_ptr<Pin> m_pin;
-
-public:
-    // Constructor
-    PinVertex() = default;
-    PinVertex(Coordinate coordinate, std::shared_ptr<Pin> pin)
-        : VertexProperties(coordinate)
-        , m_pin(pin)
-    {
-    }
-
-    // Access for pin
-    const std::shared_ptr<Pin> &pin() const { return m_pin; }
-    std::shared_ptr<Pin> &pin() { return m_pin; }
-};
-
-// TileVertex
-class TileVertex : public VertexProperties
-{
-private:
-    TileNodePosition m_type;
-
-public:
-    // Constructor
-    TileVertex() = default;
-    TileVertex(Coordinate coordinate, TileNodePosition type)
-        : VertexProperties(coordinate)
-        , m_type(type)
-    {
-    }
-
-    // Access for type
-    const TileNodePosition &type() const { return m_type; }
-    TileNodePosition &type() { return m_type; }
-};
-
 class GraphManager
 {
 private:
-    std::shared_ptr<DataManager> m_data_manager;
-    // clang-format off
-    typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
-         boost::directedS> Traits;
-    typedef boost::adjacency_list<boost::vecS, boost::vecS,
-        boost::directedS, std::shared_ptr<VertexProperties>,
-        boost::property<boost::edge_capacity_t, long,
-            boost::property<boost::edge_residual_capacity_t, long,
-                boost::property<boost::edge_reverse_t, Traits::edge_descriptor,
-                    boost::property<boost::edge_weight_t, long>>>>> Graph;
-    // clang-format on
+    DataManager *m_data_manager;
+    Component *m_component;
+    Graph g;
+    property_map<Graph, edge_capacity_t>::type capacity;
+    property_map<Graph, edge_weight_t>::type weight;
+    property_map<Graph, edge_residual_capacity_t>::type residual_capacity;
+    property_map<Graph, edge_reverse_t>::type rev;
 
-    Graph m_g;
-    std::vector<Traits::vertex_descriptor> m_vertices;
-    std::vector<Traits::edge_descriptor> m_edges;
-    boost::property_map<Graph, boost::edge_capacity_t>::type m_edge_capacity = get(boost::edge_capacity, m_g);
-    boost::property_map<Graph, boost::edge_weight_t>::type m_edge_weight = get(boost::edge_weight, m_g);
-    boost::property_map<Graph, boost::edge_residual_capacity_t>::type m_edge_residual_capacity =
-        get(boost::edge_residual_capacity, m_g);
-    boost::property_map<Graph, boost::edge_reverse_t>::type m_edge_reverse = get(boost::edge_reverse, m_g);
+    Traits::vertex_descriptor s, t;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_v;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_N;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_S;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_E;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_W;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_C;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_d_tiles_C;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_rows;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_d_rows;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_columns;
+    std::vector<std::vector<Traits::vertex_descriptor>> m_d_columns;
+    std::vector<std::string> m_vertex_names;
+    // Private Methods
+    void add_v(Graph &g, Traits::vertex_descriptor &v, std::string name);
 
 public:
     // Constructor
-    explicit GraphManager(std::shared_ptr<DataManager> data_manager)
-        : m_data_manager(data_manager)
-    {
-    }
-    // Access for data_manager
-    const DataManager &data_manager() const { return *m_data_manager; }
-    DataManager &data_manager() { return *m_data_manager; }
+    GraphManager() = default;
+    GraphManager(DataManager &data_manager,
+                 Component &component,
+                 int maximum_via_count = 1,
+                 size_t maximum_layer = 3,
+                 int threshold = 175); // 175 for case 4, 5, 6
+    ~GraphManager() = default;
 
-    // Access for graph
-    const Graph &graph() const { return m_g; }
-    Graph &graph() { return m_g; }
-
-    // Methods for building graph
-    void buildGraph();
-#ifdef VERBOSE
-    void outputVerticesToJson(const std::string &filePath);
-#endif
+    void minCostMaxFlow(Router &router);
 };
-
 #endif // GRAPH_HPP
