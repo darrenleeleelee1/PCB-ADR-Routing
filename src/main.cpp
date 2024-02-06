@@ -1,5 +1,4 @@
 #include "gdt.hpp"
-#include "graph.hpp"
 #include "io.hpp"
 #include "log.hpp"
 #define GDT
@@ -34,21 +33,23 @@ int main(int argc, char const *argv[])
         utils::printlog("Successfully parsed.");
     }
 
-    data_manager->preprocess();
-
+    // Preprocess data
+    data_manager->preprocess(); // case4, case5, case6
+    // data_manager->preprocess(25); case2
 #ifdef GDT
     GDTWriter gdt_writer(*data_manager);
     gdt_writer.preprocess();
 #endif
-    std::shared_ptr<Router> router = std::make_shared<Router>();
 
-    for (auto comp : data_manager->components())
-    {
-        std::shared_ptr<GraphManager> graph_manager = std::make_shared<GraphManager>(*data_manager, *comp.second);
-        graph_manager->minCostMaxFlow(*router);
-    }
+    // Router DDR2DDR
+    std::shared_ptr<Router> router = std::make_shared<Router>();
+    router->DDR2DDR(data_manager);
 #ifdef GDT
-    gdt_writer.via_assignment(*router);
+    gdt_writer.DDR2DDR(*router);
+#endif
+    // Produce all gds
+#ifdef GDT
+    gdt_writer.gdt2gds(case_number);
 #endif
     utils::printlog("--------------------------------------------------------");
     utils::printlog("                     Terminated...                      ");

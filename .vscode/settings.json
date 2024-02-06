@@ -68,6 +68,7 @@
         "forward_list": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "filesystem": "cpp"
     }
 }

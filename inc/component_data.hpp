@@ -126,6 +126,9 @@ private:
     std::vector<std::vector<std::shared_ptr<Pin>>> m_pin_arr;
     Coordinate m_bottom_left, m_top_right;
     double m_tile_width, m_tile_height;
+    bool m_is_cpu;
+    bool m_is_verticle_stack; // true for vericle stack, false for horizontal stack
+    std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
     // Private Methods
     std::pair<Coordinate, Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -136,14 +139,33 @@ public:
     Component() = default;
     Component(const std::string &comp_name)
         : m_comp_name(comp_name)
+        , m_is_cpu(false)
+        , m_is_verticle_stack(false)
+        , m_neighboors(2, false)
     {
     }
     // Operator Overloads
+    // == only check wether there m_pin_arr is the same
     bool operator==(const Component &rhs) const
     {
-        return m_comp_name == rhs.m_comp_name && m_pins == rhs.m_pins && m_rows == rhs.m_rows &&
-               m_columns == rhs.m_columns && m_pin_arr == rhs.m_pin_arr && m_bottom_left == rhs.m_bottom_left &&
-               m_top_right == rhs.m_top_right && m_tile_width == rhs.m_tile_width && m_tile_height == rhs.m_tile_height;
+        if (m_pin_arr.size() != rhs.m_pin_arr.size() || m_pin_arr.at(0).size() != rhs.m_pin_arr.at(0).size())
+        {
+            return false;
+        }
+        for (size_t i = 0; i < m_pin_arr.size(); ++i)
+        {
+            for (size_t j = 0; j < m_pin_arr.at(0).size(); ++j)
+            {
+                if (m_pin_arr.at(i).at(j) != nullptr && rhs.m_pin_arr.at(i).at(j) != nullptr)
+                {
+                    if (m_pin_arr.at(i).at(j)->net_name() != rhs.m_pin_arr.at(i).at(j)->net_name())
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
     bool operator!=(const Component &rhs) const { return !(*this == rhs); }
     // Accessor
@@ -174,6 +196,15 @@ public:
     // Access for tile_height
     const double &tile_height() const { return m_tile_height; }
     double &tile_height() { return m_tile_height; }
+    // Access for is_cpu
+    const bool &is_cpu() const { return m_is_cpu; }
+    bool &is_cpu() { return m_is_cpu; }
+    // Access for is_verticle_stack
+    const bool &is_verticle_stack() const { return m_is_verticle_stack; }
+    bool &is_verticle_stack() { return m_is_verticle_stack; }
+    // Access for neighboor
+    const std::vector<bool> &neighboors() const { return m_neighboors; }
+    std::vector<bool> &neighboors() { return m_neighboors; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void createPinArr();
@@ -227,6 +258,7 @@ class DataManager
 {
 private:
     std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
+    std::unordered_map<Component *, std::vector<std::string>> m_groups;
     std::unordered_map<int, Netlist> m_netlists;
     std::unordered_map<std::string, int> m_layers;
 
@@ -237,6 +269,9 @@ public:
     // Access for components
     const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
     std::unordered_map<std::string, std::shared_ptr<Component>> &components() { return m_components; }
+    // Access for groups
+    const std::unordered_map<Component *, std::vector<std::string>> &groups() const { return m_groups; }
+    std::unordered_map<Component *, std::vector<std::string>> &groups() { return m_groups; }
     // Access for netlists
     const std::unordered_map<int, Netlist> &netlists() const { return m_netlists; }
     std::unordered_map<int, Netlist> &netlists() { return m_netlists; }
@@ -247,7 +282,7 @@ public:
     // Methods
     void createNetlist(int count);
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
-    void preprocess();
+    void preprocess(int threshold = 250); // 250 for case 4, 5, 6, and 25 for case 2
 };
 class Via
 {
@@ -322,6 +357,8 @@ public:
     // Access for vias
     const std::vector<Via> &vias() const { return m_vias; }
     std::vector<Via> &vias() { return m_vias; }
+    // Routing Methods
+    void DDR2DDR(std::shared_ptr<DataManager> data_manager);
     // Methods
     void addSegment(Segment segment) { m_segments.push_back(segment); }
     void addVia(Via via) { m_vias.push_back(via); }

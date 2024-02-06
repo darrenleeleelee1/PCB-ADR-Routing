@@ -15,6 +15,47 @@ typedef adjacency_list<vecS, vecS, directedS, no_property,
                 property<edge_reverse_t, Traits::edge_descriptor,
                     property<edge_weight_t, long>>>>> Graph;
 // clang-format on
+class TileNode
+{
+private:
+    Traits::vertex_descriptor m_N;
+    Traits::vertex_descriptor m_S;
+    Traits::vertex_descriptor m_E;
+    Traits::vertex_descriptor m_W;
+    Traits::vertex_descriptor m_C;
+    Traits::vertex_descriptor m_d_C;
+
+public:
+    TileNode() = default;
+    TileNode(Traits::vertex_descriptor N,
+             Traits::vertex_descriptor S,
+             Traits::vertex_descriptor E,
+             Traits::vertex_descriptor W,
+             Traits::vertex_descriptor C,
+             Traits::vertex_descriptor d_C)
+        : m_N(N)
+        , m_S(S)
+        , m_E(E)
+        , m_W(W)
+        , m_C(C)
+        , m_d_C(d_C)
+    {
+    }
+    ~TileNode() = default;
+    // Accessor
+    const Traits::vertex_descriptor &N() const { return m_N; }
+    Traits::vertex_descriptor &N() { return m_N; }
+    const Traits::vertex_descriptor &S() const { return m_S; }
+    Traits::vertex_descriptor &S() { return m_S; }
+    const Traits::vertex_descriptor &E() const { return m_E; }
+    Traits::vertex_descriptor &E() { return m_E; }
+    const Traits::vertex_descriptor &W() const { return m_W; }
+    Traits::vertex_descriptor &W() { return m_W; }
+    const Traits::vertex_descriptor &C() const { return m_C; }
+    Traits::vertex_descriptor &C() { return m_C; }
+    const Traits::vertex_descriptor &d_C() const { return m_d_C; }
+    Traits::vertex_descriptor &d_C() { return m_d_C; }
+};
 class GraphManager
 {
 private:
@@ -28,12 +69,7 @@ private:
 
     Traits::vertex_descriptor s, t;
     std::vector<std::vector<Traits::vertex_descriptor>> m_v;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_N;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_S;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_E;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_W;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_tiles_C;
-    std::vector<std::vector<Traits::vertex_descriptor>> m_d_tiles_C;
+    std::vector<std::vector<TileNode>> m_tiles;
     std::vector<std::vector<Traits::vertex_descriptor>> m_rows;
     std::vector<std::vector<Traits::vertex_descriptor>> m_d_rows;
     std::vector<std::vector<Traits::vertex_descriptor>> m_columns;
@@ -41,17 +77,15 @@ private:
     std::vector<std::string> m_vertex_names;
     // Private Methods
     void add_v(Graph &g, Traits::vertex_descriptor &v, std::string name);
+    void add_v(Graph &g, TileNode &tile_node, std::string name);
 
 public:
     // Constructor
     GraphManager() = default;
-    GraphManager(DataManager &data_manager,
-                 Component &component,
-                 int maximum_via_count = 1,
-                 size_t maximum_layer = 3,
-                 int threshold = 175); // 175 for case 4, 5, 6
+    GraphManager(DataManager &data_manager, Component &component, int expand = 0, size_t maximum_layer = 3);
     ~GraphManager() = default;
 
-    void minCostMaxFlow(Router &router);
+    long minCostMaxFlow();
+    void via_assignment(Router &router);
 };
 #endif // GRAPH_HPP

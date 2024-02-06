@@ -1,4 +1,9 @@
 #include "component_data.hpp"
+#include "basic_ds.hpp"
+#include "graph.hpp"
+#ifdef VERBOSE
+#include <iostream>
+#endif
 // Find the corner points of the component
 std::pair<Coordinate, Coordinate> Component::findBoundingBox()
 {
@@ -155,10 +160,161 @@ void DataManager::addCompPin(std::string comp_name, std::shared_ptr<Pin> pin)
         m_components[comp_name] = std::make_shared<Component>(comp_name);
     }
 }
-void DataManager::preprocess()
+void DataManager::preprocess(int threshold)
 {
-    for (auto &comp : m_components)
+    UnionFind uf;
+    for (auto &comp_pair : m_components)
     {
-        comp.second->createPinArr();
+        auto &comp = comp_pair.second;
+        comp->createPinArr();
+        for (auto &other_pair : m_components)
+        {
+            if (comp_pair.first != other_pair.first)
+            {
+                if (*comp_pair.second == *other_pair.second)
+                {
+                    uf.unite(comp_pair.second.get(), other_pair.second.get());
+                }
+            }
+        }
+    }
+    for (auto &comp_pair : m_components)
+    {
+        m_groups[uf.find(comp_pair.second.get())].push_back(comp_pair.first);
+    }
+    // Grouping
+    std::vector<Edge> edges;
+    for (const auto &group : m_groups)
+    {
+        const auto &components = group.second;
+
+        //  Check if it is a single component grouping
+        if (components.size() == 1)
+        {
+            Component *singleComponent = m_components[components.front()].get();
+            singleComponent->is_cpu() = true;
+            // Add edges between single component and all other components
+            for (const auto &other_group : m_groups)
+            {
+                if (other_group.first != group.first)
+                { // Avoid connecting with itself
+                    for (const auto &other_comp_key : other_group.second)
+                    {
+                        Component *otherComponent = m_components[other_comp_key].get();
+                        edges.push_back({singleComponent,
+                                         otherComponent,
+                                         distanceBetweenComponent(singleComponent, otherComponent)});
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Normal processing of multiple component grouping
+            for (size_t i = 0; i < components.size(); ++i)
+            {
+                for (size_t j = i + 1; j < components.size(); ++j)
+                {
+                    Component *a = m_components[components[i]].get();
+                    Component *b = m_components[components[j]].get();
+                    edges.push_back({a, b, distanceBetweenComponent(a, b)});
+                }
+            }
+        }
+    }
+    std::vector<Edge> mst = kruskalMST(edges);
+    // mst result
+    for (const auto &edge : mst)
+    {
+        if (edge.a->is_cpu())
+        {
+            edge.b->neighboors().at(0) = true;
+            edge.b->neighboors().at(1) = true;
+            continue;
+        }
+        if (edge.b->is_cpu())
+        {
+            edge.a->neighboors().at(0) = true;
+            edge.a->neighboors().at(1) = true;
+            continue;
+        }
+        if (std::abs(std::ceil(edge.a->bottom_left().x()) - std::ceil(edge.b->bottom_left().x())) < threshold &&
+            std::abs(std::ceil(edge.a->top_right().x()) - std::ceil(edge.b->top_right().x())) < threshold)
+        {
+            edge.a->is_verticle_stack() = true;
+            edge.b->is_verticle_stack() = true;
+            // who is on top
+            if (edge.a->bottom_left().y() > edge.b->bottom_left().y())
+            {
+                // a is on top
+                edge.a->neighboors().at(1) = true; // means a have bot neighboor
+                edge.b->neighboors().at(0) = true; // means b have top neighboor
+            }
+            else
+            {
+                // b is on top
+                edge.a->neighboors().at(0) = true; // means a have top neighboor
+                edge.b->neighboors().at(1) = true; // means b have bot neighboor
+            }
+        }
+        if (std::abs(std::ceil(edge.a->bottom_left().y()) - std::ceil(edge.b->bottom_left().y())) < threshold &&
+            std::abs(std::ceil(edge.a->top_right().y()) - std::ceil(edge.b->top_right().y())) < threshold)
+        {
+            edge.a->is_verticle_stack() = false;
+            edge.b->is_verticle_stack() = false;
+            // who is on right
+            if (edge.a->bottom_left().x() > edge.b->bottom_left().x())
+            {
+                // a is on right
+                edge.a->neighboors().at(0) = true; // means a have left neighboor
+                edge.b->neighboors().at(1) = true; // means b have right neighboor
+            }
+            else
+            {
+                // b is on right
+                edge.a->neighboors().at(1) = true; // means a have right neighboor
+                edge.b->neighboors().at(0) = true; // means b have left neighboor
+            }
+        }
+    }
+#ifdef VERBOSE
+    // print mst result
+    // for (const auto &edge : mst)
+    // {
+    //     std::cout << "Edge: " << edge.a->comp_name() << " " << edge.b->comp_name() << std::endl;
+    // }
+    // print out every component's information
+    // for (const auto &comp_pair : m_components)
+    // {
+    //     std::cout << "Component: " << comp_pair.first << std::endl;
+    //     std::cout << "Is CPU: " << comp_pair.second->is_cpu() << std::endl;
+    //     std::cout << "Is Verticle Stack: " << comp_pair.second->is_verticle_stack() << std::endl;
+    //     std::cout << "Neighboors: " << comp_pair.second->neighboors().at(0) << " "
+    //               << comp_pair.second->neighboors().at(1) << std::endl;
+    //     std::cout << std::endl;
+    // }
+#endif
+}
+
+void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
+{
+    for (auto comp_pair : data_manager->components())
+    {
+        auto comp = comp_pair.second;
+        if (comp->is_cpu())
+            continue;
+        int expand = 2;
+        int maximum_layer = 5;
+        std::shared_ptr<GraphManager> graph_manager;
+        do
+        {
+            graph_manager = std::make_shared<GraphManager>(*data_manager, *comp, expand++, maximum_layer);
+            if (expand > 5)
+            {
+                maximum_layer++;
+                expand = 0;
+            }
+        } while (graph_manager->minCostMaxFlow() != (long)comp->pins().size());
+        graph_manager->via_assignment(*this);
     }
 }
