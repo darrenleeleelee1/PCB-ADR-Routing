@@ -119,22 +119,13 @@ void Component::createPinArr()
         m_pin_arr.at(row).at(column) = pin;
     }
 #ifdef VERBOSE
-    // std::cout << "Pin Arr: " << std::endl;
-    // for (int i = m_pin_arr.size() - 1; i >= 0; --i)
-    // {
-    //     for (size_t j = 0; j < m_pin_arr.at(i).size(); ++j)
-    //     {
-    //         if (m_pin_arr.at(i).at(j))
-    //         {
-    //             std::cout << m_pin_arr.at(i).at(j)->net_name() << " ";
-    //         }
-    //         else
-    //         {
-    //             std::cout << "NULL ";
-    //         }
-    //     }
-    //     std::cout << std::endl;
-    // }
+    // Print component information
+    // std::cout << "Component: " << m_comp_name << std::endl;
+    // std::cout << "Bottom Left: " << m_bottom_left.x() << " " << m_bottom_left.y() << std::endl;
+    // std::cout << "Top Right: " << m_top_right.x() << " " << m_top_right.y() << std::endl;
+    // std::cout << "Tile Width: " << m_tile_width << std::endl;
+    // std::cout << "Tile Height: " << m_tile_height << std::endl;
+    // std::cout << std::endl;
 #endif
 }
 
@@ -298,6 +289,7 @@ void DataManager::preprocess(int threshold)
 
 void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
 {
+    std::shared_ptr<GraphManager> graph_manager;
     for (auto comp_pair : data_manager->components())
     {
         auto comp = comp_pair.second;
@@ -305,7 +297,6 @@ void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
             continue;
         int expand = 2;
         int maximum_layer = 5;
-        std::shared_ptr<GraphManager> graph_manager;
         do
         {
             graph_manager = std::make_shared<GraphManager>(*data_manager, *comp, expand++, maximum_layer);
@@ -315,6 +306,30 @@ void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
                 expand = 0;
             }
         } while (graph_manager->minCostMaxFlow() != (long)comp->pins().size());
-        graph_manager->via_assignment(*this);
+        graph_manager->DDR2DDR(*this);
+    }
+}
+
+void Router::CPU2DDR(std::shared_ptr<DataManager> data_manager)
+{
+    std::shared_ptr<GraphManager> graph_manager;
+    double wire_spacing = 4.8;
+    double wire_width = 4.0;
+    double bump_ball_radius = 7.5;
+    std::string escape_boundry = "E";
+    for (auto comp_pair : data_manager->components())
+    {
+        auto comp = comp_pair.second;
+        if (comp->is_cpu())
+        {
+            graph_manager = std::make_shared<GraphManager>(
+                *data_manager, *comp, wire_spacing, wire_width, bump_ball_radius, escape_boundry);
+#ifdef VERBOSE
+            std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
+            std::cout << "flow = " << graph_manager->minCostMaxFlow() << std::endl;
+            std::cout << "#pins = " << (long)comp->pins().size() << std::endl;
+            graph_manager->CPU2DDR(*this, escape_boundry);
+#endif
+        }
     }
 }

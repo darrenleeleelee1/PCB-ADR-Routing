@@ -359,6 +359,7 @@ public:
     std::vector<Via> &vias() { return m_vias; }
     // Routing Methods
     void DDR2DDR(std::shared_ptr<DataManager> data_manager);
+    void CPU2DDR(std::shared_ptr<DataManager> data_manager);
     // Methods
     void addSegment(Segment segment) { m_segments.push_back(segment); }
     void addVia(Via via) { m_vias.push_back(via); }

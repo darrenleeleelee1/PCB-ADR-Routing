@@ -34,6 +34,7 @@ int main(int argc, char const *argv[])
     }
 
     // Preprocess data
+    utils::printlog("Preprocessing data...");
     data_manager->preprocess(); // case4, case5, case6
     // data_manager->preprocess(25); case2
 #ifdef GDT
@@ -42,13 +43,18 @@ int main(int argc, char const *argv[])
 #endif
 
     // Router DDR2DDR
+    utils::printlog("Routing DDR2DDR...");
     std::shared_ptr<Router> router = std::make_shared<Router>();
     router->DDR2DDR(data_manager);
+
+    // Router CPU2DDR
+    router->CPU2DDR(data_manager);
 #ifdef GDT
     gdt_writer.DDR2DDR(*router);
 #endif
     // Produce all gds
 #ifdef GDT
+    utils::printlog("Converting GDT to GDS...");
     gdt_writer.gdt2gds(case_number);
 #endif
     utils::printlog("--------------------------------------------------------");

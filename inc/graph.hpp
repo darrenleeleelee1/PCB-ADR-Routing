@@ -5,6 +5,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/successive_shortest_path_nonnegative_weights.hpp>
 #include <boost/graph/find_flow_cost.hpp>
+#include <boost/graph/depth_first_search.hpp>
 #include <vector>
 using namespace boost;
 #define INF 1e9
@@ -78,14 +79,44 @@ private:
     // Private Methods
     void add_v(Graph &g, Traits::vertex_descriptor &v, std::string name);
     void add_v(Graph &g, TileNode &tile_node, std::string name);
+    Graph reverseGraph(Graph &g);
 
 public:
     // Constructor
     GraphManager() = default;
-    GraphManager(DataManager &data_manager, Component &component, int expand = 0, size_t maximum_layer = 3);
+    GraphManager(DataManager &data_manager, Component &component, int expand, size_t maximum_layer);
+    GraphManager(DataManager &data_manager,
+                 Component &component,
+                 double wire_spacing,
+                 double wire_width,
+                 double bump_ball_radius,
+                 std::string escape_boundry);
     ~GraphManager() = default;
 
     long minCostMaxFlow();
-    void via_assignment(Router &router);
+    void DDR2DDR(Router &router);
+    void CPU2DDR(Router &router, std::string escape_boundry);
 };
+
+// class DFS_visitor : public default_dfs_visitor
+// {
+// private:
+//     std::vector<std::string> m_vertex_names;
+
+// public:
+//     DFS_visitor(std::vector<std::string> vertex_names)
+//         : m_vertex_names(vertex_names)
+//     {
+//     }
+//     template <typename Vertex, typename Graph> void discover_vertex(Vertex u, const Graph &g) const
+//     {
+// #ifdef VERBOSE
+//         std::cout << m_vertex_names[u] << std::endl; // 當發現一個頂點時打印它
+//         if (m_vertex_names[u] == "s")
+//         {
+//             throw std::runtime_error("s");
+//         }
+// #endif
+//     }
+// };
 #endif // GRAPH_HPP
