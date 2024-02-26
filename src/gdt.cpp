@@ -151,7 +151,7 @@ void GDTWriter::preprocess()
     file.close();
 }
 
-void GDTWriter::DDR2DDR(Router &router)
+void GDTWriter::routing(Router &router)
 {
     // mkdir GDT_files if not exists
     std::string file_name = m_root_path + "DDR2DDR";

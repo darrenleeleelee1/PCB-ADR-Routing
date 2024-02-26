@@ -98,25 +98,4 @@ public:
     void CPU2DDR(Router &router, std::string escape_boundry);
 };
 
-// class DFS_visitor : public default_dfs_visitor
-// {
-// private:
-//     std::vector<std::string> m_vertex_names;
-
-// public:
-//     DFS_visitor(std::vector<std::string> vertex_names)
-//         : m_vertex_names(vertex_names)
-//     {
-//     }
-//     template <typename Vertex, typename Graph> void discover_vertex(Vertex u, const Graph &g) const
-//     {
-// #ifdef VERBOSE
-//         std::cout << m_vertex_names[u] << std::endl; // 當發現一個頂點時打印它
-//         if (m_vertex_names[u] == "s")
-//         {
-//             throw std::runtime_error("s");
-//         }
-// #endif
-//     }
-// };
 #endif // GRAPH_HPP

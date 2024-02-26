@@ -296,7 +296,7 @@ void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
         if (comp->is_cpu())
             continue;
         int expand = 2;
-        int maximum_layer = 5;
+        int maximum_layer = 3;
         do
         {
             graph_manager = std::make_shared<GraphManager>(*data_manager, *comp, expand++, maximum_layer);
@@ -306,6 +306,11 @@ void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
                 expand = 0;
             }
         } while (graph_manager->minCostMaxFlow() != (long)comp->pins().size());
+#ifdef VERBOSE
+        std::cout << "DDR2DDR: " << comp->comp_name() << std::endl;
+        std::cout << "expand = " << expand << std::endl;
+        std::cout << "maximum_layer = " << maximum_layer << std::endl;
+#endif
         graph_manager->DDR2DDR(*this);
     }
 }

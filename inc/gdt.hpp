@@ -33,7 +33,7 @@ public:
     }
     // Methods
     void preprocess();
-    void DDR2DDR(Router &router);
+    void routing(Router &router);
     void gdt2gds(std::string prefix);
 };
 

@@ -48,9 +48,9 @@ int main(int argc, char const *argv[])
     router->DDR2DDR(data_manager);
 
     // Router CPU2DDR
-    router->CPU2DDR(data_manager);
+    // router->CPU2DDR(data_manager);
 #ifdef GDT
-    gdt_writer.DDR2DDR(*router);
+    gdt_writer.routing(*router);
 #endif
     // Produce all gds
 #ifdef GDT

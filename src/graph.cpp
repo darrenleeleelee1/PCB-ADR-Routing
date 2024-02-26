@@ -677,16 +677,7 @@ void GraphManager::CPU2DDR(Router &router, std::string escape_boundry)
     Coordinate tile_bottom_left = Coordinate(m_component->bottom_left().x() - (m_component->tile_width() / 2),
                                              m_component->bottom_left().y() - (m_component->tile_height() / 2),
                                              m_component->bottom_left().z());
-    double bias = 4.5;
-
-    // DFS_visitor vis(m_vertex_names);
-    // try
-    // {
-    //     depth_first_search(reverseGraph(g), visitor(vis).root_vertex(vertex(2, g)));
-    // }
-    // catch (std::exception &e)
-    // {
-    // }
+    double bias = 0;
 
     // Display flow on each edge
     graph_traits<Graph>::edge_iterator ei, ei_end;
