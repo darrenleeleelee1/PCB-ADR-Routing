@@ -49,7 +49,7 @@ Graph GraphManager::reverseGraph(Graph &g)
     return rg;
 }
 // For DDR2DDR
-GraphManager::GraphManager(DataManager &data_manager, Component &component, int expand, size_t maximum_layer)
+void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, int expand, size_t maximum_layer)
 {
     if (component.is_cpu())
     {
@@ -251,12 +251,12 @@ GraphManager::GraphManager(DataManager &data_manager, Component &component, int 
     }
 }
 // For CPU2DDR
-GraphManager::GraphManager(DataManager &data_manager,
-                           Component &component,
-                           double wire_spacing,
-                           double wire_width,
-                           double bump_ball_radius,
-                           std::string escape_boundry)
+void GraphManager::CPU2DDRInit(DataManager &data_manager,
+                               Component &component,
+                               double wire_spacing,
+                               double wire_width,
+                               double bump_ball_radius,
+                               std::string escape_boundry)
 {
     if (!component.is_cpu())
     {
@@ -667,19 +667,227 @@ void GraphManager::DDR2DDR(Router &router)
         }
     }
 }
+void tileDetailedRoute(Router &router,
+                       Coordinate tile_bottom_left,
+                       char from,
+                       char to,
+                       int rep_from,
+                       int total_from,
+                       int rep_to,
+                       int total_to,
+                       double tile_width,
+                       double tile_height)
+{
+    total_from++;
+    total_to++;
+    Coordinate tile_top_right =
+        Coordinate(tile_bottom_left.x() + tile_width, tile_bottom_left.y() + tile_height, tile_bottom_left.z());
+    Coordinate tile_bottom_right = Coordinate(tile_top_right.x(), tile_bottom_left.y(), tile_bottom_left.z());
+    Coordinate tile_top_left = Coordinate(tile_bottom_left.x(), tile_top_right.y(), tile_bottom_left.z());
+    if ((from == 'n' && to == 'e') || (from == 'e' && to == 'n'))
+    {
+        double x = tile_width * rep_from / total_from;
+        double y = tile_height * rep_to / total_to;
+        double a = 0.5 * std::min(x, y);
 
-void GraphManager::CPU2DDR(Router &router, std::string escape_boundry)
+        router.addSegment(
+            Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()},
+                    Coordinate{tile_top_right.x() - x, tile_top_right.y() - (y - a), tile_top_right.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - (y - a), tile_top_right.z()},
+                                  Coordinate{tile_top_right.x() - a, tile_top_right.y() - y, tile_top_right.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_right.x() - a, tile_top_right.y() - y, tile_top_right.z()},
+                                  Coordinate{tile_top_right.x(), tile_top_right.y() - y, tile_top_right.z()}});
+    }
+    else if ((from == 'n' && to == 's') || (from == 's' && to == 'n'))
+    {
+        double x = tile_width * rep_from / total_from;
+        double y = tile_width * rep_to / total_to;
+        double a = std::abs(x - y);
+        router.addSegment(
+            Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()},
+                    Coordinate{tile_top_right.x() - x, tile_bottom_right.y() + 2 * a, tile_top_right.z()}});
+        if (a > 0.0)
+        {
+
+            router.addSegment(
+                Segment{Coordinate{tile_top_right.x() - x, tile_bottom_right.y() + 2 * a, tile_top_right.z()},
+                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_top_right.z()}});
+            router.addSegment(
+                Segment{Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_top_right.z()},
+                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y(), tile_top_right.z()}});
+        }
+    }
+    else if ((from == 'n' && to == 'w') || (from == 'w' && to == 'n'))
+    {
+        double x = tile_width * rep_from / total_from; // n
+        double y = tile_height * rep_to / total_to; // w
+        double a = 0.5 * std::min(x, y);
+        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y(), tile_top_left.z()},
+                                  Coordinate{tile_top_left.x() + x, tile_top_left.y() - a, tile_top_left.z()}});
+
+        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y() - a, tile_top_left.z()},
+                                  Coordinate{tile_top_left.x() + a, tile_top_left.y() - y, tile_top_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_left.x() + a, tile_top_left.y() - y, tile_top_left.z()},
+                                  Coordinate{tile_top_left.x(), tile_top_left.y() - y, tile_top_left.z()}});
+    }
+    else if ((from == 'e' && to == 's') || (from == 's' && to == 'e'))
+    {
+        double y = tile_height * rep_from / total_from; // e
+        double x = tile_width * rep_to / total_to; // s
+        double a = 0.5 * std::min(x, y);
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y() + y, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - a, tile_bottom_right.y() + y, tile_bottom_right.z()}});
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - a, tile_bottom_right.y() + y, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + a, tile_bottom_right.z()}});
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + a, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y(), tile_bottom_right.z()}});
+    }
+    else if ((from == 'e' && to == 'w') || (from == 'w' && to == 'e'))
+    {
+        double x = tile_height * rep_to / total_to; // w
+        double y = tile_height * rep_from / total_from; // e
+        double a = std::abs(x - y);
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_left.x(), tile_bottom_right.y() + x, tile_bottom_left.z()},
+                    Coordinate{tile_bottom_right.x() - 2 * a, tile_bottom_right.y() + x, tile_bottom_left.z()}});
+        if (a > 0.0)
+        {
+            router.addSegment(
+                Segment{Coordinate{tile_bottom_right.x() - 2 * a, tile_bottom_right.y() + x, tile_bottom_left.z()},
+                        Coordinate{tile_top_right.x() - a, tile_bottom_right.y() + y, tile_top_right.z()}});
+            router.addSegment(Segment{Coordinate{tile_top_right.x() - a, tile_bottom_right.y() + y, tile_top_right.z()},
+                                      Coordinate{tile_top_right.x(), tile_bottom_right.y() + y, tile_top_right.z()}});
+        }
+    }
+    else if ((from == 's' && to == 'w') || (from == 'w' && to == 's'))
+    {
+        double x = tile_height * rep_from / total_from;
+        double y = tile_width * rep_to / total_to;
+        double a = 0.5 * std::min(x, y);
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y(), tile_bottom_left.z()},
+                    Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + a, tile_bottom_left.z()}});
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + a, tile_bottom_left.z()},
+                    Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()},
+                                  Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+    }
+    else if ((from == '{' && to == 'e') || (from == 'e' && to == '{'))
+    {
+        double y = tile_height * rep_to / total_to;
+        router.addSegment(Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
+                                  Coordinate{tile_top_left.x() + y, tile_top_left.y() - y, tile_top_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_left.x() + y, tile_top_left.y() - y, tile_top_left.z()},
+                                  Coordinate{tile_top_right.x(), tile_top_left.y() - y, tile_top_left.z()}});
+    }
+    else if ((from == '{' && to == 's') || (from == 's' && to == '{'))
+    {
+        double x = tile_width * rep_to / total_to;
+        router.addSegment(Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
+                                  Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()},
+                                  Coordinate{tile_top_left.x() + x, tile_bottom_left.y(), tile_top_left.z()}});
+    }
+    else if ((from == '|' && to == 's') || (from == 's' && to == '|'))
+    {
+        double x = tile_width * rep_to / total_to;
+        router.addSegment(Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
+                                  Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()},
+                                  Coordinate{tile_top_right.x() - x, tile_bottom_right.y(), tile_top_right.z()}});
+    }
+    else if ((from == '|' && to == 'w') || (from == 'w' && to == '|'))
+    {
+        double y = tile_height * rep_to / total_to;
+        router.addSegment(Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
+                                  Coordinate{tile_top_right.x() - y, tile_top_right.y() - y, tile_top_right.z()}});
+        router.addSegment(Segment{Coordinate{tile_top_right.x() - y, tile_top_right.y() - y, tile_top_right.z()},
+                                  Coordinate{tile_top_left.x(), tile_top_right.y() - y, tile_top_right.z()}});
+    }
+    else if ((from == '}' && to == 'n') || (from == 'n' && to == '}'))
+    {
+        double x = tile_width * rep_from / total_from;
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y(), tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()}});
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_top_right.y(), tile_bottom_right.z()}});
+    }
+    else if ((from == '}' && to == 'w') || (from == 'w' && to == '}'))
+    {
+        double y = tile_height * rep_to / total_to;
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y(), tile_bottom_right.z()},
+                    Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()},
+                                  Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+    }
+    else if ((from == '~' && to == 'n') || (from == 'n' && to == '~'))
+    {
+        double x = tile_width * rep_from / total_from;
+
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_left.x(), tile_bottom_left.y(), tile_bottom_left.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_top_right.y() - x, tile_bottom_right.z()}});
+        router.addSegment(Segment{Coordinate{tile_bottom_right.x() - x, tile_top_right.y() - x, tile_bottom_right.z()},
+                                  Coordinate{tile_bottom_right.x() - x, tile_top_right.y(), tile_bottom_right.z()}});
+    }
+    else if ((from == '~' && to == 'e') || (from == 'e' && to == '~'))
+    {
+        double y = tile_height * rep_from / total_from;
+        router.addSegment(
+            Segment{Coordinate{tile_bottom_left.x(), tile_bottom_left.y(), tile_bottom_left.z()},
+                    Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()}});
+        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()},
+                                  Coordinate{tile_bottom_right.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+    }
+    else
+    {
+        throw std::runtime_error("Invalid from and to: " + std::string(1, from) + ", " + std::string(1, to));
+    }
+}
+void GraphManager::CPU2DDR(Router &router, Component &component, std::string escape_boundry)
 {
     std::regex vertex_pattern("v([0-9]{1,2})_([0-9]{1,2})");
     std::regex tile_pattern("([NSEWC])([0-9]{1,2})_([0-9]{1,2})");
     std::regex d_tile_pattern("dC([0-9]{1,2})_([0-9]{1,2})");
     std::smatch match_source, match_target;
-    Coordinate tile_bottom_left = Coordinate(m_component->bottom_left().x() - (m_component->tile_width() / 2),
-                                             m_component->bottom_left().y() - (m_component->tile_height() / 2),
-                                             m_component->bottom_left().z());
-    double bias = 0;
+    Coordinate tile_bottom_left = Coordinate(component.bottom_left().x() - component.tile_width(),
+                                             component.bottom_left().y() - component.tile_height(),
+                                             component.bottom_left().z());
+    enum Direction
+    {
+        N,
+        E,
+        S,
+        W,
+        DIRECTION_COUNT
+    };
+    enum IO
+    {
+        IN,
+        OUT,
+        IO_COUNT
+    };
+    struct tmp_tile
+    {
+        int direction[DIRECTION_COUNT][IO_COUNT] = {{0}};
+        bool pins[4] = {false, false, false, false};
+    };
 
+    int num_tile_rows = component.rows() + 1;
+    int num_tile_columns = component.columns() + 1;
+    std::vector<std::vector<tmp_tile>> v_tmp_tiles(num_tile_rows, std::vector<tmp_tile>(num_tile_columns));
     // Display flow on each edge
+    // base index
+    // 0 - s, 1 - t
+    // 2 vertices
+    // # of pin + 2 - tiles
     graph_traits<Graph>::edge_iterator ei, ei_end;
     for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei)
     {
@@ -688,46 +896,6 @@ void GraphManager::CPU2DDR(Router &router, std::string escape_boundry)
         {
             std::string source_name = m_vertex_names[source(*ei, g)];
             std::string target_name = m_vertex_names[target(*ei, g)];
-            // vertex to tile
-            if (std::regex_match(source_name, match_source, vertex_pattern) &&
-                std::regex_match(target_name, match_target, tile_pattern))
-            {
-                int s_i = std::stoi(match_source[1].str());
-                int s_j = std::stoi(match_source[2].str());
-                int t_i = std::stoi(match_target[2].str());
-                int t_j = std::stoi(match_target[3].str());
-                auto &pin_arr = m_component->pin_arr();
-                Coordinate start, end;
-                start = pin_arr.at(s_i).at(s_j)->coordinate();
-                if (match_target[1].str() == "N")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) + bias,
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "S")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) - bias,
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "E")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) + bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "W")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) - bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else
-                    throw std::runtime_error("Invalid escape boundry character");
-                router.addSegment(Segment{start, end});
-            }
-            // tile to tile
             if (std::regex_match(source_name, match_source, tile_pattern) &&
                 std::regex_match(target_name, match_target, tile_pattern))
             {
@@ -735,151 +903,713 @@ void GraphManager::CPU2DDR(Router &router, std::string escape_boundry)
                 int s_j = std::stoi(match_source[3].str());
                 int t_i = std::stoi(match_target[2].str());
                 int t_j = std::stoi(match_target[3].str());
-                Coordinate start, end;
-                if (match_source[1].str() == "N")
+                if (match_source[1].str() == "N" && match_target[1].str() == "S")
                 {
-                    start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                       tile_bottom_left.y() + (s_i * m_component->tile_height()) + bias,
-                                       tile_bottom_left.z()};
+                    v_tmp_tiles.at(s_i).at(s_j).direction[N][OUT] += flow;
+                    v_tmp_tiles.at(t_i).at(t_j).direction[S][IN] += flow;
                 }
-                else if (match_source[1].str() == "S")
+                if (match_source[1].str() == "S" && match_target[1].str() == "N")
                 {
-                    start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                       tile_bottom_left.y() + (s_i * m_component->tile_height()) - bias,
-                                       tile_bottom_left.z()};
+                    v_tmp_tiles.at(s_i).at(s_j).direction[S][OUT] += flow;
+                    v_tmp_tiles.at(t_i).at(t_j).direction[N][IN] += flow;
                 }
-                else if (match_source[1].str() == "E")
+                if (match_source[1].str() == "E" && match_target[1].str() == "W")
                 {
-                    start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()) + bias,
-                                       tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                       tile_bottom_left.z()};
+                    v_tmp_tiles.at(s_i).at(s_j).direction[E][OUT] += flow;
+                    v_tmp_tiles.at(t_i).at(t_j).direction[W][IN] += flow;
                 }
-                else if (match_source[1].str() == "W")
+                if (match_source[1].str() == "W" && match_target[1].str() == "E")
                 {
-                    start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()) - bias,
-                                       tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                       tile_bottom_left.z()};
+                    v_tmp_tiles.at(s_i).at(s_j).direction[W][OUT] += flow;
+                    v_tmp_tiles.at(t_i).at(t_j).direction[E][IN] += flow;
                 }
-                else if (match_source[1].str() == "C")
-                {
-                    start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                       tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                       tile_bottom_left.z()};
-                }
-                else
-                    throw std::runtime_error("Invalid escape boundry character");
-                if (match_target[1].str() == "N")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) + bias,
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "S")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) - bias,
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "E")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) + bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "W")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) - bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else if (match_target[1].str() == "C")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else
-                    throw std::runtime_error("Invalid escape boundry character");
-
-                router.addSegment(Segment{start, end});
             }
-            // dtile to tile
-            if (std::regex_match(source_name, match_source, d_tile_pattern) &&
+            if (std::regex_match(source_name, match_source, vertex_pattern) &&
                 std::regex_match(target_name, match_target, tile_pattern))
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
                 int t_i = std::stoi(match_target[2].str());
                 int t_j = std::stoi(match_target[3].str());
-                Coordinate start, end;
-                start = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                   tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                   tile_bottom_left.z()};
                 if (match_target[1].str() == "N")
                 {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) + bias,
-                                     tile_bottom_left.z()};
+                    v_tmp_tiles.at(t_i).at(t_j).pins[N] = true;
                 }
-                else if (match_target[1].str() == "S")
+                if (match_target[1].str() == "S")
                 {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()) - bias,
-                                     tile_bottom_left.z()};
+                    v_tmp_tiles.at(t_i).at(t_j).pins[S] = true;
                 }
-                else if (match_target[1].str() == "E")
+                if (match_target[1].str() == "E")
                 {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) + bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
+                    v_tmp_tiles.at(t_i).at(t_j).pins[E] = true;
                 }
-                else if (match_target[1].str() == "W")
+                if (match_target[1].str() == "W")
                 {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()) - bias,
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
+                    v_tmp_tiles.at(t_i).at(t_j).pins[W] = true;
                 }
-                else if (match_target[1].str() == "C")
-                {
-                    end = Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                     tile_bottom_left.z()};
-                }
-                else
-                    throw std::runtime_error("Invalid escape boundry character");
-                router.addSegment(Segment{start, end});
             }
-            // vertex to target
             if (std::regex_match(source_name, match_source, vertex_pattern) && target_name == "t")
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
-                Coordinate start, end;
-                start = m_component->pin_arr().at(s_i).at(s_j)->coordinate();
-                // If is escape to N s_i = num_pin_rows - 1
-                if (s_i == m_component->rows() - 1 && escape_boundry.find('N') != std::string::npos)
+                Coordinate pin_bottom_left =
+                    Coordinate(component.bottom_left().x(), component.bottom_left().y(), component.bottom_left().z());
+                if (escape_boundry.find('N') != std::string::npos)
                 {
-                    end = Coordinate{start.x(), start.y() + (m_component->tile_height() / 2) + bias, start.z()};
+                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z()),
+                                              Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + (s_i + 1) * component.tile_height(),
+                                                         pin_bottom_left.z())});
                 }
-                // If is escape to S s_i = 0
-                else if (s_i == 0 && escape_boundry.find('S') != std::string::npos)
+                else if (escape_boundry.find('S') != std::string::npos)
                 {
-                    end = Coordinate{start.x(), start.y() - (m_component->tile_height() / 2) - bias, start.z()};
+                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z()),
+                                              Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + (s_i - 1) * component.tile_height(),
+                                                         pin_bottom_left.z())});
                 }
-                // If is escape to E s_j = num_pin_columns - 1
-                else if (s_j == m_component->columns() - 1 && escape_boundry.find('E') != std::string::npos)
+                else if (escape_boundry.find('E') != std::string::npos)
                 {
-                    end = Coordinate{start.x() + (m_component->tile_width() / 2) + bias, start.y(), start.z()};
+                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z()),
+                                              Coordinate(pin_bottom_left.x() + (s_j + 1) * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z())});
                 }
-                // If is escape to W s_j = 0
-                else if (s_j == 0 && escape_boundry.find('W') != std::string::npos)
+                else if (escape_boundry.find('W') != std::string::npos)
                 {
-                    end = Coordinate{start.x() - (m_component->tile_width() / 2) - bias, start.y(), start.z()};
+                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z()),
+                                              Coordinate(pin_bottom_left.x() + (s_j - 1) * component.tile_width(),
+                                                         pin_bottom_left.y() + s_i * component.tile_height(),
+                                                         pin_bottom_left.z())});
                 }
                 else
+                {
                     throw std::runtime_error("Invalid escape boundry character");
+                }
+            }
+            if (std::regex_match(source_name, match_source, tile_pattern) && target_name == "t")
+            {
+                int s_i = std::stoi(match_source[2].str());
+                int s_j = std::stoi(match_source[3].str());
+                if (escape_boundry.find('N') != std::string::npos)
+                {
+                    v_tmp_tiles.at(s_i).at(s_j).direction[N][OUT] += flow;
+                }
+                else if (escape_boundry.find('S') != std::string::npos)
+                {
+                    v_tmp_tiles.at(s_i).at(s_j).direction[S][OUT] += flow;
+                }
+                else if (escape_boundry.find('E') != std::string::npos)
+                {
+                    v_tmp_tiles.at(s_i).at(s_j).direction[E][OUT] += flow;
+                }
+                else if (escape_boundry.find('W') != std::string::npos)
+                {
+                    v_tmp_tiles.at(s_i).at(s_j).direction[W][OUT] += flow;
+                }
+                else
+                {
+                    throw std::runtime_error("Invalid escape boundry character");
+                }
+            }
+        }
+    }
+    // print v_tmp_tiles
+    for (int i = 0; i < num_tile_rows; ++i)
+    {
+        for (int j = 0; j < num_tile_columns; j++)
+        {
+            int count = 0;
+            for (int k = 0; k < DIRECTION_COUNT; ++k)
+            {
+                for (int l = 0; l < IO_COUNT; ++l)
+                {
+                    if (l == IN)
+                        count += v_tmp_tiles.at(i).at(j).direction[k][l];
+                    else
+                        count -= v_tmp_tiles.at(i).at(j).direction[k][l];
+                }
+            }
+            for (int k = 0; k < DIRECTION_COUNT; ++k)
+            {
+                if (v_tmp_tiles.at(i).at(j).pins[k])
+                    count++;
+            }
+#ifdef VERBOSE
+            if (count != 0)
+            {
+                std::cout << "Tile " << i << " " << j << " N_in: " << v_tmp_tiles.at(i).at(j).direction[N][IN]
+                          << " N_out: " << v_tmp_tiles.at(i).at(j).direction[N][OUT]
+                          << " S_in: " << v_tmp_tiles.at(i).at(j).direction[S][IN]
+                          << " S_out: " << v_tmp_tiles.at(i).at(j).direction[S][OUT]
+                          << " E_in: " << v_tmp_tiles.at(i).at(j).direction[E][IN]
+                          << " E_out: " << v_tmp_tiles.at(i).at(j).direction[E][OUT]
+                          << " W_in: " << v_tmp_tiles.at(i).at(j).direction[W][IN]
+                          << " W_out: " << v_tmp_tiles.at(i).at(j).direction[W][OUT] << " count: " << count
+                          << std::endl;
+                // throw run time error
+                throw std::runtime_error("Invalid flow count");
+            }
+#endif
+        }
+    }
 
-                router.addSegment(Segment{start, end});
+    for (int i = 0; i < num_tile_rows; ++i)
+    {
+        for (int j = 0; j < num_tile_columns; j++)
+        {
+            std::vector<char> st;
+            char to_c, from_c;
+            int rep_N = 1, rep_S = 1, rep_E = 1, rep_W = 1;
+            int rep, total;
+            Coordinate t_t = tile_bottom_left;
+            t_t.x() += j * component.tile_width();
+            t_t.y() += i * component.tile_height();
+            for (int k = 0; k < DIRECTION_COUNT; ++k)
+            {
+                if (v_tmp_tiles.at(i).at(j).pins[k])
+                {
+                    switch (k)
+                    {
+                    case N:
+                        to_c = '{';
+                        if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                        {
+                            from_c = st.back();
+                            from_c += 32;
+                            st.pop_back();
+                            switch (from_c)
+                            {
+                            case 'n':
+                                rep = rep_N++;
+                                total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                break;
+                            case 'e':
+                                rep = rep_E++;
+                                total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                break;
+                            case 's':
+                                rep = rep_S++;
+                                total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                break;
+                            case 'w':
+                                rep = rep_W++;
+                                total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                break;
+                            }
+                            tileDetailedRoute(router,
+                                              t_t,
+                                              from_c,
+                                              to_c,
+                                              rep,
+                                              total,
+                                              0,
+                                              0,
+                                              component.tile_width(),
+                                              component.tile_height());
+                        }
+                        else
+                            st.push_back(to_c);
+                        break;
+                    case E:
+                        to_c = '|';
+                        if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                        {
+                            from_c = st.back();
+                            from_c += 32;
+                            st.pop_back();
+                            switch (from_c)
+                            {
+                            case 'n':
+                                rep = rep_N++;
+                                total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                break;
+                            case 'e':
+                                rep = rep_E++;
+                                total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                break;
+                            case 's':
+                                rep = rep_S++;
+                                total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                break;
+                            case 'w':
+                                rep = rep_W++;
+                                total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                break;
+                            }
+                            tileDetailedRoute(router,
+                                              t_t,
+                                              from_c,
+                                              to_c,
+                                              rep,
+                                              total,
+                                              0,
+                                              0,
+                                              component.tile_width(),
+                                              component.tile_height());
+                        }
+                        else
+                            st.push_back(to_c);
+                        break;
+                    case S:
+                        to_c = '}';
+                        if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                        {
+                            from_c = st.back();
+                            from_c += 32;
+                            st.pop_back();
+                            switch (from_c)
+                            {
+                            case 'n':
+                                rep = rep_N++;
+                                total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                break;
+                            case 'e':
+                                rep = rep_E++;
+                                total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                break;
+                            case 's':
+                                rep = rep_S++;
+                                total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                break;
+                            case 'w':
+                                rep = rep_W++;
+                                total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                break;
+                            }
+                            tileDetailedRoute(router,
+                                              t_t,
+                                              from_c,
+                                              to_c,
+                                              rep,
+                                              total,
+                                              0,
+                                              0,
+                                              component.tile_width(),
+                                              component.tile_height());
+                        }
+                        else
+                            st.push_back(to_c);
+                        break;
+                    case W:
+                        to_c = '~';
+                        if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                        {
+                            from_c = st.back();
+                            from_c += 32;
+                            st.pop_back();
+                            switch (from_c)
+                            {
+                            case 'n':
+                                rep = rep_N++;
+                                total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                break;
+                            case 'e':
+                                rep = rep_E++;
+                                total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                break;
+                            case 's':
+                                rep = rep_S++;
+                                total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                break;
+                            case 'w':
+                                rep = rep_W++;
+                                total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                break;
+                            }
+                            tileDetailedRoute(router,
+                                              t_t,
+                                              from_c,
+                                              to_c,
+                                              rep,
+                                              total,
+                                              0,
+                                              0,
+                                              component.tile_width(),
+                                              component.tile_height());
+                        }
+                        else
+                            st.push_back(to_c);
+                        break;
+                    }
+                }
+                for (int l = 0; l < IO_COUNT; ++l)
+                {
+                    if (l == IN)
+                    {
+                        if (v_tmp_tiles.at(i).at(j).direction[k][l] > 0)
+                        {
+                            switch (k)
+                            {
+                            case N:
+                                for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                                {
+                                    to_c = 'n';
+                                    if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                                    {
+                                        from_c = st.back();
+                                        from_c += 32;
+                                        st.pop_back();
+                                        switch (from_c)
+                                        {
+                                        case 'n':
+                                            rep = rep_N++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                            break;
+                                        case 'e':
+                                            rep = rep_E++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                            break;
+                                        case 's':
+                                            rep = rep_S++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                            break;
+                                        case 'w':
+                                            rep = rep_W++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                            break;
+                                        }
+                                        tileDetailedRoute(router,
+                                                          t_t,
+                                                          from_c,
+                                                          to_c,
+                                                          rep,
+                                                          total,
+                                                          rep_N++,
+                                                          v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                          component.tile_width(),
+                                                          component.tile_height());
+                                    }
+                                    else
+                                        st.push_back(to_c);
+                                }
+                                break;
+                            case E:
+                                for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                                {
+                                    to_c = 'e';
+                                    if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                                    {
+                                        from_c = st.back();
+                                        from_c += 32;
+                                        st.pop_back();
+                                        switch (from_c)
+                                        {
+                                        case 'n':
+                                            rep = rep_N++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                            break;
+                                        case 'e':
+                                            rep = rep_E++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                            break;
+                                        case 's':
+                                            rep = rep_S++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                            break;
+                                        case 'w':
+                                            rep = rep_W++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                            break;
+                                        }
+                                        tileDetailedRoute(router,
+                                                          t_t,
+                                                          from_c,
+                                                          to_c,
+                                                          rep,
+                                                          total,
+                                                          rep_E++,
+                                                          v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                          component.tile_width(),
+                                                          component.tile_height());
+                                    }
+                                    else
+                                        st.push_back(to_c);
+                                }
+                                break;
+                            case S:
+                                for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                                {
+                                    to_c = 's';
+                                    if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                                    {
+                                        from_c = st.back();
+                                        from_c += 32;
+                                        st.pop_back();
+                                        switch (from_c)
+                                        {
+                                        case 'n':
+                                            rep = rep_N++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                            break;
+                                        case 'e':
+                                            rep = rep_E++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                            break;
+                                        case 's':
+                                            rep = rep_S++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                            break;
+                                        case 'w':
+                                            rep = rep_W++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                            break;
+                                        }
+                                        tileDetailedRoute(router,
+                                                          t_t,
+                                                          from_c,
+                                                          to_c,
+                                                          rep,
+                                                          total,
+                                                          rep_S++,
+                                                          v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                          component.tile_width(),
+                                                          component.tile_height());
+                                    }
+                                    else
+                                        st.push_back(to_c);
+                                }
+                                break;
+                            case W:
+                                for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                                {
+                                    to_c = 'w';
+                                    if (!st.empty() && (st.back() >= 'E' && st.back() <= 'W'))
+                                    {
+                                        from_c = st.back();
+                                        from_c += 32;
+                                        st.pop_back();
+                                        switch (from_c)
+                                        {
+                                        case 'n':
+                                            rep = rep_N++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[N][OUT];
+                                            break;
+                                        case 'e':
+                                            rep = rep_E++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[E][OUT];
+                                            break;
+                                        case 's':
+                                            rep = rep_S++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[S][OUT];
+                                            break;
+                                        case 'w':
+                                            rep = rep_W++;
+                                            total = v_tmp_tiles.at(i).at(j).direction[W][OUT];
+                                            break;
+                                        }
+                                        tileDetailedRoute(router,
+                                                          t_t,
+                                                          from_c,
+                                                          to_c,
+                                                          rep,
+                                                          total,
+                                                          rep_W++,
+                                                          v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                          component.tile_width(),
+                                                          component.tile_height());
+                                    }
+                                    else
+                                        st.push_back(to_c);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        switch (k)
+                        {
+                        case N:
+                            for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                            {
+                                to_c = 'N';
+                                if (!st.empty() && (st.back() >= 'e' && st.back() <= '~'))
+                                {
+                                    from_c = st.back();
+                                    st.pop_back();
+                                    to_c += 32;
+                                    switch (from_c)
+                                    {
+                                    case 'n':
+                                        rep = rep_N++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[N][IN];
+                                        break;
+                                    case 'e':
+                                        rep = rep_E++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[E][IN];
+                                        break;
+                                    case 's':
+                                        rep = rep_S++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[S][IN];
+                                        break;
+                                    case 'w':
+                                        rep = rep_W++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[W][IN];
+                                        break;
+                                    }
+                                    tileDetailedRoute(router,
+                                                      t_t,
+                                                      from_c,
+                                                      to_c,
+                                                      rep,
+                                                      total,
+                                                      rep_N++,
+                                                      v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                      component.tile_width(),
+                                                      component.tile_height());
+                                }
+                                else
+                                    st.push_back(to_c);
+                            }
+                            break;
+                        case E:
+                            for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                            {
+                                to_c = 'E';
+                                if (!st.empty() && (st.back() >= 'e' && st.back() <= '~'))
+                                {
+                                    from_c = st.back();
+                                    st.pop_back();
+                                    to_c += 32;
+                                    switch (from_c)
+                                    {
+                                    case 'n':
+                                        rep = rep_N++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[N][IN];
+                                        break;
+                                    case 'e':
+                                        rep = rep_E++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[E][IN];
+                                        break;
+                                    case 's':
+                                        rep = rep_S++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[S][IN];
+                                        break;
+                                    case 'w':
+                                        rep = rep_W++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[W][IN];
+                                        break;
+                                    }
+                                    tileDetailedRoute(router,
+                                                      t_t,
+                                                      from_c,
+                                                      to_c,
+                                                      rep,
+                                                      total,
+                                                      rep_E++,
+                                                      v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                      component.tile_width(),
+                                                      component.tile_height());
+                                }
+                                else
+                                    st.push_back(to_c);
+                            }
+                            break;
+                        case S:
+                            for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                            {
+                                to_c = 'S';
+                                if (!st.empty() && (st.back() >= 'e' && st.back() <= '~'))
+                                {
+                                    from_c = st.back();
+                                    st.pop_back();
+                                    to_c += 32;
+                                    switch (from_c)
+                                    {
+                                    case 'n':
+                                        rep = rep_N++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[N][IN];
+                                        break;
+                                    case 'e':
+                                        rep = rep_E++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[E][IN];
+                                        break;
+                                    case 's':
+                                        rep = rep_S++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[S][IN];
+                                        break;
+                                    case 'w':
+                                        rep = rep_W++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[W][IN];
+                                        break;
+                                    }
+                                    tileDetailedRoute(router,
+                                                      t_t,
+                                                      from_c,
+                                                      to_c,
+                                                      rep,
+                                                      total,
+                                                      rep_S++,
+                                                      v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                      component.tile_width(),
+                                                      component.tile_height());
+                                }
+                                else
+                                    st.push_back(to_c);
+                            }
+                            break;
+                        case W:
+                            for (int m = 0; m < v_tmp_tiles.at(i).at(j).direction[k][l]; ++m)
+                            {
+                                to_c = 'W';
+                                if (!st.empty() && (st.back() >= 'e' && st.back() <= '~'))
+                                {
+                                    from_c = st.back();
+                                    st.pop_back();
+                                    to_c += 32;
+                                    switch (from_c)
+                                    {
+                                    case 'n':
+                                        rep = rep_N++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[N][IN];
+                                        break;
+                                    case 'e':
+                                        rep = rep_E++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[E][IN];
+                                        break;
+                                    case 's':
+                                        rep = rep_S++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[S][IN];
+                                        break;
+                                    case 'w':
+                                        rep = rep_W++;
+                                        total = v_tmp_tiles.at(i).at(j).direction[W][IN];
+                                        break;
+                                    }
+                                    tileDetailedRoute(router,
+                                                      t_t,
+                                                      from_c,
+                                                      to_c,
+                                                      rep,
+                                                      total,
+                                                      rep_W++,
+                                                      v_tmp_tiles.at(i).at(j).direction[k][l],
+                                                      component.tile_width(),
+                                                      component.tile_height());
+                                }
+                                else
+                                    st.push_back(to_c);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!st.empty())
+            {
+#ifdef VERBOSE
+                std::cout << "Tile " << i << " " << j << "\n";
+                throw std::runtime_error("Testing");
+#endif
             }
         }
     }

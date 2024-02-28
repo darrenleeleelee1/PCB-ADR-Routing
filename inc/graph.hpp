@@ -84,18 +84,17 @@ private:
 public:
     // Constructor
     GraphManager() = default;
-    GraphManager(DataManager &data_manager, Component &component, int expand, size_t maximum_layer);
-    GraphManager(DataManager &data_manager,
-                 Component &component,
-                 double wire_spacing,
-                 double wire_width,
-                 double bump_ball_radius,
-                 std::string escape_boundry);
     ~GraphManager() = default;
-
+    void DDR2DDRInit(DataManager &data_manager, Component &component, int expand, size_t maximum_layer);
+    void CPU2DDRInit(DataManager &data_manager,
+                     Component &component,
+                     double wire_spacing,
+                     double wire_width,
+                     double bump_ball_radius,
+                     std::string escape_boundry);
     long minCostMaxFlow();
     void DDR2DDR(Router &router);
-    void CPU2DDR(Router &router, std::string escape_boundry);
+    void CPU2DDR(Router &router, Component &component, std::string escape_boundry);
 };
 
 #endif // GRAPH_HPP
