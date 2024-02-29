@@ -588,7 +588,58 @@ void GraphManager::DDR2DDR(Router &router)
                 int s_j = std::stoi(match_source[2].str());
                 int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
-                if (m_component->neighboors().at(0))
+                if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
+                {
+                    Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                                     tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                                     t_j};
+                    Coordinate left_pin_coor = Coordinate{
+                        tile_bottom_left.x() + (s_j * m_component->tile_width()) - (m_component->tile_width() / 2),
+                        tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
+                        t_j};
+                    Coordinate left_bound = Coordinate{tile_bottom_left.x() - 2 * m_component->tile_width(),
+                                                       tile_bottom_left.y() + (s_i * m_component->tile_height()) -
+                                                           (m_component->tile_height() / 2),
+                                                       t_j};
+                    router.addSegment(Segment{
+                        via_coor,
+                        Coordinate(via_coor.x() - 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z())});
+                    router.addSegment(
+                        Segment{Coordinate(via_coor.x() - 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z()),
+                                Coordinate(left_pin_coor.x() - 0.5 * m_component->tile_width(),
+                                           left_pin_coor.y(),
+                                           left_pin_coor.z())});
+                    router.addSegment(Segment{Coordinate(left_pin_coor.x() - 0.5 * m_component->tile_width(),
+                                                         left_pin_coor.y(),
+                                                         left_pin_coor.z()),
+                                              left_bound});
+
+                    via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                          tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                          t_j};
+                    Coordinate right_pin_coor = Coordinate{
+                        tile_bottom_left.x() + (s_j * m_component->tile_width()) + (m_component->tile_width() / 2),
+                        tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
+                        t_j};
+                    Coordinate right_bound = Coordinate{
+                        tile_bottom_left.x() + (m_component->tile_width() * (m_component->columns() + shift_columns)) +
+                            2 * m_component->tile_width(),
+                        tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
+                        t_j};
+                    router.addSegment(Segment{
+                        via_coor,
+                        Coordinate(via_coor.x() + 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z())});
+                    router.addSegment(
+                        Segment{Coordinate(via_coor.x() + 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z()),
+                                Coordinate(right_pin_coor.x() + 0.5 * m_component->tile_width(),
+                                           right_pin_coor.y(),
+                                           right_pin_coor.z())});
+                    router.addSegment(Segment{Coordinate(right_pin_coor.x() + 0.5 * m_component->tile_width(),
+                                                         right_pin_coor.y(),
+                                                         right_pin_coor.z()),
+                                              right_bound});
+                }
+                else if (m_component->neighboors().at(0))
                 {
                     // left have neighboor
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
@@ -598,14 +649,14 @@ void GraphManager::DDR2DDR(Router &router)
                         tile_bottom_left.x() + (s_j * m_component->tile_width()) - (m_component->tile_width() / 2),
                         tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
                         t_j};
-                    Coordinate left_bound = Coordinate{tile_bottom_left.x() - m_component->tile_width(),
+                    Coordinate left_bound = Coordinate{tile_bottom_left.x() - 2 * m_component->tile_width(),
                                                        tile_bottom_left.y() + (s_i * m_component->tile_height()) -
                                                            (m_component->tile_height() / 2),
                                                        t_j};
                     router.addSegment(Segment{via_coor, left_pin_coor});
                     router.addSegment(Segment{left_pin_coor, left_bound});
                 }
-                if (m_component->neighboors().at(1))
+                else if (m_component->neighboors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -616,7 +667,7 @@ void GraphManager::DDR2DDR(Router &router)
                         t_j};
                     Coordinate right_bound = Coordinate{
                         tile_bottom_left.x() + (m_component->tile_width() * (m_component->columns() + shift_columns)) +
-                            m_component->tile_width(),
+                            2 * m_component->tile_width(),
                         tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
                         t_j};
                     router.addSegment(Segment{via_coor, right_pin_coor});
@@ -630,7 +681,7 @@ void GraphManager::DDR2DDR(Router &router)
                 int s_j = std::stoi(match_source[2].str());
                 int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
-                if (m_component->neighboors().at(0))
+                if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -642,12 +693,62 @@ void GraphManager::DDR2DDR(Router &router)
                     Coordinate top_bound = Coordinate{
                         tile_bottom_left.x() + (s_j * m_component->tile_width()) + (m_component->tile_width() / 2),
                         tile_bottom_left.y() + (m_component->tile_height() * (m_component->rows() + shift_rows)) +
-                            m_component->tile_height(),
+                            2 * m_component->tile_height(),
+                        t_j};
+                    router.addSegment(Segment{
+                        via_coor,
+                        Coordinate(via_coor.x(), via_coor.y() + 0.5 * m_component->tile_height(), via_coor.z())});
+                    router.addSegment(Segment{
+                        Coordinate(via_coor.x(), via_coor.y() + 0.5 * m_component->tile_height(), via_coor.z()),
+                        Coordinate(
+                            top_pin_coor.x(), top_pin_coor.y() + 0.5 * m_component->tile_height(), top_pin_coor.z())});
+                    router.addSegment(Segment{Coordinate(top_pin_coor.x(),
+                                                         top_pin_coor.y() + 0.5 * m_component->tile_height(),
+                                                         top_pin_coor.z()),
+                                              top_bound});
+
+                    via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                          tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                          t_j};
+                    Coordinate bottom_pin_coor = Coordinate{
+                        tile_bottom_left.x() + (s_j * m_component->tile_width()) + (m_component->tile_width() / 2),
+                        tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
+                        t_j};
+                    Coordinate bottom_bound = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()) +
+                                                             (m_component->tile_width() / 2),
+                                                         tile_bottom_left.y() - 2 * m_component->tile_height(),
+                                                         t_j};
+                    router.addSegment(Segment{
+                        via_coor,
+                        Coordinate(via_coor.x(), via_coor.y() - 0.5 * m_component->tile_height(), via_coor.z())});
+                    router.addSegment(
+                        Segment{Coordinate(via_coor.x(), via_coor.y() - 0.5 * m_component->tile_height(), via_coor.z()),
+                                Coordinate(bottom_pin_coor.x(),
+                                           bottom_pin_coor.y() - 0.5 * m_component->tile_height(),
+                                           bottom_pin_coor.z())});
+                    router.addSegment(Segment{Coordinate(bottom_pin_coor.x(),
+                                                         bottom_pin_coor.y() - 0.5 * m_component->tile_height(),
+                                                         bottom_pin_coor.z()),
+                                              bottom_bound});
+                }
+                else if (m_component->neighboors().at(0))
+                {
+                    Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                                     tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                                     t_j};
+                    Coordinate top_pin_coor = Coordinate{
+                        tile_bottom_left.x() + (s_j * m_component->tile_width()) + (m_component->tile_width() / 2),
+                        tile_bottom_left.y() + (s_i * m_component->tile_height()) + (m_component->tile_height() / 2),
+                        t_j};
+                    Coordinate top_bound = Coordinate{
+                        tile_bottom_left.x() + (s_j * m_component->tile_width()) + (m_component->tile_width() / 2),
+                        tile_bottom_left.y() + (m_component->tile_height() * (m_component->rows() + shift_rows)) +
+                            2 * m_component->tile_height(),
                         t_j};
                     router.addSegment(Segment{via_coor, top_pin_coor});
                     router.addSegment(Segment{top_pin_coor, top_bound});
                 }
-                if (m_component->neighboors().at(1))
+                else if (m_component->neighboors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -658,7 +759,7 @@ void GraphManager::DDR2DDR(Router &router)
                         t_j};
                     Coordinate bottom_bound = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()) +
                                                              (m_component->tile_width() / 2),
-                                                         tile_bottom_left.y() - m_component->tile_height(),
+                                                         tile_bottom_left.y() - 2 * m_component->tile_height(),
                                                          t_j};
                     router.addSegment(Segment{via_coor, bottom_pin_coor});
                     router.addSegment(Segment{bottom_pin_coor, bottom_bound});
