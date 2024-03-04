@@ -221,12 +221,14 @@ void DataManager::preprocess(int threshold)
         {
             edge.b->neighboors().at(0) = true;
             edge.b->neighboors().at(1) = true;
+            edge.a->cpu_connected_components().push_back(edge.b);
             continue;
         }
         if (edge.b->is_cpu())
         {
             edge.a->neighboors().at(0) = true;
             edge.a->neighboors().at(1) = true;
+            edge.b->cpu_connected_components().push_back(edge.a);
             continue;
         }
         if (std::abs(std::ceil(edge.a->bottom_left().x()) - std::ceil(edge.b->bottom_left().x())) < threshold &&
@@ -277,12 +279,24 @@ void DataManager::preprocess(int threshold)
     // print out every component's information
     // for (const auto &comp_pair : m_components)
     // {
-    //     std::cout << "Component: " << comp_pair.first << std::endl;
-    //     std::cout << "Is CPU: " << comp_pair.second->is_cpu() << std::endl;
-    //     std::cout << "Is Verticle Stack: " << comp_pair.second->is_verticle_stack() << std::endl;
-    //     std::cout << "Neighboors: " << comp_pair.second->neighboors().at(0) << " "
-    //               << comp_pair.second->neighboors().at(1) << std::endl;
-    //     std::cout << std::endl;
+    //     if (comp_pair.second->is_cpu())
+    //     {
+    //         std::cout << "CPU Connected Components: ";
+    //         for (const auto &connected_comp : comp_pair.second->cpu_connected_components())
+    //         {
+    //             std::cout << connected_comp->comp_name() << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     else
+    //     {
+    //         std::cout << "Component: " << comp_pair.first << std::endl;
+    //         std::cout << "Is CPU: " << comp_pair.second->is_cpu() << std::endl;
+    //         std::cout << "Is Verticle Stack: " << comp_pair.second->is_verticle_stack() << std::endl;
+    //         std::cout << "Neighboors: " << comp_pair.second->neighboors().at(0) << " "
+    //                   << comp_pair.second->neighboors().at(1) << std::endl;
+    //         std::cout << std::endl;
+    //     }
     // }
 #endif
 }

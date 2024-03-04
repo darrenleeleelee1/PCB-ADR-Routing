@@ -129,6 +129,7 @@ private:
     bool m_is_cpu;
     bool m_is_verticle_stack; // true for vericle stack, false for horizontal stack
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
+    std::vector<Component *> m_cpu_connected_components;
     // Private Methods
     std::pair<Coordinate, Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -205,6 +206,9 @@ public:
     // Access for neighboor
     const std::vector<bool> &neighboors() const { return m_neighboors; }
     std::vector<bool> &neighboors() { return m_neighboors; }
+    // Access for cpu_connected_components
+    const std::vector<Component *> &cpu_connected_components() const { return m_cpu_connected_components; }
+    std::vector<Component *> &cpu_connected_components() { return m_cpu_connected_components; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void createPinArr();
