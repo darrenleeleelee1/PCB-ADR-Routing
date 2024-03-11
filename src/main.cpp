@@ -45,12 +45,12 @@ int main(int argc, char const *argv[])
     // Router DDR2DDR
     utils::printlog("Routing DDR2DDR...");
     std::shared_ptr<Router> router = std::make_shared<Router>();
-    router->DDR2DDR(data_manager);
+    data_manager->DDR2DDR();
 
     // Router CPU2DDR
-    router->CPU2DDR(data_manager);
+    data_manager->CPU2DDR();
 #ifdef GDT
-    gdt_writer.routing(*router);
+    gdt_writer.routing();
 #endif
     // Produce all gds
 #ifdef GDT

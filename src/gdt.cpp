@@ -151,7 +151,7 @@ void GDTWriter::preprocess()
     file.close();
 }
 
-void GDTWriter::routing(Router &router)
+void GDTWriter::routing()
 {
     // mkdir GDT_files if not exists
     std::string file_name = m_root_path + "DDR2DDR";
@@ -194,15 +194,20 @@ void GDTWriter::routing(Router &router)
             }
         }
     }
-    for (auto &seg : router.segments())
+    for (auto comp_pair : m_data_manager.components())
     {
-        file << "b{" << seg.start().z() << " xy(" << generateLinePoints(seg.start(), seg.end()) << ")}\n";
-    }
-    for (auto &via : router.vias())
-    {
-        for (int k = via.coordinate().z(); k <= via.layer(); k++)
+        auto comp = comp_pair.second;
+        auto router = comp->router();
+        for (auto &seg : router->segments())
         {
-            file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+            file << "b{" << seg.start().z() << " xy(" << generateLinePoints(seg.start(), seg.end()) << ")}\n";
+        }
+        for (auto &via : router->vias())
+        {
+            for (int k = via.coordinate().z(); k <= via.layer(); k++)
+            {
+                file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+            }
         }
     }
     file << "}\n}\n";

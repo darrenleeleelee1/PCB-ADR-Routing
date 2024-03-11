@@ -93,8 +93,8 @@ public:
                      double bump_ball_radius,
                      std::string escape_boundry);
     long minCostMaxFlow();
-    void DDR2DDR(Router &router);
-    void CPU2DDR(Router &router, Component &component, std::string escape_boundry);
+    std::pair<Coordinate, Coordinate> DDR2DDR(std::shared_ptr<Router> router);
+    void CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string escape_boundry);
 };
 
 #endif // GRAPH_HPP

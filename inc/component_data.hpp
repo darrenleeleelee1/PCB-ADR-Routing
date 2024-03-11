@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+class Router;
 
 class Coordinate
 {
@@ -27,7 +28,12 @@ public:
     {
     }
     // Operator Overloads
-    bool operator==(const Coordinate &rhs) const { return m_x == rhs.m_x && m_y == rhs.m_y && m_z == rhs.m_z; }
+    bool operator==(const Coordinate &rhs) const
+    {
+        const double epsilon = 5e-1;
+        auto compare_float = [epsilon](double a, double b) -> bool { return std::fabs(a - b) < epsilon; };
+        return compare_float(m_x, rhs.m_x) && compare_float(m_y, rhs.m_y) && m_z == rhs.m_z;
+    }
     bool operator!=(const Coordinate &rhs) const { return !(*this == rhs); }
     // Accessor
     // Access for x
@@ -115,7 +121,6 @@ public:
     Coordinate &coordinate() { return m_coordinate; }
     // Methods
 };
-
 class Component
 {
 private:
@@ -129,7 +134,10 @@ private:
     bool m_is_cpu;
     bool m_is_verticle_stack; // true for vericle stack, false for horizontal stack
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
+    std::vector<bool> m_ddr_neighboors; // 0 for left/top, 1 for right/bottom, for CPU know which side to connect
     std::vector<Component *> m_cpu_connected_components;
+    std::shared_ptr<Router> m_router;
+    std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
     // Private Methods
     std::pair<Coordinate, Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -143,7 +151,9 @@ public:
         , m_is_cpu(false)
         , m_is_verticle_stack(false)
         , m_neighboors(2, false)
+        , m_ddr_neighboors(2, false)
     {
+        m_router = std::make_shared<Router>();
     }
     // Operator Overloads
     // == only check wether there m_pin_arr is the same
@@ -206,12 +216,22 @@ public:
     // Access for neighboor
     const std::vector<bool> &neighboors() const { return m_neighboors; }
     std::vector<bool> &neighboors() { return m_neighboors; }
+    // Access for ddr_neighboor
+    const std::vector<bool> &ddr_neighboors() const { return m_ddr_neighboors; }
+    std::vector<bool> &ddr_neighboors() { return m_ddr_neighboors; }
     // Access for cpu_connected_components
     const std::vector<Component *> &cpu_connected_components() const { return m_cpu_connected_components; }
     std::vector<Component *> &cpu_connected_components() { return m_cpu_connected_components; }
+    // Access for router
+    const std::shared_ptr<Router> &router() const { return m_router; }
+    std::shared_ptr<Router> &router() { return m_router; }
+    // Access for bounding_box
+    const std::pair<Coordinate, Coordinate> &bounding_box() const { return m_bounding_box; }
+    std::pair<Coordinate, Coordinate> &bounding_box() { return m_bounding_box; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void createPinArr();
+    void reducedBends();
 };
 
 class Nets
@@ -287,6 +307,8 @@ public:
     void createNetlist(int count);
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void preprocess(int threshold = 250); // 250 for case 4, 5, 6, and 25 for case 2
+    void DDR2DDR();
+    void CPU2DDR();
 };
 class Via
 {
@@ -321,6 +343,7 @@ class Segment
 private:
     Coordinate m_start;
     Coordinate m_end;
+    int m_net_id;
 
 public:
     // Constructor
@@ -330,11 +353,20 @@ public:
         , m_end(end)
     {
     }
+    Segment(const Coordinate &start, const Coordinate &end, int net_id)
+        : m_start(start)
+        , m_end(end)
+        , m_net_id(net_id)
+    {
+    }
     Segment(const double &x1, const double &y1, const int z1, const double &x2, const double &y2, const int z2)
         : m_start(x1, y1, z1)
         , m_end(x2, y2, z2)
     {
     }
+    // overload operator
+    bool operator==(const Segment &rhs) const { return m_start == rhs.m_start && m_end == rhs.m_end; }
+    bool operator!=(const Segment &rhs) const { return !(*this == rhs); }
     // Accessor
     // Access for start
     const Coordinate &start() const { return m_start; }
@@ -342,7 +374,20 @@ public:
     // Access for end
     const Coordinate &end() const { return m_end; }
     Coordinate &end() { return m_end; }
+    // Access for net_id
+    const int &net_id() const { return m_net_id; }
+    int &net_id() { return m_net_id; }
     // Methods
+    double slope() const
+    {
+        double deltaX = m_end.x() - m_start.x();
+        // Handling the case of vertical line segments
+        if (std::fabs(deltaX) < 1e-5)
+        {
+            return std::numeric_limits<double>::infinity();
+        }
+        return (m_end.y() - m_start.y()) / deltaX;
+    }
 };
 
 class Router
@@ -361,9 +406,6 @@ public:
     // Access for vias
     const std::vector<Via> &vias() const { return m_vias; }
     std::vector<Via> &vias() { return m_vias; }
-    // Routing Methods
-    void DDR2DDR(std::shared_ptr<DataManager> data_manager);
-    void CPU2DDR(std::shared_ptr<DataManager> data_manager);
     // Methods
     void addSegment(Segment segment) { m_segments.push_back(segment); }
     void addVia(Via via) { m_vias.push_back(via); }

@@ -457,7 +457,7 @@ long GraphManager::minCostMaxFlow()
 {
     // Calculate minimum cost maximum flow
     successive_shortest_path_nonnegative_weights(g, s, t);
-    long cost = find_flow_cost(g);
+    // long cost = find_flow_cost(g);
     long total_flow = 0;
     graph_traits<Graph>::out_edge_iterator out_ei, out_e_end;
     for (tie(out_ei, out_e_end) = out_edges(vertex(s, g), g); out_ei != out_e_end; ++out_ei)
@@ -482,7 +482,7 @@ long GraphManager::minCostMaxFlow()
 #endif
     return total_flow;
 }
-void GraphManager::DDR2DDR(Router &router)
+std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> router)
 {
     std::regex vertex_pattern("v([0-9]{1,2})_([0-9]{1,2})");
     std::regex tile_pattern("([NSEW])([0-9]{1,2})_([0-9]{1,2})");
@@ -515,10 +515,10 @@ void GraphManager::DDR2DDR(Router &router)
                 int t_i = std::stoi(match_target[2].str());
                 int t_j = std::stoi(match_target[3].str());
                 auto &pin_arr = m_component->pin_arr();
-                router.addSegment(Segment{pin_arr.at(s_i).at(s_j)->coordinate(),
-                                          Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                                     tile_bottom_left.z()}});
+                router->addSegment(Segment{pin_arr.at(s_i).at(s_j)->coordinate(),
+                                           Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
+                                                      tile_bottom_left.y() + (t_i * m_component->tile_height()),
+                                                      tile_bottom_left.z()}});
             }
             // tile to tile
             if (std::regex_match(source_name, match_source, tile_pattern) &&
@@ -528,12 +528,12 @@ void GraphManager::DDR2DDR(Router &router)
                 int s_j = std::stoi(match_source[3].str());
                 int t_i = std::stoi(match_target[2].str());
                 int t_j = std::stoi(match_target[3].str());
-                router.addSegment(Segment{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                                     tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                                     tile_bottom_left.z()},
-                                          Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
-                                                     tile_bottom_left.y() + (t_i * m_component->tile_height()),
-                                                     tile_bottom_left.z()}});
+                router->addSegment(Segment{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                                      tile_bottom_left.z()},
+                                           Coordinate{tile_bottom_left.x() + (t_j * m_component->tile_width()),
+                                                      tile_bottom_left.y() + (t_i * m_component->tile_height()),
+                                                      tile_bottom_left.z()}});
             }
             // dummy center tile to row or column
             if (std::regex_match(source_name, match_source, d_tile_pattern) &&
@@ -541,12 +541,12 @@ void GraphManager::DDR2DDR(Router &router)
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
-                int t_i = std::stoi(match_target[1].str());
+                // int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
-                router.addVia(Via{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                             tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                             tile_bottom_left.z()},
-                                  t_j});
+                router->addVia(Via{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                              tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                              tile_bottom_left.z()},
+                                   t_j});
                 // Count the row's vias
                 // if (row_or_col_via_count.find(t_i) == row_or_col_via_count.end())
                 //     row_or_col_via_count[t_i] = 1;
@@ -558,12 +558,12 @@ void GraphManager::DDR2DDR(Router &router)
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
-                int t_i = std::stoi(match_target[1].str());
+                // int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
-                router.addVia(Via{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
-                                             tile_bottom_left.y() + (s_i * m_component->tile_height()),
-                                             tile_bottom_left.z()},
-                                  t_j});
+                router->addVia(Via{Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
+                                              tile_bottom_left.y() + (s_i * m_component->tile_height()),
+                                              tile_bottom_left.z()},
+                                   t_j});
                 // Count the column's vias
                 // if (row_or_col_via_count.find(t_i) == row_or_col_via_count.end())
                 //     row_or_col_via_count[t_i] = 1;
@@ -586,7 +586,7 @@ void GraphManager::DDR2DDR(Router &router)
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
-                int t_i = std::stoi(match_target[1].str());
+                // int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
                 if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
                 {
@@ -601,18 +601,18 @@ void GraphManager::DDR2DDR(Router &router)
                                                        tile_bottom_left.y() + (s_i * m_component->tile_height()) -
                                                            (m_component->tile_height() / 2),
                                                        t_j};
-                    router.addSegment(Segment{
+                    router->addSegment(Segment{
                         via_coor,
                         Coordinate(via_coor.x() - 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z())});
-                    router.addSegment(
+                    router->addSegment(
                         Segment{Coordinate(via_coor.x() - 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z()),
                                 Coordinate(left_pin_coor.x() - 0.5 * m_component->tile_width(),
                                            left_pin_coor.y(),
                                            left_pin_coor.z())});
-                    router.addSegment(Segment{Coordinate(left_pin_coor.x() - 0.5 * m_component->tile_width(),
-                                                         left_pin_coor.y(),
-                                                         left_pin_coor.z()),
-                                              left_bound});
+                    router->addSegment(Segment{Coordinate(left_pin_coor.x() - 0.5 * m_component->tile_width(),
+                                                          left_pin_coor.y(),
+                                                          left_pin_coor.z()),
+                                               left_bound});
 
                     via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                           tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -626,18 +626,18 @@ void GraphManager::DDR2DDR(Router &router)
                             2 * m_component->tile_width(),
                         tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
                         t_j};
-                    router.addSegment(Segment{
+                    router->addSegment(Segment{
                         via_coor,
                         Coordinate(via_coor.x() + 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z())});
-                    router.addSegment(
+                    router->addSegment(
                         Segment{Coordinate(via_coor.x() + 0.5 * m_component->tile_width(), via_coor.y(), via_coor.z()),
                                 Coordinate(right_pin_coor.x() + 0.5 * m_component->tile_width(),
                                            right_pin_coor.y(),
                                            right_pin_coor.z())});
-                    router.addSegment(Segment{Coordinate(right_pin_coor.x() + 0.5 * m_component->tile_width(),
-                                                         right_pin_coor.y(),
-                                                         right_pin_coor.z()),
-                                              right_bound});
+                    router->addSegment(Segment{Coordinate(right_pin_coor.x() + 0.5 * m_component->tile_width(),
+                                                          right_pin_coor.y(),
+                                                          right_pin_coor.z()),
+                                               right_bound});
                 }
                 else if (m_component->neighboors().at(0))
                 {
@@ -653,8 +653,8 @@ void GraphManager::DDR2DDR(Router &router)
                                                        tile_bottom_left.y() + (s_i * m_component->tile_height()) -
                                                            (m_component->tile_height() / 2),
                                                        t_j};
-                    router.addSegment(Segment{via_coor, left_pin_coor});
-                    router.addSegment(Segment{left_pin_coor, left_bound});
+                    router->addSegment(Segment{via_coor, left_pin_coor});
+                    router->addSegment(Segment{left_pin_coor, left_bound});
                 }
                 else if (m_component->neighboors().at(1))
                 {
@@ -670,8 +670,8 @@ void GraphManager::DDR2DDR(Router &router)
                             2 * m_component->tile_width(),
                         tile_bottom_left.y() + (s_i * m_component->tile_height()) - (m_component->tile_height() / 2),
                         t_j};
-                    router.addSegment(Segment{via_coor, right_pin_coor});
-                    router.addSegment(Segment{right_pin_coor, right_bound});
+                    router->addSegment(Segment{via_coor, right_pin_coor});
+                    router->addSegment(Segment{right_pin_coor, right_bound});
                 }
             }
             if (std::regex_match(source_name, match_source, d_tile_pattern) &&
@@ -679,7 +679,7 @@ void GraphManager::DDR2DDR(Router &router)
             {
                 int s_i = std::stoi(match_source[1].str());
                 int s_j = std::stoi(match_source[2].str());
-                int t_i = std::stoi(match_target[1].str());
+                // int t_i = std::stoi(match_target[1].str());
                 int t_j = std::stoi(match_target[2].str());
                 if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
                 {
@@ -695,17 +695,17 @@ void GraphManager::DDR2DDR(Router &router)
                         tile_bottom_left.y() + (m_component->tile_height() * (m_component->rows() + shift_rows)) +
                             2 * m_component->tile_height(),
                         t_j};
-                    router.addSegment(Segment{
+                    router->addSegment(Segment{
                         via_coor,
                         Coordinate(via_coor.x(), via_coor.y() + 0.5 * m_component->tile_height(), via_coor.z())});
-                    router.addSegment(Segment{
+                    router->addSegment(Segment{
                         Coordinate(via_coor.x(), via_coor.y() + 0.5 * m_component->tile_height(), via_coor.z()),
                         Coordinate(
                             top_pin_coor.x(), top_pin_coor.y() + 0.5 * m_component->tile_height(), top_pin_coor.z())});
-                    router.addSegment(Segment{Coordinate(top_pin_coor.x(),
-                                                         top_pin_coor.y() + 0.5 * m_component->tile_height(),
-                                                         top_pin_coor.z()),
-                                              top_bound});
+                    router->addSegment(Segment{Coordinate(top_pin_coor.x(),
+                                                          top_pin_coor.y() + 0.5 * m_component->tile_height(),
+                                                          top_pin_coor.z()),
+                                               top_bound});
 
                     via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                           tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -718,18 +718,18 @@ void GraphManager::DDR2DDR(Router &router)
                                                              (m_component->tile_width() / 2),
                                                          tile_bottom_left.y() - 2 * m_component->tile_height(),
                                                          t_j};
-                    router.addSegment(Segment{
+                    router->addSegment(Segment{
                         via_coor,
                         Coordinate(via_coor.x(), via_coor.y() - 0.5 * m_component->tile_height(), via_coor.z())});
-                    router.addSegment(
+                    router->addSegment(
                         Segment{Coordinate(via_coor.x(), via_coor.y() - 0.5 * m_component->tile_height(), via_coor.z()),
                                 Coordinate(bottom_pin_coor.x(),
                                            bottom_pin_coor.y() - 0.5 * m_component->tile_height(),
                                            bottom_pin_coor.z())});
-                    router.addSegment(Segment{Coordinate(bottom_pin_coor.x(),
-                                                         bottom_pin_coor.y() - 0.5 * m_component->tile_height(),
-                                                         bottom_pin_coor.z()),
-                                              bottom_bound});
+                    router->addSegment(Segment{Coordinate(bottom_pin_coor.x(),
+                                                          bottom_pin_coor.y() - 0.5 * m_component->tile_height(),
+                                                          bottom_pin_coor.z()),
+                                               bottom_bound});
                 }
                 else if (m_component->neighboors().at(0))
                 {
@@ -745,8 +745,8 @@ void GraphManager::DDR2DDR(Router &router)
                         tile_bottom_left.y() + (m_component->tile_height() * (m_component->rows() + shift_rows)) +
                             2 * m_component->tile_height(),
                         t_j};
-                    router.addSegment(Segment{via_coor, top_pin_coor});
-                    router.addSegment(Segment{top_pin_coor, top_bound});
+                    router->addSegment(Segment{via_coor, top_pin_coor});
+                    router->addSegment(Segment{top_pin_coor, top_bound});
                 }
                 else if (m_component->neighboors().at(1))
                 {
@@ -761,14 +761,44 @@ void GraphManager::DDR2DDR(Router &router)
                                                              (m_component->tile_width() / 2),
                                                          tile_bottom_left.y() - 2 * m_component->tile_height(),
                                                          t_j};
-                    router.addSegment(Segment{via_coor, bottom_pin_coor});
-                    router.addSegment(Segment{bottom_pin_coor, bottom_bound});
+                    router->addSegment(Segment{via_coor, bottom_pin_coor});
+                    router->addSegment(Segment{bottom_pin_coor, bottom_bound});
                 }
             }
         }
     }
+
+    if (m_component->is_verticle_stack())
+    {
+        //
+        Coordinate top_bound = Coordinate{
+            tile_bottom_left.x() + (m_columns.size() * m_component->tile_width()) + (m_component->tile_width() / 2),
+            tile_bottom_left.y() + (m_component->tile_height() * (m_component->rows() + shift_rows)) +
+                2 * m_component->tile_height(),
+            0};
+        Coordinate bottom_bound =
+            Coordinate{tile_bottom_left.x() + (0 * m_component->tile_width()) + (m_component->tile_width() / 2),
+                       tile_bottom_left.y() - 2 * m_component->tile_height(),
+                       0};
+
+        return std::make_pair(top_bound, bottom_bound);
+    }
+    else
+    {
+        Coordinate left_bound =
+            Coordinate{tile_bottom_left.x() - 2 * m_component->tile_width(),
+                       tile_bottom_left.y() + (0 * m_component->tile_height()) - (m_component->tile_height() / 2),
+                       0};
+        Coordinate right_bound = Coordinate{
+            tile_bottom_left.x() + (m_component->tile_width() * (m_component->columns() + shift_columns)) +
+                2 * m_component->tile_width(),
+            tile_bottom_left.y() + (m_rows.size() * m_component->tile_height()) - (m_component->tile_height() / 2),
+            0};
+
+        return std::make_pair(left_bound, right_bound);
+    }
 }
-void tileDetailedRoute(Router &router,
+void tileDetailedRoute(std::shared_ptr<Router> router,
                        Coordinate tile_bottom_left,
                        char from,
                        char to,
@@ -785,174 +815,193 @@ void tileDetailedRoute(Router &router,
         Coordinate(tile_bottom_left.x() + tile_width, tile_bottom_left.y() + tile_height, tile_bottom_left.z());
     Coordinate tile_bottom_right = Coordinate(tile_top_right.x(), tile_bottom_left.y(), tile_bottom_left.z());
     Coordinate tile_top_left = Coordinate(tile_bottom_left.x(), tile_top_right.y(), tile_bottom_left.z());
+    double alpha = 0.75;
     if ((from == 'n' && to == 'e') || (from == 'e' && to == 'n'))
     {
-        double x = tile_width * rep_from / total_from;
-        double y = tile_height * rep_to / total_to;
-        double a = 0.5 * std::min(x, y);
+        double x = tile_width * rep_from / total_from; // n
+        double y = tile_height * rep_to / total_to; // e
+        double a = alpha * std::min(x, y);
 
-        router.addSegment(
-            Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()},
-                    Coordinate{tile_top_right.x() - x, tile_top_right.y() - (y - a), tile_top_right.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - (y - a), tile_top_right.z()},
-                                  Coordinate{tile_top_right.x() - a, tile_top_right.y() - y, tile_top_right.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_right.x() - a, tile_top_right.y() - y, tile_top_right.z()},
-                                  Coordinate{tile_top_right.x(), tile_top_right.y() - y, tile_top_right.z()}});
+        router->addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()},
+                                   Coordinate{tile_top_right.x() - x, tile_top_right.y() - y + a, tile_top_right.z()}});
+        router->addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - y + a, tile_top_right.z()},
+                                   Coordinate{tile_top_right.x() - x + a, tile_top_right.y() - y, tile_top_right.z()}});
+        router->addSegment(Segment{Coordinate{tile_top_right.x() - x + a, tile_top_right.y() - y, tile_top_right.z()},
+                                   Coordinate{tile_top_right.x(), tile_top_right.y() - y, tile_top_right.z()}});
     }
     else if ((from == 'n' && to == 's') || (from == 's' && to == 'n'))
     {
-        double x = tile_width * rep_from / total_from;
-        double y = tile_width * rep_to / total_to;
+        double x = tile_width * rep_from / total_from; // n
+        double y = tile_width * rep_to / total_to; // s
         double a = std::abs(x - y);
-        router.addSegment(
+        router->addSegment(
             Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()},
                     Coordinate{tile_top_right.x() - x, tile_bottom_right.y() + 2 * a, tile_top_right.z()}});
         if (a > 0.0)
         {
 
-            router.addSegment(
+            router->addSegment(
                 Segment{Coordinate{tile_top_right.x() - x, tile_bottom_right.y() + 2 * a, tile_top_right.z()},
-                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_top_right.z()}});
-            router.addSegment(
-                Segment{Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_top_right.z()},
-                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y(), tile_top_right.z()}});
+                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_bottom_right.z()}});
+            router->addSegment(
+                Segment{Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + a, tile_bottom_right.z()},
+                        Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y(), tile_bottom_right.z()}});
         }
     }
     else if ((from == 'n' && to == 'w') || (from == 'w' && to == 'n'))
     {
         double x = tile_width * rep_from / total_from; // n
         double y = tile_height * rep_to / total_to; // w
-        double a = 0.5 * std::min(x, y);
-        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y(), tile_top_left.z()},
-                                  Coordinate{tile_top_left.x() + x, tile_top_left.y() - a, tile_top_left.z()}});
+        double a = alpha * std::min(x, y);
+        double x_prime = tile_width - x;
+        double y_prime = tile_height - y;
+        router->addSegment(
+            Segment{Coordinate{tile_top_left.x() + x_prime, tile_top_left.y(), tile_top_left.z()},
+                    Coordinate{tile_top_left.x() + x_prime, tile_top_left.y() - y_prime + a, tile_top_left.z()}});
 
-        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y() - a, tile_top_left.z()},
-                                  Coordinate{tile_top_left.x() + a, tile_top_left.y() - y, tile_top_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_left.x() + a, tile_top_left.y() - y, tile_top_left.z()},
-                                  Coordinate{tile_top_left.x(), tile_top_left.y() - y, tile_top_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_top_left.x() + x_prime, tile_top_left.y() - y_prime + a, tile_top_left.z()},
+                    Coordinate{tile_top_left.x() + x_prime - a, tile_top_left.y() - y_prime, tile_top_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_top_left.x() + x_prime - a, tile_top_left.y() - y_prime, tile_top_left.z()},
+                    Coordinate{tile_top_left.x(), tile_top_left.y() - y_prime, tile_top_left.z()}});
     }
     else if ((from == 'e' && to == 's') || (from == 's' && to == 'e'))
     {
-        double y = tile_height * rep_from / total_from; // e
-        double x = tile_width * rep_to / total_to; // s
-        double a = 0.5 * std::min(x, y);
-        router.addSegment(
-            Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y() + y, tile_bottom_right.z()},
-                    Coordinate{tile_bottom_right.x() - a, tile_bottom_right.y() + y, tile_bottom_right.z()}});
-        router.addSegment(
-            Segment{Coordinate{tile_bottom_right.x() - a, tile_bottom_right.y() + y, tile_bottom_right.z()},
-                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + a, tile_bottom_right.z()}});
-        router.addSegment(
-            Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + a, tile_bottom_right.z()},
-                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y(), tile_bottom_right.z()}});
+        double x = tile_height * rep_from / total_from; // e
+        double y = tile_width * rep_to / total_to; // s
+        double a = alpha * std::min(x, y);
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y() + x, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - y + a, tile_bottom_right.y() + x, tile_bottom_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - y + a, tile_bottom_right.y() + x, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + x - a, tile_bottom_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y() + x - a, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - y, tile_bottom_right.y(), tile_bottom_right.z()}});
     }
     else if ((from == 'e' && to == 'w') || (from == 'w' && to == 'e'))
     {
-        double x = tile_height * rep_to / total_to; // w
-        double y = tile_height * rep_from / total_from; // e
-        double a = std::abs(x - y);
-        router.addSegment(
-            Segment{Coordinate{tile_bottom_left.x(), tile_bottom_right.y() + x, tile_bottom_left.z()},
-                    Coordinate{tile_bottom_right.x() - 2 * a, tile_bottom_right.y() + x, tile_bottom_left.z()}});
+        double x = tile_height * rep_from / total_from; // e
+        double x_prime = tile_height - x;
+        double y = tile_height * rep_to / total_to; // w
+        double y_prime = tile_height - y;
+        double a = std::abs(std::min(x, x_prime) - std::min(y, y_prime));
+        router->addSegment(
+            Segment{Coordinate{tile_top_right.x(), tile_top_right.y() - x, tile_top_right.z()},
+                    Coordinate{tile_bottom_left.x() + 2 * a, tile_top_right.y() - x, tile_top_right.z()}});
         if (a > 0.0)
         {
-            router.addSegment(
-                Segment{Coordinate{tile_bottom_right.x() - 2 * a, tile_bottom_right.y() + x, tile_bottom_left.z()},
-                        Coordinate{tile_top_right.x() - a, tile_bottom_right.y() + y, tile_top_right.z()}});
-            router.addSegment(Segment{Coordinate{tile_top_right.x() - a, tile_bottom_right.y() + y, tile_top_right.z()},
-                                      Coordinate{tile_top_right.x(), tile_bottom_right.y() + y, tile_top_right.z()}});
+            router->addSegment(
+                Segment{Coordinate{tile_bottom_left.x() + 2 * a, tile_top_right.y() - x, tile_top_right.z()},
+                        Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()}});
+            router->addSegment(
+                Segment{Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()},
+                        Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
         }
     }
     else if ((from == 's' && to == 'w') || (from == 'w' && to == 's'))
     {
-        double x = tile_height * rep_from / total_from;
-        double y = tile_width * rep_to / total_to;
-        double a = 0.5 * std::min(x, y);
-        router.addSegment(
+        double x = tile_height * rep_from / total_from; // s
+        double y = tile_width * rep_to / total_to; // w
+        double a = alpha * std::min(x, y);
+        router->addSegment(
             Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y(), tile_bottom_left.z()},
-                    Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + a, tile_bottom_left.z()}});
-        router.addSegment(
-            Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + a, tile_bottom_left.z()},
-                    Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + a, tile_bottom_left.y() + y, tile_bottom_left.z()},
-                                  Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+                    Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + y - a, tile_bottom_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + y - a, tile_bottom_left.z()},
+                    Coordinate{tile_bottom_left.x() + x - a, tile_bottom_left.y() + y, tile_bottom_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x - a, tile_bottom_left.y() + y, tile_bottom_left.z()},
+                    Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
     }
     else if ((from == '{' && to == 'e') || (from == 'e' && to == '{'))
     {
-        double y = tile_height * rep_to / total_to;
-        router.addSegment(Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
-                                  Coordinate{tile_top_left.x() + y, tile_top_left.y() - y, tile_top_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_left.x() + y, tile_top_left.y() - y, tile_top_left.z()},
-                                  Coordinate{tile_top_right.x(), tile_top_left.y() - y, tile_top_left.z()}});
+        double x = tile_height * rep_to / total_to;
+        router->addSegment(Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
+                                   Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()}});
+        router->addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()},
+                                   Coordinate{tile_top_right.x(), tile_top_right.y() - x, tile_top_right.z()}});
     }
     else if ((from == '{' && to == 's') || (from == 's' && to == '{'))
     {
         double x = tile_width * rep_to / total_to;
-        router.addSegment(Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
-                                  Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_left.x() + x, tile_top_left.y() - x, tile_top_left.z()},
-                                  Coordinate{tile_top_left.x() + x, tile_bottom_left.y(), tile_top_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_top_left.x(), tile_top_left.y(), tile_top_left.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y(), tile_bottom_right.z()}});
     }
     else if ((from == '|' && to == 's') || (from == 's' && to == '|'))
     {
         double x = tile_width * rep_to / total_to;
-        router.addSegment(Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
-                                  Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()},
-                                  Coordinate{tile_top_right.x() - x, tile_bottom_right.y(), tile_top_right.z()}});
+        router->addSegment(Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
+                                   Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_top_right.x() - x, tile_top_right.y() - x, tile_top_right.z()},
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y(), tile_bottom_right.z()}});
     }
     else if ((from == '|' && to == 'w') || (from == 'w' && to == '|'))
     {
-        double y = tile_height * rep_to / total_to;
-        router.addSegment(Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
-                                  Coordinate{tile_top_right.x() - y, tile_top_right.y() - y, tile_top_right.z()}});
-        router.addSegment(Segment{Coordinate{tile_top_right.x() - y, tile_top_right.y() - y, tile_top_right.z()},
-                                  Coordinate{tile_top_left.x(), tile_top_right.y() - y, tile_top_right.z()}});
+        double x = tile_height * rep_to / total_to;
+        double x_prime = tile_width - x;
+
+        router->addSegment(
+            Segment{Coordinate{tile_top_right.x(), tile_top_right.y(), tile_top_right.z()},
+                    Coordinate{tile_top_right.x() - x_prime, tile_top_right.y() - x_prime, tile_top_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_top_right.x() - x_prime, tile_top_right.y() - x_prime, tile_top_right.z()},
+                    Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + x, tile_bottom_left.z()}});
     }
     else if ((from == '}' && to == 'n') || (from == 'n' && to == '}'))
     {
         double x = tile_width * rep_from / total_from;
-        router.addSegment(
+        router->addSegment(
             Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y(), tile_bottom_right.z()},
                     Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()}});
-        router.addSegment(
+        router->addSegment(
             Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()},
-                    Coordinate{tile_bottom_right.x() - x, tile_top_right.y(), tile_bottom_right.z()}});
+                    Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()}});
     }
     else if ((from == '}' && to == 'w') || (from == 'w' && to == '}'))
     {
-        double y = tile_height * rep_to / total_to;
-        router.addSegment(
+        double x = tile_height * rep_to / total_to;
+        router->addSegment(
             Segment{Coordinate{tile_bottom_right.x(), tile_bottom_right.y(), tile_bottom_right.z()},
-                    Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()},
-                                  Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+                    Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_right.x() - x, tile_bottom_right.y() + x, tile_bottom_right.z()},
+                    Coordinate{tile_bottom_left.x(), tile_bottom_left.y() + x, tile_bottom_left.z()}});
     }
     else if ((from == '~' && to == 'n') || (from == 'n' && to == '~'))
     {
         double x = tile_width * rep_from / total_from;
-
-        router.addSegment(
+        double x_prime = tile_height - x;
+        router->addSegment(
             Segment{Coordinate{tile_bottom_left.x(), tile_bottom_left.y(), tile_bottom_left.z()},
-                    Coordinate{tile_bottom_right.x() - x, tile_top_right.y() - x, tile_bottom_right.z()}});
-        router.addSegment(Segment{Coordinate{tile_bottom_right.x() - x, tile_top_right.y() - x, tile_bottom_right.z()},
-                                  Coordinate{tile_bottom_right.x() - x, tile_top_right.y(), tile_bottom_right.z()}});
+                    Coordinate{tile_bottom_left.x() + x_prime, tile_bottom_left.y() + x_prime, tile_bottom_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x_prime, tile_bottom_left.y() + x_prime, tile_bottom_left.z()},
+                    Coordinate{tile_top_right.x() - x, tile_top_right.y(), tile_top_right.z()}});
     }
     else if ((from == '~' && to == 'e') || (from == 'e' && to == '~'))
     {
-        double y = tile_height * rep_from / total_from;
-        router.addSegment(
+        double x = tile_height * rep_from / total_from;
+        router->addSegment(
             Segment{Coordinate{tile_bottom_left.x(), tile_bottom_left.y(), tile_bottom_left.z()},
-                    Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()}});
-        router.addSegment(Segment{Coordinate{tile_bottom_left.x() + y, tile_bottom_left.y() + y, tile_bottom_left.z()},
-                                  Coordinate{tile_bottom_right.x(), tile_bottom_left.y() + y, tile_bottom_left.z()}});
+                    Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + x, tile_bottom_left.z()}});
+        router->addSegment(
+            Segment{Coordinate{tile_bottom_left.x() + x, tile_bottom_left.y() + x, tile_bottom_left.z()},
+                    Coordinate{tile_bottom_right.x(), tile_bottom_right.y() + x, tile_bottom_right.z()}});
     }
     else
     {
         throw std::runtime_error("Invalid from and to: " + std::string(1, from) + ", " + std::string(1, to));
     }
 }
-void GraphManager::CPU2DDR(Router &router, Component &component, std::string escape_boundry)
+void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string escape_boundry)
 {
     std::regex vertex_pattern("v([0-9]{1,2})_([0-9]{1,2})");
     std::regex tile_pattern("([NSEWC])([0-9]{1,2})_([0-9]{1,2})");
@@ -1028,8 +1077,8 @@ void GraphManager::CPU2DDR(Router &router, Component &component, std::string esc
             if (std::regex_match(source_name, match_source, vertex_pattern) &&
                 std::regex_match(target_name, match_target, tile_pattern))
             {
-                int s_i = std::stoi(match_source[1].str());
-                int s_j = std::stoi(match_source[2].str());
+                // int s_i = std::stoi(match_source[1].str());
+                // int s_j = std::stoi(match_source[2].str());
                 int t_i = std::stoi(match_target[2].str());
                 int t_j = std::stoi(match_target[3].str());
                 if (match_target[1].str() == "N")
@@ -1057,39 +1106,39 @@ void GraphManager::CPU2DDR(Router &router, Component &component, std::string esc
                     Coordinate(component.bottom_left().x(), component.bottom_left().y(), component.bottom_left().z());
                 if (escape_boundry.find('N') != std::string::npos)
                 {
-                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z()),
-                                              Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + (s_i + 1) * component.tile_height(),
-                                                         pin_bottom_left.z())});
+                    router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z()),
+                                               Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + (s_i + 1) * component.tile_height(),
+                                                          pin_bottom_left.z())});
                 }
                 else if (escape_boundry.find('S') != std::string::npos)
                 {
-                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z()),
-                                              Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + (s_i - 1) * component.tile_height(),
-                                                         pin_bottom_left.z())});
+                    router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z()),
+                                               Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + (s_i - 1) * component.tile_height(),
+                                                          pin_bottom_left.z())});
                 }
                 else if (escape_boundry.find('E') != std::string::npos)
                 {
-                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z()),
-                                              Coordinate(pin_bottom_left.x() + (s_j + 1) * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z())});
+                    router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z()),
+                                               Coordinate(pin_bottom_left.x() + (s_j + 1) * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z())});
                 }
                 else if (escape_boundry.find('W') != std::string::npos)
                 {
-                    router.addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z()),
-                                              Coordinate(pin_bottom_left.x() + (s_j - 1) * component.tile_width(),
-                                                         pin_bottom_left.y() + s_i * component.tile_height(),
-                                                         pin_bottom_left.z())});
+                    router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z()),
+                                               Coordinate(pin_bottom_left.x() + (s_j - 1) * component.tile_width(),
+                                                          pin_bottom_left.y() + s_i * component.tile_height(),
+                                                          pin_bottom_left.z())});
                 }
                 else
                 {

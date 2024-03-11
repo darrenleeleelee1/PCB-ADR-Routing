@@ -241,13 +241,17 @@ void DataManager::preprocess(int threshold)
             {
                 // a is on top
                 edge.a->neighboors().at(1) = true; // means a have bot neighboor
+                edge.a->ddr_neighboors().at(1) = true; // means a have bot ddr neighboor
                 edge.b->neighboors().at(0) = true; // means b have top neighboor
+                edge.b->ddr_neighboors().at(0) = true; // means b have top ddr neighboor
             }
             else
             {
                 // b is on top
                 edge.a->neighboors().at(0) = true; // means a have top neighboor
+                edge.a->ddr_neighboors().at(0) = true; // means a have top ddr neighboor
                 edge.b->neighboors().at(1) = true; // means b have bot neighboor
+                edge.b->ddr_neighboors().at(1) = true; // means b have bot ddr neighboor
             }
         }
         if (std::abs(std::ceil(edge.a->bottom_left().y()) - std::ceil(edge.b->bottom_left().y())) < threshold &&
@@ -260,13 +264,17 @@ void DataManager::preprocess(int threshold)
             {
                 // a is on right
                 edge.a->neighboors().at(0) = true; // means a have left neighboor
+                edge.a->ddr_neighboors().at(0) = true; // means a have left ddr neighboor
                 edge.b->neighboors().at(1) = true; // means b have right neighboor
+                edge.b->ddr_neighboors().at(1) = true; // means b have right ddr neighboor
             }
             else
             {
                 // b is on right
                 edge.a->neighboors().at(1) = true; // means a have right neighboor
+                edge.a->ddr_neighboors().at(1) = true; // means a have right ddr neighboor
                 edge.b->neighboors().at(0) = true; // means b have left neighboor
+                edge.b->ddr_neighboors().at(0) = true; // means b have left ddr neighboor
             }
         }
     }
@@ -300,11 +308,10 @@ void DataManager::preprocess(int threshold)
     // }
 #endif
 }
-
-void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
+void DataManager::DDR2DDR()
 {
     std::shared_ptr<GraphManager> graph_manager;
-    for (auto comp_pair : data_manager->components())
+    for (auto comp_pair : m_components)
     {
         auto comp = comp_pair.second;
         if (comp->is_cpu())
@@ -314,43 +321,160 @@ void Router::DDR2DDR(std::shared_ptr<DataManager> data_manager)
         do
         {
             graph_manager = std::make_shared<GraphManager>();
-            graph_manager->DDR2DDRInit(*data_manager, *comp, expand++, maximum_layer);
+            graph_manager->DDR2DDRInit(*this, *comp, expand++, maximum_layer);
             if (expand > 5)
             {
                 maximum_layer++;
                 expand = 0;
             }
         } while (graph_manager->minCostMaxFlow() != (long)comp->pins().size());
-#ifdef VERBOSE
-        std::cout << "DDR2DDR: " << comp->comp_name() << std::endl;
-        std::cout << "expand = " << expand << std::endl;
-        std::cout << "maximum_layer = " << maximum_layer << std::endl;
-#endif
-        graph_manager->DDR2DDR(*this);
+        comp->bounding_box() = graph_manager->DDR2DDR(comp->router());
     }
 }
-
-void Router::CPU2DDR(std::shared_ptr<DataManager> data_manager)
+void DataManager::CPU2DDR()
 {
     std::shared_ptr<GraphManager> graph_manager;
     double wire_spacing = 4.8;
     double wire_width = 4.0;
     double bump_ball_radius = 7.5;
     std::string escape_boundry = "N";
-    for (auto comp_pair : data_manager->components())
+    for (auto comp_pair : m_components)
     {
         auto comp = comp_pair.second;
         if (comp->is_cpu())
         {
             graph_manager = std::make_shared<GraphManager>();
-            graph_manager->CPU2DDRInit(
-                *data_manager, *comp, wire_spacing, wire_width, bump_ball_radius, escape_boundry);
+            graph_manager->CPU2DDRInit(*this, *comp, wire_spacing, wire_width, bump_ball_radius, escape_boundry);
 #ifdef VERBOSE
             std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
             std::cout << "flow = " << graph_manager->minCostMaxFlow() << std::endl;
             std::cout << "#pins = " << (long)comp->pins().size() << std::endl;
 #endif
-            graph_manager->CPU2DDR(*this, *comp, escape_boundry);
+            // escape routing
+            graph_manager->CPU2DDR(comp->router(), *comp, escape_boundry);
+            comp->reducedBends();
+
+            for (auto connected_comp : comp->cpu_connected_components())
+            {
+                if (connected_comp->is_verticle_stack())
+                {
+                    if (connected_comp->ddr_neighboors().at(0))
+                    {
+#ifdef VERBOSE
+                        std::cout << connected_comp->comp_name() << " Escape from Bot to CPU" << std::endl;
+#endif
+                    }
+                    else
+                    {
+#ifdef VERBOSE
+                        std::cout << connected_comp->comp_name() << " Escape from Top to CPU" << std::endl;
+#endif
+                    }
+                }
+                else
+                {
+                    if (connected_comp->ddr_neighboors().at(0))
+                    {
+#ifdef VERBOSE
+                        std::cout << connected_comp->comp_name() << " Escape from Right to CPU" << std::endl;
+#endif
+                    }
+                    else
+                    {
+#ifdef VERBOSE
+                        std::cout << connected_comp->comp_name() << " Escape from Left to CPU" << std::endl;
+#endif
+                    }
+                }
+            }
         }
     }
+}
+
+void Component::reducedBends()
+{
+    auto compareSlope = [](const Segment &seg1, const Segment &seg2, double epsilon = 1e-1) -> bool {
+        double slope1 = seg1.slope();
+        double slope2 = seg2.slope();
+
+        // both are vertical lines
+        if (std::isinf(slope1) && std::isinf(slope2))
+        {
+            return true;
+        }
+
+        // one is vertical and the other is not
+        if (std::isinf(slope1) || std::isinf(slope2))
+        {
+            return false;
+        }
+
+        // otherwise, compare the slopes
+        return std::fabs(slope1 - slope2) < epsilon;
+    };
+    for (auto &pin : m_pins)
+    {
+        int cnt = 0;
+        std::cout << "Pin: " << pin->net_name() << std::endl;
+        std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
+        Coordinate cur;
+        for (auto &s : m_router->segments())
+        {
+            Segment *seg = &s;
+            if (seg->start() == pin->coordinate() || seg->end() == pin->coordinate())
+            {
+                cur = seg->start() == pin->coordinate() ? seg->end() : seg->start();
+                cnt++;
+            }
+            else
+                continue;
+            bool keep_going = false;
+
+            // ---merge the segments with the same slope---
+            do
+            {
+                keep_going = false;
+                for (auto &o_s : m_router->segments())
+                {
+                    Segment *other_seg = &o_s;
+                    if (*seg != *other_seg)
+                    {
+                        if (other_seg->start() == cur || other_seg->end() == cur)
+                        {
+                            cur = other_seg->start() == cur ? other_seg->end() : other_seg->start();
+                            keep_going = true;
+                            if (compareSlope(*seg, *other_seg))
+                            {
+                                if (seg->start() == other_seg->start() || seg->start() == other_seg->end())
+                                {
+                                    seg->start() =
+                                        seg->start() == other_seg->start() ? other_seg->end() : other_seg->start();
+                                }
+                                else if (seg->end() == other_seg->start() || seg->end() == other_seg->end())
+                                {
+                                    seg->end() =
+                                        seg->end() == other_seg->start() ? other_seg->end() : other_seg->start();
+                                }
+                                other_seg->start() = Coordinate(-1, -1, -1);
+                                other_seg->end() = Coordinate(-1, -1, -1);
+                            }
+                            else
+                                seg = other_seg;
+                            break;
+                        }
+                    }
+                }
+            } while (keep_going);
+            // ---merge the segments with the same slope---
+        }
+        if (cnt > 1)
+        {
+            throw std::runtime_error("Error: Pin " + pin->net_name() + " have two connection");
+        }
+    }
+    // remove empty segments
+    m_router->segments().erase(std::remove_if(m_router->segments().begin(),
+                                              m_router->segments().end(),
+                                              [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
+                               m_router->segments().end());
 }
