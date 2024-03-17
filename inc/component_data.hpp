@@ -381,12 +381,17 @@ public:
     double slope() const
     {
         double deltaX = m_end.x() - m_start.x();
+        double deltaY = m_end.y() - m_start.y();
         // Handling the case of vertical line segments
-        if (std::fabs(deltaX) < 1e-5)
+        if (std::fabs(deltaX) < 5e-1)
         {
             return std::numeric_limits<double>::infinity();
         }
-        return (m_end.y() - m_start.y()) / deltaX;
+        else if (std::fabs(deltaY) < 5e-1)
+        {
+            return 0.0;
+        }
+        return deltaY / deltaX;
     }
 };
 

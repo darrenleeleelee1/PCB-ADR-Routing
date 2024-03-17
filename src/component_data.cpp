@@ -337,7 +337,7 @@ void DataManager::CPU2DDR()
     double wire_spacing = 4.8;
     double wire_width = 4.0;
     double bump_ball_radius = 7.5;
-    std::string escape_boundry = "N";
+    std::string escape_boundry = "W";
     for (auto comp_pair : m_components)
     {
         auto comp = comp_pair.second;
@@ -415,8 +415,8 @@ void Component::reducedBends()
     for (auto &pin : m_pins)
     {
         int cnt = 0;
-        std::cout << "Pin: " << pin->net_name() << std::endl;
-        std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
+        // std::cout << "Pin: " << pin->net_name() << std::endl;
+        // std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
         Coordinate cur;
         for (auto &s : m_router->segments())
         {
@@ -477,4 +477,149 @@ void Component::reducedBends()
                                               m_router->segments().end(),
                                               [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
                                m_router->segments().end());
+    /*
+    // remove bends
+    for (auto &pin : m_pins)
+    {
+        std::cout << "Pin: " << pin->net_name() << std::endl;
+        std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
+        Coordinate cur;
+        for (auto &s : m_router->segments())
+        {
+            Segment *seg = &s;
+            if (seg->start() == pin->coordinate() || seg->end() == pin->coordinate())
+            {
+                cur = seg->start() == pin->coordinate() ? seg->end() : seg->start();
+            }
+            else
+                continue;
+            bool keep_going = false;
+            std::vector<Segment *> vs;
+            vs.push_back(seg);
+            // ---merge the segments with the same slope---
+            do
+            {
+                keep_going = false;
+                if (vs.size() == 3)
+                {
+                    // vs[0] is not vertical or horizontal
+                    if (vs[0]->slope() != 0.0 && !std::isinf(vs[0]->slope()))
+                    {
+                        if (vs[2]->slope() != 0.0 && !std::isinf(vs[2]->slope()))
+                        {
+                            double height = std::fabs(vs[2]->start().y() - vs[2]->end().y());
+                            vs[2]->start().y() -= std::fabs(vs[1]->start().y() - vs[1]->end().y());
+                            vs[2]->end().y() -= std::fabs(vs[1]->start().y() - vs[1]->end().y());
+
+                            vs[1]->start().y() += height;
+                            vs[1]->end().y() += height;
+                            if (std::fabs(vs[0]->start().x() - vs[2]->start().x()) < 1e-5)
+                            {
+                                vs[1]->start().x() = vs[2]->end().x();
+                                vs[1]->end().x() = vs[2]->end().x();
+                                if (vs[2]->end().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
+                                    vs[2]->end().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
+                                {
+                                    if (std::fabs(vs[1]->start().y() - vs[2]->end().y()) < 1e-5)
+                                    {
+                                        vs[1]->start().y() -= height;
+                                    }
+                                    else
+                                    {
+                                        vs[1]->end().y() -= height;
+                                    }
+                                    vs[0]->start().x() = vs[2]->end().x();
+                                    vs[2]->start() = Coordinate(-1, -1, -1);
+                                    vs[2]->end() = Coordinate(-1, -1, -1);
+                                }
+                            }
+                            else if (std::fabs(vs[0]->start().x() - vs[2]->end().x()) < 1e-5)
+                            {
+                                vs[1]->start().x() = vs[2]->start().x();
+                                vs[1]->end().x() = vs[2]->start().x();
+                                if (vs[2]->start().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
+                                    vs[2]->start().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
+                                {
+                                    if (std::fabs(vs[1]->start().y() - vs[2]->start().y()) < 1e-5)
+                                    {
+                                        vs[1]->start().y() -= height;
+                                    }
+                                    else
+                                    {
+                                        vs[1]->end().y() -= height;
+                                    }
+                                    vs[0]->start().x() = vs[2]->start().x();
+                                    vs[2]->start() = Coordinate(-1, -1, -1);
+                                    vs[2]->end() = Coordinate(-1, -1, -1);
+                                }
+                            }
+                            else if (std::fabs(vs[0]->end().x() - vs[2]->start().x()) < 1e-5)
+                            {
+                                vs[1]->start().x() = vs[2]->end().x();
+                                vs[1]->end().x() = vs[2]->end().x();
+                                if (vs[2]->end().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
+                                    vs[2]->end().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
+                                {
+                                    if (std::fabs(vs[1]->start().y() - vs[2]->end().y()) < 1e-5)
+                                    {
+                                        vs[1]->start().y() -= height;
+                                    }
+                                    else
+                                    {
+                                        vs[1]->end().y() -= height;
+                                    }
+                                    vs[0]->end().x() = vs[2]->end().x();
+                                    vs[2]->start() = Coordinate(-1, -1, -1);
+                                    vs[2]->end() = Coordinate(-1, -1, -1);
+                                }
+                            }
+                            else if (std::fabs(vs[0]->end().x() - vs[2]->end().x()) < 1e-5)
+                            {
+                                vs[1]->start().x() = vs[2]->start().x();
+                                vs[1]->end().x() = vs[2]->start().x();
+                                if (vs[2]->start().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
+                                    vs[2]->start().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
+                                {
+                                    if (std::fabs(vs[1]->start().y() - vs[2]->start().y()) < 1e-5)
+                                    {
+                                        vs[1]->start().y() -= height;
+                                    }
+                                    else
+                                    {
+                                        vs[1]->end().y() -= height;
+                                    }
+                                    vs[0]->end().x() = vs[2]->start().x();
+                                    vs[2]->start() = Coordinate(-1, -1, -1);
+                                    vs[2]->end() = Coordinate(-1, -1, -1);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                for (auto &o_s : m_router->segments())
+                {
+                    Segment *other_seg = &o_s;
+                    if (*seg != *other_seg)
+                    {
+                        if (other_seg->start() == cur || other_seg->end() == cur)
+                        {
+                            cur = other_seg->start() == cur ? other_seg->end() : other_seg->start();
+                            keep_going = true;
+                            seg = other_seg;
+                            break;
+                        }
+                    }
+                }
+                vs.push_back(seg);
+            } while (keep_going);
+            // ---merge the segments with the same slope---
+        }
+    }
+    // remove empty segments
+    m_router->segments().erase(std::remove_if(m_router->segments().begin(),
+                                              m_router->segments().end(),
+                                              [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
+                               m_router->segments().end());
+    */
 }
