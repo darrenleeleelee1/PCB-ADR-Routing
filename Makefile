@@ -1,6 +1,6 @@
 EXE = ADRouter
 
-
+# or::tools need add -DBUILD_DEPS=ON
 
 .PHONY: build
 build:

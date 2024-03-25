@@ -94,7 +94,7 @@ public:
                      std::string escape_boundry);
     long minCostMaxFlow();
     std::pair<Coordinate, Coordinate> DDR2DDR(std::shared_ptr<Router> router);
-    void CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string escape_boundry);
+    void CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string cpu_escape_boundry);
 };
 
 #endif // GRAPH_HPP

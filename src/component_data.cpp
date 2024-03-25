@@ -1,6 +1,11 @@
 #include "component_data.hpp"
 #include "basic_ds.hpp"
 #include "graph.hpp"
+#include <cmath>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 #ifdef VERBOSE
 #include <iostream>
 #endif
@@ -128,7 +133,13 @@ void Component::createPinArr()
     // std::cout << std::endl;
 #endif
 }
-
+void Component::initializeAreaRouting()
+{
+    for (auto p : m_pins)
+    {
+        m_wire_on_boundary[p->net_name()] = std::vector<Coordinate>(4);
+    }
+}
 void DataManager::createNetlist(int count)
 {
     if (!m_netlists.count(count))
@@ -149,6 +160,7 @@ void DataManager::addCompPin(std::string comp_name, std::shared_ptr<Pin> pin)
     else
     {
         m_components[comp_name] = std::make_shared<Component>(comp_name);
+        m_components[comp_name]->addPin(pin);
     }
 }
 void DataManager::preprocess(int threshold)
@@ -184,7 +196,7 @@ void DataManager::preprocess(int threshold)
         {
             Component *singleComponent = m_components[components.front()].get();
             singleComponent->is_cpu() = true;
-            // Add edges between single component and all other components
+            // // Add edges between single component and all other components
             for (const auto &other_group : m_groups)
             {
                 if (other_group.first != group.first)
@@ -337,21 +349,23 @@ void DataManager::CPU2DDR()
     double wire_spacing = 4.8;
     double wire_width = 4.0;
     double bump_ball_radius = 7.5;
-    std::string escape_boundry = "W";
+    double flow;
+
     for (auto comp_pair : m_components)
     {
         auto comp = comp_pair.second;
         if (comp->is_cpu())
         {
             graph_manager = std::make_shared<GraphManager>();
-            graph_manager->CPU2DDRInit(*this, *comp, wire_spacing, wire_width, bump_ball_radius, escape_boundry);
+            graph_manager->CPU2DDRInit(*this, *comp, wire_spacing, wire_width, bump_ball_radius, m_cpu_escape_boundry);
+            flow = graph_manager->minCostMaxFlow();
 #ifdef VERBOSE
-            std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
-            std::cout << "flow = " << graph_manager->minCostMaxFlow() << std::endl;
-            std::cout << "#pins = " << (long)comp->pins().size() << std::endl;
+            // std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
+            // std::cout << "flow = " << flow << std::endl;
+            // std::cout << "#pins = " << (long)comp->pins().size() << std::endl;
 #endif
             // escape routing
-            graph_manager->CPU2DDR(comp->router(), *comp, escape_boundry);
+            graph_manager->CPU2DDR(comp->router(), *comp, m_cpu_escape_boundry);
             comp->reducedBends();
 
             for (auto connected_comp : comp->cpu_connected_components())
@@ -390,7 +404,166 @@ void DataManager::CPU2DDR()
         }
     }
 }
+void DataManager::areaRouting(Coordinate diagonal_start_line)
+{
 
+    // lambda for add snaking wires
+    auto addSnakingWire = [&](std::string peak_direction,
+                              std::string go_direction,
+                              std::shared_ptr<Router> area_router,
+                              Coordinate start_point,
+                              double l_dia,
+                              double minimum_wirelength,
+                              double h_sna,
+                              int num_snakes) {
+        if (peak_direction == "N")
+        {
+        }
+        else if (peak_direction == "E")
+        {
+            if (go_direction == "N")
+            {
+                // go up
+            }
+            else if (go_direction == "S")
+            {
+                // go down
+                int cnt = 0;
+                Coordinate cur = start_point, next;
+                while (cnt++ < num_snakes)
+                {
+                    next = Coordinate{cur.x(), cur.y() - minimum_wirelength, cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() + std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() + h_sna, cur.y(), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() + std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x(), cur.y() - minimum_wirelength, cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() - std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() - h_sna, cur.y(), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                    next = Coordinate{cur.x() - std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
+                    area_router->addSegment(Segment{cur, next});
+
+                    cur = next;
+                }
+                return cur;
+            }
+        }
+        else if (peak_direction == "S")
+        {
+        }
+        else if (peak_direction == "W")
+        {
+        }
+    };
+
+    auto comp_pair = std::make_pair(m_components.at("U45"), m_components.at("U61"));
+    std::vector<int> layers = {1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2};
+    std::vector<int> orders = {5, 7, 2, 3, 4, 4, 8, 8, 6, 1, 6, 1, 7, 0, 2, 0, 5, 3};
+
+    std::ifstream x_file("outputs/x_values.csv");
+    std::ifstream s_file("outputs/s_values.csv");
+    std::string line;
+    std::vector<std::vector<double>> x;
+    std::vector<std::vector<double>> s;
+
+    while (std::getline(x_file, line))
+    {
+        std::vector<double> layerValues;
+        std::stringstream ss(line);
+        std::string value;
+
+        while (std::getline(ss, value, ','))
+        {
+            layerValues.push_back(std::stod(value));
+        }
+
+        x.push_back(layerValues);
+    }
+    x_file.close();
+    while (std::getline(s_file, line))
+    {
+        std::vector<double> layerValues;
+        std::stringstream ss(line);
+        std::string value;
+
+        while (std::getline(ss, value, ','))
+        {
+            layerValues.push_back(std::stod(value));
+        }
+
+        s.push_back(layerValues);
+    }
+    s_file.close();
+
+    int cnt = -1;
+    for (auto p : comp_pair.first->pins())
+    {
+        cnt++;
+        auto east_first = comp_pair.first->wire_on_boundary()[p->net_name()].at(1);
+        auto east_second = comp_pair.second->wire_on_boundary()[p->net_name()].at(1);
+        double first_offset = east_first.x() < east_second.x() ? east_second.x() - east_first.x() : 0;
+        first_offset += diagonal_start_line.y() - east_second.y();
+        // CPU horizontal
+        m_area_router->addSegment(
+            Segment{east_first,
+                    Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
+                               east_first.y(),
+                               east_first.z()}});
+
+        double secod_offset = east_second.x() < east_first.x() ? east_first.x() - east_second.x() : 0;
+        // DDR horizontal
+        m_area_router->addSegment(
+            Segment{east_second,
+                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)),
+                               east_second.y(),
+                               east_second.z()}});
+        m_area_router->addSegment(
+            Segment{Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)),
+                               east_second.y(),
+                               east_second.z()},
+                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
+                                   diagonal_start_line.y() - east_second.y(),
+                               diagonal_start_line.y(),
+                               east_second.z()}});
+        // CPU to DDR
+        m_area_router->addVia(
+            Via{Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
+                           east_first.y(),
+                           east_second.z()},
+                east_first.z()});
+        Coordinate cur = Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
+                                    east_first.y(),
+                                    east_second.z()};
+        cur = addSnakingWire(
+            "E", "S", m_area_router, cur, 5.0, 5.0, 15.0, std::floor(s.at(layers.at(cnt) - 1).at(orders.at(cnt))));
+        m_area_router->addSegment(
+            Segment{cur,
+                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
+                                   diagonal_start_line.y() - east_second.y(),
+                               diagonal_start_line.y(),
+                               east_second.z()}});
+    }
+}
 void Component::reducedBends()
 {
     auto compareSlope = [](const Segment &seg1, const Segment &seg2, double epsilon = 1e-1) -> bool {

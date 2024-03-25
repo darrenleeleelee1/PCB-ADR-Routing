@@ -2,6 +2,7 @@
 #define COMPONENT_DATA_HPP
 
 #ifdef VERBOSE
+#include <iomanip>
 #include <iostream>
 #endif
 #include <cmath>
@@ -138,6 +139,8 @@ private:
     std::vector<Component *> m_cpu_connected_components;
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
+    // collect for area routing
+    std::unordered_map<std::string, std::vector<Coordinate>> m_wire_on_boundary; // N:0, E:1, S:2, W:3
     // Private Methods
     std::pair<Coordinate, Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -228,9 +231,16 @@ public:
     // Access for bounding_box
     const std::pair<Coordinate, Coordinate> &bounding_box() const { return m_bounding_box; }
     std::pair<Coordinate, Coordinate> &bounding_box() { return m_bounding_box; }
+    // Access for wire_on_boundary
+    const std::unordered_map<std::string, std::vector<Coordinate>> &wire_on_boundary() const
+    {
+        return m_wire_on_boundary;
+    }
+    std::unordered_map<std::string, std::vector<Coordinate>> &wire_on_boundary() { return m_wire_on_boundary; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void createPinArr();
+    void initializeAreaRouting();
     void reducedBends();
 };
 
@@ -240,6 +250,10 @@ private:
     std::string m_net_name;
     int m_net_id;
     std::vector<std::shared_ptr<Pin>> m_pins;
+    // For linear programming
+    double m_escape_length;
+    double m_height_diagonal, m_height_orthogonal;
+    int m_ddr_layer;
 
 public:
     // Constructor
@@ -259,6 +273,18 @@ public:
     // Access for pins
     const std::vector<std::shared_ptr<Pin>> &pins() const { return m_pins; }
     std::vector<std::shared_ptr<Pin>> &pins() { return m_pins; }
+    // Access for escape_length
+    const double &escape_length() const { return m_escape_length; }
+    double &escape_length() { return m_escape_length; }
+    // Access for height_diagonal
+    const double &height_diagonal() const { return m_height_diagonal; }
+    double &height_diagonal() { return m_height_diagonal; }
+    // Access for height_orthogonal
+    const double &height_orthogonal() const { return m_height_orthogonal; }
+    double &height_orthogonal() { return m_height_orthogonal; }
+    // Access for ddr_layer
+    const int &ddr_layer() const { return m_ddr_layer; }
+    int &ddr_layer() { return m_ddr_layer; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
 };
@@ -276,6 +302,22 @@ public:
     const std::vector<std::shared_ptr<Nets>> &nets() const { return m_nets; }
     std::vector<std::shared_ptr<Nets>> &nets() { return m_nets; }
     // Methods
+#ifdef VERBOSE
+    // Dump
+    void dump()
+    {
+        for (auto &n : m_nets)
+        {
+            std::cout << "Net: " << n->net_name() << " ID: " << n->net_id() << std::endl;
+            for (auto &p : n->pins())
+            {
+                std::cout << "Pin: " << p->pin_name() << " Comp: " << p->comp_name() << " Net: " << p->net_name()
+                          << " ID: " << p->net_id() << " Coordinate: " << p->coordinate().printCoordinate()
+                          << std::endl;
+            }
+        }
+    }
+#endif
 };
 
 class DataManager
@@ -285,10 +327,16 @@ private:
     std::unordered_map<Component *, std::vector<std::string>> m_groups;
     std::unordered_map<int, Netlist> m_netlists;
     std::unordered_map<std::string, int> m_layers;
+    std::shared_ptr<Router> m_area_router;
+    std::string m_cpu_escape_boundry;
 
 public:
     // Constructor
-    DataManager() = default;
+    DataManager()
+    {
+        m_area_router = std::make_shared<Router>();
+        m_cpu_escape_boundry = "E";
+    };
     // Accessor
     // Access for components
     const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
@@ -302,13 +350,19 @@ public:
     // Accessor for layers
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
-
+    // Access for area_router
+    const std::shared_ptr<Router> &area_router() const { return m_area_router; }
+    std::shared_ptr<Router> &area_router() { return m_area_router; }
+    // Access for cpu_escape_boundry
+    const std::string &cpu_escape_boundry() const { return m_cpu_escape_boundry; }
+    std::string &cpu_escape_boundry() { return m_cpu_escape_boundry; }
     // Methods
     void createNetlist(int count);
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void preprocess(int threshold = 250); // 250 for case 4, 5, 6, and 25 for case 2
     void DDR2DDR();
     void CPU2DDR();
+    void areaRouting(Coordinate diagonal_start_line);
 };
 class Via
 {

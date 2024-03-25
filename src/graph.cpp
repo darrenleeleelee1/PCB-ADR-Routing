@@ -279,9 +279,9 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
                                       tile_width_with_bump_ball * tile_width_with_bump_ball)) /
                            (wire_spacing + wire_width));
 #ifdef VERBOSE
-    std::cout << "o_cap: " << o_cap << std::endl;
-    std::cout << "d_cap: " << d_cap << std::endl;
-    std::cout << "d_cap - 2 * std::floor(o_cap / 2): " << d_cap - 2 * std::floor(o_cap / 2) << std::endl;
+    // std::cout << "o_cap: " << o_cap << std::endl;
+    // std::cout << "d_cap: " << d_cap << std::endl;
+    // std::cout << "d_cap - 2 * std::floor(o_cap / 2): " << d_cap - 2 * std::floor(o_cap / 2) << std::endl;
 
 #endif
     // Create the graph

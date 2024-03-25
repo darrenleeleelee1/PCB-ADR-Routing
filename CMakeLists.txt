@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(ADRouter)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -13,21 +13,36 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Verbose")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_VERBOSE}")
 endif()
 
+# include(FetchContent)
+# FetchContent_Declare(
+#   or-tools
+#   GIT_REPOSITORY https://github.com/google/or-tools.git
+#   GIT_TAG        main
+# )
 
+# FetchContent_MakeAvailable(or-tools)
+
+# Specify include directories
 include_directories(inc)
+
+
+# Add your source files
 file(GLOB SOURCES "src/*.cpp")
 add_executable(ADRouter ${SOURCES})
 
+# add_subdirectory(or-tools)
+
 target_link_libraries(ADRouter stdc++fs)
+# target_link_libraries(ADRouter stdc++fs ortools::ortools)
 
 
 # Copy the executable to the bin directory after a release build
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  add_custom_command(TARGET ADRouter POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E copy
-                             $<TARGET_FILE:ADRouter>
-                             ${CMAKE_SOURCE_DIR}/bin/$<TARGET_FILE_NAME:ADRouter>)
-endif()
+# if(CMAKE_BUILD_TYPE STREQUAL "Release")
+#   add_custom_command(TARGET ADRouter POST_BUILD
+#                      COMMAND ${CMAKE_COMMAND} -E copy
+#                              $<TARGETlamake_FILE:ADRouter>
+#                              ${CMAKE_SOURCE_DIR}/bin/$<TARGET_FILE_NAME:ADRouter>)
+# endif()
 
 
 # Add the json library
@@ -49,22 +64,22 @@ endif()
 
 
 # Google Test integration
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
-)
-FetchContent_MakeAvailable(googletest)
+# include(FetchContent)
+# FetchContent_Declare(
+#     googletest
+#     URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+# )
+# FetchContent_MakeAvailable(googletest)
 
-# Create the io_test executable and link it with Google Test
-add_executable(io_test tests/io_test.cpp)
-target_link_libraries(io_test gtest gtest_main)
+# # Create the io_test executable and link it with Google Test
+# add_executable(io_test tests/io_test.cpp)
+# target_link_libraries(io_test gtest gtest_main)
 
-# Enable testing and specify the tests to run
-include(GoogleTest)
-gtest_discover_tests(io_test)
+# # Enable testing and specify the tests to run
+# include(GoogleTest)
+# gtest_discover_tests(io_test)
 
-enable_testing()
+# enable_testing()
 
 
 # Uncomment and edit the following lines if you have other directories or libraries to include

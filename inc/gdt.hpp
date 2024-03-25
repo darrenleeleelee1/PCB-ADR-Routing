@@ -34,6 +34,7 @@ public:
     // Methods
     void preprocess();
     void routing();
+    void areaRouting();
     void gdt2gds(std::string prefix);
 };
 

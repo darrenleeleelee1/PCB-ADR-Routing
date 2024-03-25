@@ -213,7 +213,80 @@ void GDTWriter::routing()
     file << "}\n}\n";
     file.close();
 }
+void GDTWriter::areaRouting()
+{
+    // mkdir GDT_files if not exists
+    std::string file_name = m_root_path + "areaRouting";
+    std::ofstream file(file_name, std::ios::trunc);
+    m_gdt_files.push_back("areaRouting");
 
+    std::time_t current_time = std::time(nullptr);
+    struct std::tm *time_info;
+    char formatted_time[20]; // 20 characters are enough to hold "YYYY-MM-DD HH:MM:SS\0"
+
+    time_info = std::localtime(&current_time);
+    std::strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S", time_info);
+
+    std::string formatted_time_str(formatted_time);
+
+    file << "gds2{5\n";
+    file << "m=" << formatted_time_str << " a=" << formatted_time_str << "\nlib 'preprocessed' 0.001 1e-09\n";
+    file << "cell{c=" << formatted_time_str << " m=" << formatted_time_str << " 'pins and wires'\n";
+    for (auto comp_pair : m_data_manager.components())
+    {
+        auto &comp = comp_pair.second;
+        for (int i = comp->pin_arr().size() - 1; i >= 0; --i)
+        {
+            for (size_t j = 0; j < comp->pin_arr().at(i).size(); ++j)
+            {
+                if (comp->pin_arr().at(i).at(j))
+                {
+                    auto pin = comp->pin_arr().at(i).at(j);
+                    file << "b{0 xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
+                    file << "t{255 tt" << pin->net_id() << " mc m2 xy(" << pin->coordinate().x() << ", "
+                         << pin->coordinate().y() << ") '" << pin->net_id() << "'}\n";
+                }
+                else
+                {
+                    Coordinate missing_pin(j * comp->tile_width() + comp->bottom_left().x(),
+                                           i * comp->tile_height() + comp->bottom_left().y(),
+                                           0);
+                    file << "b{0 xy(" << generateCirclePoints(missing_pin) << ")}\n";
+                }
+            }
+        }
+    }
+    for (auto comp_pair : m_data_manager.components())
+    {
+        auto comp = comp_pair.second;
+        auto router = comp->router();
+        for (auto &seg : router->segments())
+        {
+            file << "b{" << seg.start().z() << " xy(" << generateLinePoints(seg.start(), seg.end()) << ")}\n";
+        }
+        for (auto &via : router->vias())
+        {
+            for (int k = via.coordinate().z(); k <= via.layer(); k++)
+            {
+                file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+            }
+        }
+    }
+    auto router = m_data_manager.area_router();
+    for (auto &seg : router->segments())
+    {
+        file << "b{" << seg.start().z() << " xy(" << generateLinePoints(seg.start(), seg.end()) << ")}\n";
+    }
+    for (auto &via : router->vias())
+    {
+        for (int k = via.coordinate().z(); k <= via.layer(); k++)
+        {
+            file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+        }
+    }
+    file << "}\n}\n";
+    file.close();
+}
 void GDTWriter::gdt2gds(std::string prefix)
 {
     std::string command;
