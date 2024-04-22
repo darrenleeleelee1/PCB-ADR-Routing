@@ -42,13 +42,12 @@ void ADRParser::parse(DataManager &data_manager)
         {
             number = std::stoi(match[1].str());
             count = std::stoi(match[2].str());
-            data_manager.createNetlist(number);
             continue;
         }
         if (std::regex_match(line, match, net_pattern))
         {
             net_name = match[1].str();
-            net = std::make_shared<Nets>(net_name, data_manager.netlists().at(number).nets().size());
+            net = std::make_shared<Nets>(net_name, data_manager.netlists().nets().size());
             continue;
         }
         if (std::regex_match(line, match, pin_pattern))
@@ -68,16 +67,18 @@ void ADRParser::parse(DataManager &data_manager)
         }
         if (line == "PIN END")
         {
-            data_manager.netlists().at(number).nets().push_back(net);
+            data_manager.netlists().nets().push_back(net);
             continue;
         }
     }
     // Check if netlist count matches
     // If number is 0, then we are not checking, means no address signal
-    if (number && data_manager.netlists().at(number).nets().size() != static_cast<std::size_t>(count))
+    if (number && data_manager.netlists().nets().size() != static_cast<std::size_t>(count))
     {
         throw std::runtime_error("Error: Netlist count does not match");
     }
+
+    return;
 }
 
 LayerParser::LayerParser(const std::string &filename)
@@ -132,6 +133,8 @@ void LayerParser::parse(DataManager &data_manager)
 
         data_manager.layers().emplace(layer_name, layer_number);
     }
+
+    return;
 }
 
 ObstaclesParser::ObstaclesParser(const std::string &filename)
@@ -180,6 +183,8 @@ void ObstaclesParser::parse(DataManager &data_manager)
         data_manager.pcb_bounding_box().at(1).y() =
             std::max(data_manager.pcb_bounding_box().at(1).y(), top_right_y / 100.0);
     }
+
+    return;
 }
 
 ComponentParser::ComponentParser(const std::string &filename)
@@ -241,4 +246,49 @@ void ComponentParser::parse(DataManager &data_manager)
         }
         data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);
     }
+
+    return;
+}
+
+EdgeParser::EdgeParser(const std::string &filename)
+{
+    file.open(filename);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Could not open " + filename);
+    }
+}
+
+EdgeParser::~EdgeParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
+
+void EdgeParser::parse(DataManager &data_manager)
+{
+    json config;
+    file >> config;
+    for (const auto &element : config)
+    {
+        std::pair<std::string, char> from = {
+            element["from"]["comp_name"],
+            element["from"]["escaepe_dir"].get<std::string>()[0] // string to char
+        };
+        std::pair<std::string, char> to = {
+            element["to"]["comp_name"],
+            element["to"]["escaepe_dir"].get<std::string>()[0] // string to char
+        };
+
+        if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
+        {
+            throw std::runtime_error("Error: Component not found");
+        }
+
+        data_manager.ddr2ddr_edges().push_back({from, to});
+    }
+
+    return;
 }

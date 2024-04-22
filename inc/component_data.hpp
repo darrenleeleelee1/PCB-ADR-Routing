@@ -6,6 +6,7 @@
 #include <iostream>
 #endif
 #include <cmath>
+#include <list>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -138,7 +139,6 @@ private:
     bool m_is_45_degree;
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
     std::vector<bool> m_ddr_neighboors; // 0 for left/top, 1 for right/bottom, for CPU know which side to connect
-    std::vector<Component *> m_cpu_connected_components;
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
     // collect for area routing
@@ -236,9 +236,6 @@ public:
     // Access for ddr_neighboor
     const std::vector<bool> &ddr_neighboors() const { return m_ddr_neighboors; }
     std::vector<bool> &ddr_neighboors() { return m_ddr_neighboors; }
-    // Access for cpu_connected_components
-    const std::vector<Component *> &cpu_connected_components() const { return m_cpu_connected_components; }
-    std::vector<Component *> &cpu_connected_components() { return m_cpu_connected_components; }
     // Access for router
     const std::shared_ptr<Router> &router() const { return m_router; }
     std::shared_ptr<Router> &router() { return m_router; }
@@ -255,7 +252,6 @@ public:
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void createPinArr();
     void initializeAreaRouting();
-    void reducedBends();
 };
 
 class Nets
@@ -264,11 +260,7 @@ private:
     std::string m_net_name;
     int m_net_id;
     std::vector<std::shared_ptr<Pin>> m_pins;
-    // For linear programming
-    double m_escape_length;
-    double m_height_diagonal, m_height_orthogonal;
-    int m_ddr_layer;
-
+    std::unordered_map<std::string, double> m_group_escape_length; // group name, escape length
 public:
     // Constructor
     Nets() = default;
@@ -287,18 +279,9 @@ public:
     // Access for pins
     const std::vector<std::shared_ptr<Pin>> &pins() const { return m_pins; }
     std::vector<std::shared_ptr<Pin>> &pins() { return m_pins; }
-    // Access for escape_length
-    const double &escape_length() const { return m_escape_length; }
-    double &escape_length() { return m_escape_length; }
-    // Access for height_diagonal
-    const double &height_diagonal() const { return m_height_diagonal; }
-    double &height_diagonal() { return m_height_diagonal; }
-    // Access for height_orthogonal
-    const double &height_orthogonal() const { return m_height_orthogonal; }
-    double &height_orthogonal() { return m_height_orthogonal; }
-    // Access for ddr_layer
-    const int &ddr_layer() const { return m_ddr_layer; }
-    int &ddr_layer() { return m_ddr_layer; }
+    // Access for group_escape_length
+    const std::unordered_map<std::string, double> &group_escape_length() const { return m_group_escape_length; }
+    std::unordered_map<std::string, double> &group_escape_length() { return m_group_escape_length; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
 };
@@ -366,7 +349,7 @@ class DataManager
 private:
     std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
     std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_groups;
-    std::unordered_map<int, Netlist> m_netlists;
+    Netlist m_netlists;
     std::unordered_map<std::string, int> m_layers;
     std::vector<Obstacle> m_obstacles;
     std::shared_ptr<Router> m_area_router;
@@ -374,6 +357,8 @@ private:
     std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
     double m_wire_spacing;
     double m_wire_width;
+    std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
+        m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
 
 public:
     // Constructor
@@ -394,8 +379,8 @@ public:
     const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() const { return m_groups; }
     std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() { return m_groups; }
     // Access for netlists
-    const std::unordered_map<int, Netlist> &netlists() const { return m_netlists; }
-    std::unordered_map<int, Netlist> &netlists() { return m_netlists; }
+    const Netlist &netlists() const { return m_netlists; }
+    Netlist &netlists() { return m_netlists; }
     // Accessor for layers
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
@@ -416,20 +401,31 @@ public:
     double &wire_spacing() { return m_wire_spacing; }
     // Access for wire_width
     const double &wire_width() const { return m_wire_width; }
+    double &wire_width() { return m_wire_width; }
+    // Access for ddr2ddr_edges
+    const std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
+    {
+        return m_ddr2ddr_edges;
+    }
+    std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges()
+    {
+        return m_ddr2ddr_edges;
+    }
     // Methods
-    void createNetlist(int count);
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
-    void preprocess(int threshold = 250); // 250 for case 4, 5, 6, and 25 for case 2
+    void sumEscapeLength();
+    void preprocess();
     void DDR2DDR();
     void CPU2DDR();
-    void areaRouting(double height_of_diagonal);
+    void AreaRouting();
 };
 class Via
 {
 private:
     Coordinate m_coordinate;
     int m_layer;
+    int m_net_id;
 
 public:
     // Constructor
@@ -443,6 +439,7 @@ public:
         {
             std::swap(m_coordinate.z(), m_layer);
         }
+        m_net_id = -1;
     }
     // Accessor
     // Access for coordinate
@@ -451,6 +448,9 @@ public:
     // Access for layer
     const int &layer() const { return m_layer; }
     int &layer() { return m_layer; }
+    // Access for net_id
+    const int &net_id() const { return m_net_id; }
+    int &net_id() { return m_net_id; }
     // Methods
 };
 class Segment
@@ -467,6 +467,7 @@ public:
         : m_start(start)
         , m_end(end)
     {
+        m_net_id = -1;
     }
     Segment(const Coordinate &start, const Coordinate &end, int net_id)
         : m_start(start)
@@ -478,6 +479,7 @@ public:
         : m_start(x1, y1, z1)
         , m_end(x2, y2, z2)
     {
+        m_net_id = -1;
     }
     // overload operator
     bool operator==(const Segment &rhs) const { return m_start == rhs.m_start && m_end == rhs.m_end; }
@@ -493,20 +495,83 @@ public:
     const int &net_id() const { return m_net_id; }
     int &net_id() { return m_net_id; }
     // Methods
+    double length() const
+    {
+        double delta_x = m_end.x() - m_start.x();
+        double delta_y = m_end.y() - m_start.y();
+        return std::sqrt(delta_x * delta_x + delta_y * delta_y);
+    }
     double slope() const
     {
-        double deltaX = m_end.x() - m_start.x();
-        double deltaY = m_end.y() - m_start.y();
+        double delta_x = m_end.x() - m_start.x();
+        double delta_y = m_end.y() - m_start.y();
         // Handling the case of vertical line segments
-        if (std::fabs(deltaX) < 5e-1)
+        if (std::fabs(delta_x) < 5e-1)
         {
             return std::numeric_limits<double>::infinity();
         }
-        else if (std::fabs(deltaY) < 5e-1)
+        else if (std::fabs(delta_y) < 5e-1)
         {
             return 0.0;
         }
-        return deltaY / deltaX;
+        return delta_y / delta_x;
+    }
+    bool isOverlap(Coordinate coor) const
+    {
+        if (m_start.z() != coor.z() && m_start.z() != coor.z())
+            return false;
+
+        if (slope() == std::numeric_limits<double>::infinity())
+        {
+            if (m_start.x() != coor.x()) // not on the vertical line
+                return false;
+
+            return (m_start.y() <= coor.y() && coor.y() <= m_end.y()) ||
+                   (m_end.y() <= coor.y() && coor.y() <= m_start.y());
+        }
+        else
+        {
+            double epsilon = 5e-1;
+            double x_min = std::min(m_start.x(), m_end.x());
+            double x_max = std::max(m_start.x(), m_end.x());
+            double y_min = std::min(m_start.y(), m_end.y());
+            double y_max = std::max(m_start.y(), m_end.y());
+
+            if (coor.x() < x_min - epsilon || coor.x() > x_max + epsilon || coor.y() < y_min - epsilon ||
+                coor.y() > y_max + epsilon)
+                return false; // not on the line
+
+            return fabs(slope() * (coor.x() - m_start.x()) - (coor.y() - m_start.y())) < epsilon;
+        }
+    }
+    bool isOverlap(Via via) const
+    {
+        if (m_start.z() != via.coordinate().z() && m_start.z() != via.layer())
+            return false;
+
+        if (slope() == std::numeric_limits<double>::infinity())
+        {
+            if (m_start.x() != via.coordinate().x()) // not on the vertical line
+                return false;
+
+            return (m_start.y() <= via.coordinate().y() && via.coordinate().y() <= m_end.y()) ||
+                   (m_end.y() <= via.coordinate().y() && via.coordinate().y() <= m_start.y());
+        }
+        else
+        {
+            double epsilon = 5e-1;
+            double x_min = std::min(m_start.x(), m_end.x());
+            double x_max = std::max(m_start.x(), m_end.x());
+            double y_min = std::min(m_start.y(), m_end.y());
+            double y_max = std::max(m_start.y(), m_end.y());
+
+            if (via.coordinate().x() < x_min - epsilon || via.coordinate().x() > x_max + epsilon ||
+                via.coordinate().y() < y_min - epsilon || via.coordinate().y() > y_max + epsilon)
+                return false; // not on the line
+
+            return fabs(slope() * (via.coordinate().x() - m_start.x()) - (via.coordinate().y() - m_start.y())) <
+                   epsilon;
+        }
     }
 };
 
@@ -527,7 +592,9 @@ public:
     const std::vector<Via> &vias() const { return m_vias; }
     std::vector<Via> &vias() { return m_vias; }
     // Methods
-    void addSegment(Segment segment) { m_segments.push_back(segment); }
+    void addSegment(Segment segment);
     void addVia(Via via) { m_vias.push_back(via); }
+    void setViaNetId();
+    void setSegmentNetId();
 };
 #endif // COMPONENT_DATA_HPP

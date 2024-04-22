@@ -60,6 +60,18 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
+class EdgeParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit EdgeParser(const std::string &filename);
+    ~EdgeParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
 class ParserManager
 {
 private:

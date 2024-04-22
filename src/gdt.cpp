@@ -2,6 +2,11 @@
 #include <cmath>
 #include <ctime>
 #include <iomanip>
+/*
+datatype = net id
+datatype 255 = obstacle
+datatype 254 = via
+*/
 std::string generateSquarePoints(Coordinate center, double width = 3)
 {
     std::vector<double> points;
@@ -120,7 +125,7 @@ void GDTWriter::preprocess()
                 if (comp->pin_arr().at(i).at(j))
                 {
                     auto pin = comp->pin_arr().at(i).at(j);
-                    file << "b{0 xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
+                    file << "b{0 dt" << pin->net_id() << " xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
                     file << "t{255 tt" << pin->net_id() << " mc m2 xy(" << pin->coordinate().x() << ", "
                          << pin->coordinate().y() << ") '" << pin->net_id() << "'}\n";
                 }
@@ -129,7 +134,7 @@ void GDTWriter::preprocess()
                     Coordinate missing_pin(j * comp->tile_width() + comp->bottom_left().x(),
                                            i * comp->tile_height() + comp->bottom_left().y(),
                                            0);
-                    file << "b{0 xy(" << generateCirclePoints(missing_pin) << ")}\n";
+                    file << "b{0 dt255 xy(" << generateCirclePoints(missing_pin) << ")}\n";
                 }
             }
         }
@@ -156,23 +161,9 @@ void GDTWriter::preprocess()
             Coordinate top_right((j + 1) * tile_size + m_data_manager.pcb_bounding_box().at(0).x(),
                                  (i + 1) * tile_size + m_data_manager.pcb_bounding_box().at(0).y(),
                                  0);
-            file << "b{243 dt0 xy(" << generateRectanglePoints(bottom_left, top_right) << ")}\n";
+            file << "b{243 dt243 xy(" << generateRectanglePoints(bottom_left, top_right) << ")}\n";
         }
     }
-    /*
-    for (auto netlist : m_data_manager.netlists())
-    {
-        for (auto net : netlist.second.nets())
-        {
-            for (auto pin : net->pins())
-            {
-                file << "b{0 xy(" << generateCirclePoints(pin->coordinate().x(), pin->coordinate().y()) << ")}\n";
-                file << "t{255 tt" << pin->net_id() << " mc m2 xy(" << pin->coordinate().x() << ", "
-                     << pin->coordinate().y() << ") '" << pin->net_id() << "'}\n";
-            }
-        }
-    }
-    */
     file << "}\n}\n";
     file.close();
 }
@@ -206,7 +197,7 @@ void GDTWriter::routing()
                 if (comp->pin_arr().at(i).at(j))
                 {
                     auto pin = comp->pin_arr().at(i).at(j);
-                    file << "b{0 xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
+                    file << "b{0 dt" << pin->net_id() << " xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
                     file << "t{255 tt" << pin->net_id() << " mc m2 xy(" << pin->coordinate().x() << ", "
                          << pin->coordinate().y() << ") '" << pin->net_id() << "'}\n";
                 }
@@ -215,7 +206,7 @@ void GDTWriter::routing()
                     Coordinate missing_pin(j * comp->tile_width() + comp->bottom_left().x(),
                                            i * comp->tile_height() + comp->bottom_left().y(),
                                            0);
-                    file << "b{0 xy(" << generateCirclePoints(missing_pin) << ")}\n";
+                    file << "b{0 dt255 xy(" << generateCirclePoints(missing_pin) << ")}\n";
                 }
             }
         }
@@ -226,13 +217,15 @@ void GDTWriter::routing()
         auto router = comp->router();
         for (auto &seg : router->segments())
         {
-            file << "b{" << seg.start().z() << " xy(" << generateLinePoints(seg.start(), seg.end()) << ")}\n";
+            file << "b{" << seg.start().z() << " dt" << seg.net_id() << " xy("
+                 << generateLinePoints(seg.start(), seg.end()) << ")}\n";
         }
         for (auto &via : router->vias())
         {
             for (int k = via.coordinate().z(); k <= via.layer(); k++)
             {
-                file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+                file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate(), 9.0)
+                     << ")}\n";
             }
         }
     }
@@ -294,7 +287,8 @@ void GDTWriter::areaRouting()
         {
             for (int k = via.coordinate().z(); k <= via.layer(); k++)
             {
-                file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+                file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate(), 9.0)
+                     << ")}\n";
             }
         }
     }
@@ -307,7 +301,8 @@ void GDTWriter::areaRouting()
     {
         for (int k = via.coordinate().z(); k <= via.layer(); k++)
         {
-            file << "b{" << k << " xy(" << generateSquarePoints(via.coordinate(), 9.0) << ")}\n";
+            file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate(), 9.0)
+                 << ")}\n";
         }
     }
     file << "}\n}\n";

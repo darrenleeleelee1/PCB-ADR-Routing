@@ -32,6 +32,7 @@ std::vector<Coordinate> Component::findBoundingBox()
 
     return rectCorners;
 }
+
 double Component::calculateTileWidth(double y_tolerance)
 {
     // Tolerance is for y difference that is considered to be the same row
@@ -96,6 +97,7 @@ double Component::calculateTileHeight(double x_tolerance)
 
     return result;
 }
+
 void Component::createPinArr()
 {
     // Find the corner points of the component
@@ -134,6 +136,7 @@ void Component::createPinArr()
     // std::cout << std::endl;
 #endif
 }
+
 void Component::initializeAreaRouting()
 {
     for (auto p : m_pins)
@@ -141,17 +144,7 @@ void Component::initializeAreaRouting()
         m_wire_on_boundary[p->net_name()] = std::vector<Coordinate>(4);
     }
 }
-void DataManager::createNetlist(int count)
-{
-    if (!m_netlists.count(count))
-    {
-        m_netlists[count] = Netlist();
-    }
-    else
-    {
-        throw std::runtime_error("Error: Netlist " + std::to_string(count) + " already exists");
-    }
-}
+
 void DataManager::addCompPin(std::string comp_name, std::shared_ptr<Pin> pin)
 {
     if (m_components.count(comp_name))
@@ -164,7 +157,42 @@ void DataManager::addCompPin(std::string comp_name, std::shared_ptr<Pin> pin)
         m_components[comp_name]->addPin(pin);
     }
 }
-void DataManager::preprocess(int threshold)
+
+void DataManager::sumEscapeLength()
+{
+    for (auto comp_group : m_groups)
+    {
+        std::string group_name = comp_group.first;
+        for (auto comp : comp_group.second)
+        {
+            for (auto s : comp->router()->segments())
+            {
+                int net_id = s.net_id();
+                if (m_netlists.nets().at(net_id)->net_id() != net_id)
+                {
+                    throw std::runtime_error("Error: net_id does not match");
+                }
+                if (!m_netlists.nets().at(net_id)->group_escape_length().count(group_name))
+                {
+                    m_netlists.nets().at(net_id)->group_escape_length()[group_name] = 0.0;
+                }
+                m_netlists.nets().at(net_id)->group_escape_length()[group_name] += s.length();
+            }
+        }
+    }
+#ifdef VERBOSE
+    for (auto net : m_netlists.nets())
+    {
+        std::cout << "Net: " << net->net_id() << std::endl;
+        for (auto group : net->group_escape_length())
+        {
+            std::cout << "Group: " << group.first << " Escape Length: " << group.second << std::endl;
+        }
+    }
+#endif
+}
+
+void DataManager::preprocess()
 {
     for (auto &comp_pair : m_components)
     {
@@ -172,6 +200,7 @@ void DataManager::preprocess(int threshold)
         comp->createPinArr();
     }
 }
+
 void DataManager::DDR2DDR()
 {
     std::shared_ptr<GraphManager> graph_manager;
@@ -193,8 +222,11 @@ void DataManager::DDR2DDR()
             }
         } while (graph_manager->minCostMaxFlow() != (long)comp->pins().size());
         comp->bounding_box() = graph_manager->DDR2DDR(comp->router());
+        comp->router()->setViaNetId();
+        comp->router()->setSegmentNetId();
     }
 }
+
 void DataManager::CPU2DDR()
 {
     std::shared_ptr<GraphManager> graph_manager;
@@ -217,433 +249,161 @@ void DataManager::CPU2DDR()
 #endif
             // escape routing
             graph_manager->CPU2DDR(comp->router(), *comp, m_cpu_escape_boundry);
-            comp->reducedBends();
-
-            for (auto connected_comp : comp->cpu_connected_components())
+            try
             {
-                if (connected_comp->is_vertical_stack())
+                if (flow != (long)comp->pins().size())
                 {
-                    if (connected_comp->ddr_neighboors().at(0))
-                    {
-#ifdef VERBOSE
-                        std::cout << connected_comp->comp_name() << " Escape from Bot to CPU" << std::endl;
-#endif
-                    }
-                    else
-                    {
-#ifdef VERBOSE
-                        std::cout << connected_comp->comp_name() << " Escape from Top to CPU" << std::endl;
-#endif
-                    }
+                    throw std::runtime_error("Error: CPU2DDR flow != #pins");
                 }
-                else
-                {
-                    if (connected_comp->ddr_neighboors().at(0))
-                    {
-#ifdef VERBOSE
-                        std::cout << connected_comp->comp_name() << " Escape from Right to CPU" << std::endl;
-#endif
-                    }
-                    else
-                    {
-#ifdef VERBOSE
-                        std::cout << connected_comp->comp_name() << " Escape from Left to CPU" << std::endl;
-#endif
-                    }
-                }
+            }
+            catch (const std::runtime_error &e)
+            {
+                // not doing anything right now
             }
         }
     }
 }
-void DataManager::areaRouting(double height_of_diagonal)
+
+void DataManager::AreaRouting() { sumEscapeLength(); }
+
+void Router::addSegment(Segment segment)
 {
-
-    // lambda for add snaking wires
-    auto addSnakingWire = [&](std::string peak_direction,
-                              std::string go_direction,
-                              std::shared_ptr<Router> area_router,
-                              Coordinate start_point,
-                              double l_dia,
-                              double minimum_wirelength,
-                              double h_sna,
-                              int num_snakes) {
-        if (peak_direction == "N")
+    m_segments.push_back(segment); // add new segment
+    bool merged = true;
+    while (merged)
+    {
+        merged = false;
+        for (auto &s : m_segments)
         {
-        }
-        else if (peak_direction == "E")
-        {
-            if (go_direction == "N")
+            for (auto &other_s : m_segments)
             {
-                // go up
-            }
-            else if (go_direction == "S")
-            {
-                // go down
-                int cnt = 0;
-                Coordinate cur = start_point, next;
-                while (cnt++ < num_snakes)
+                if (s == other_s)
+                    continue;
+                if (s.start().isCloseTo(other_s.start()))
                 {
-                    next = Coordinate{cur.x(), cur.y() - minimum_wirelength, cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() + std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() + h_sna, cur.y(), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() + std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x(), cur.y() - minimum_wirelength, cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() - std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() - h_sna, cur.y(), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                    next = Coordinate{cur.x() - std::sqrt(l_dia), cur.y() - std::sqrt(l_dia), cur.z()};
-                    area_router->addSegment(Segment{cur, next});
-
-                    cur = next;
-                }
-                return cur;
-            }
-        }
-        else if (peak_direction == "S")
-        {
-        }
-        else if (peak_direction == "W")
-        {
-        }
-    };
-
-    auto comp_pair = std::make_pair(m_components.at("U45"), m_components.at("U61"));
-    std::vector<int> layers = {1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2};
-    std::vector<int> orders = {5, 7, 2, 3, 4, 4, 8, 8, 6, 1, 6, 1, 7, 0, 2, 0, 5, 3};
-
-    std::ifstream x_file("outputs/x_values.csv");
-    std::ifstream s_file("outputs/s_values.csv");
-    std::string line;
-    std::vector<std::vector<double>> x;
-    std::vector<std::vector<double>> s;
-
-    while (std::getline(x_file, line))
-    {
-        std::vector<double> layerValues;
-        std::stringstream ss(line);
-        std::string value;
-
-        while (std::getline(ss, value, ','))
-        {
-            layerValues.push_back(std::stod(value));
-        }
-
-        x.push_back(layerValues);
-    }
-    x_file.close();
-    while (std::getline(s_file, line))
-    {
-        std::vector<double> layerValues;
-        std::stringstream ss(line);
-        std::string value;
-
-        while (std::getline(ss, value, ','))
-        {
-            layerValues.push_back(std::stod(value));
-        }
-
-        s.push_back(layerValues);
-    }
-    s_file.close();
-
-    int cnt = -1;
-    for (auto p : comp_pair.first->pins())
-    {
-        cnt++;
-        auto east_first = comp_pair.first->wire_on_boundary()[p->net_name()].at(1);
-        auto east_second = comp_pair.second->wire_on_boundary()[p->net_name()].at(1);
-        double first_offset = east_first.x() < east_second.x() ? east_second.x() - east_first.x() : 0;
-        first_offset += height_of_diagonal;
-        // CPU horizontal
-        m_area_router->addSegment(
-            Segment{east_first,
-                    Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
-                               east_first.y(),
-                               east_first.z()}});
-
-        double secod_offset = east_second.x() < east_first.x() ? east_first.x() - east_second.x() : 0;
-        // DDR horizontal
-        m_area_router->addSegment(
-            Segment{east_second,
-                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)),
-                               east_second.y(),
-                               east_second.z()}});
-        m_area_router->addSegment(
-            Segment{Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)),
-                               east_second.y(),
-                               east_second.z()},
-                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
-                                   height_of_diagonal,
-                               east_second.y() + height_of_diagonal,
-                               east_second.z()}});
-        // CPU to DDR
-        m_area_router->addVia(
-            Via{Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
-                           east_first.y(),
-                           east_second.z()},
-                east_first.z()});
-        Coordinate cur = Coordinate{first_offset + east_first.x() + x.at(layers.at(cnt) - 1).at(orders.at(cnt)),
-                                    east_first.y(),
-                                    east_second.z()};
-        cur = addSnakingWire(
-            "E", "S", m_area_router, cur, 5.0, 5.0, 15.0, std::floor(s.at(layers.at(cnt) - 1).at(orders.at(cnt))));
-        m_area_router->addSegment(
-            Segment{cur,
-                    Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
-                                   height_of_diagonal,
-                               east_second.y() + height_of_diagonal,
-                               east_second.z()}});
-    }
-}
-void Component::reducedBends()
-{
-    auto compareSlope = [](const Segment &seg1, const Segment &seg2, double epsilon = 1e-1) -> bool {
-        double slope1 = seg1.slope();
-        double slope2 = seg2.slope();
-
-        // both are vertical lines
-        if (std::isinf(slope1) && std::isinf(slope2))
-        {
-            return true;
-        }
-
-        // one is vertical and the other is not
-        if (std::isinf(slope1) || std::isinf(slope2))
-        {
-            return false;
-        }
-
-        // otherwise, compare the slopes
-        return std::fabs(slope1 - slope2) < epsilon;
-    };
-    for (auto &pin : m_pins)
-    {
-        int cnt = 0;
-        // std::cout << "Pin: " << pin->net_name() << std::endl;
-        // std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
-        Coordinate cur;
-        for (auto &s : m_router->segments())
-        {
-            Segment *seg = &s;
-            if (seg->start() == pin->coordinate() || seg->end() == pin->coordinate())
-            {
-                cur = seg->start() == pin->coordinate() ? seg->end() : seg->start();
-                cnt++;
-            }
-            else
-                continue;
-            bool keep_going = false;
-
-            // ---merge the segments with the same slope---
-            do
-            {
-                keep_going = false;
-                for (auto &o_s : m_router->segments())
-                {
-                    Segment *other_seg = &o_s;
-                    if (*seg != *other_seg)
+                    if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
-                        if (other_seg->start() == cur || other_seg->end() == cur)
-                        {
-                            cur = other_seg->start() == cur ? other_seg->end() : other_seg->start();
-                            keep_going = true;
-                            if (compareSlope(*seg, *other_seg))
-                            {
-                                if (seg->start() == other_seg->start() || seg->start() == other_seg->end())
-                                {
-                                    seg->start() =
-                                        seg->start() == other_seg->start() ? other_seg->end() : other_seg->start();
-                                }
-                                else if (seg->end() == other_seg->start() || seg->end() == other_seg->end())
-                                {
-                                    seg->end() =
-                                        seg->end() == other_seg->start() ? other_seg->end() : other_seg->start();
-                                }
-                                other_seg->start() = Coordinate(-1, -1, -1);
-                                other_seg->end() = Coordinate(-1, -1, -1);
-                            }
-                            else
-                                seg = other_seg;
-                            break;
-                        }
+                        other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        continue;
                     }
-                }
-            } while (keep_going);
-            // ---merge the segments with the same slope---
-        }
-        if (cnt > 1)
-        {
-            throw std::runtime_error("Error: Pin " + pin->net_name() + " have two connection");
-        }
-    }
-    // remove empty segments
-    m_router->segments().erase(std::remove_if(m_router->segments().begin(),
-                                              m_router->segments().end(),
-                                              [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
-                               m_router->segments().end());
-    /*
-    // remove bends
-    for (auto &pin : m_pins)
-    {
-        std::cout << "Pin: " << pin->net_name() << std::endl;
-        std::cout << "Coordinate: " << pin->coordinate().x() << " " << pin->coordinate().y() << std::endl;
-        Coordinate cur;
-        for (auto &s : m_router->segments())
-        {
-            Segment *seg = &s;
-            if (seg->start() == pin->coordinate() || seg->end() == pin->coordinate())
-            {
-                cur = seg->start() == pin->coordinate() ? seg->end() : seg->start();
-            }
-            else
-                continue;
-            bool keep_going = false;
-            std::vector<Segment *> vs;
-            vs.push_back(seg);
-            // ---merge the segments with the same slope---
-            do
-            {
-                keep_going = false;
-                if (vs.size() == 3)
-                {
-                    // vs[0] is not vertical or horizontal
-                    if (vs[0]->slope() != 0.0 && !std::isinf(vs[0]->slope()))
-                    {
-                        if (vs[2]->slope() != 0.0 && !std::isinf(vs[2]->slope()))
-                        {
-                            double height = std::fabs(vs[2]->start().y() - vs[2]->end().y());
-                            vs[2]->start().y() -= std::fabs(vs[1]->start().y() - vs[1]->end().y());
-                            vs[2]->end().y() -= std::fabs(vs[1]->start().y() - vs[1]->end().y());
-
-                            vs[1]->start().y() += height;
-                            vs[1]->end().y() += height;
-                            if (std::fabs(vs[0]->start().x() - vs[2]->start().x()) < 1e-5)
-                            {
-                                vs[1]->start().x() = vs[2]->end().x();
-                                vs[1]->end().x() = vs[2]->end().x();
-                                if (vs[2]->end().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
-                                    vs[2]->end().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
-                                {
-                                    if (std::fabs(vs[1]->start().y() - vs[2]->end().y()) < 1e-5)
-                                    {
-                                        vs[1]->start().y() -= height;
-                                    }
-                                    else
-                                    {
-                                        vs[1]->end().y() -= height;
-                                    }
-                                    vs[0]->start().x() = vs[2]->end().x();
-                                    vs[2]->start() = Coordinate(-1, -1, -1);
-                                    vs[2]->end() = Coordinate(-1, -1, -1);
-                                }
-                            }
-                            else if (std::fabs(vs[0]->start().x() - vs[2]->end().x()) < 1e-5)
-                            {
-                                vs[1]->start().x() = vs[2]->start().x();
-                                vs[1]->end().x() = vs[2]->start().x();
-                                if (vs[2]->start().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
-                                    vs[2]->start().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
-                                {
-                                    if (std::fabs(vs[1]->start().y() - vs[2]->start().y()) < 1e-5)
-                                    {
-                                        vs[1]->start().y() -= height;
-                                    }
-                                    else
-                                    {
-                                        vs[1]->end().y() -= height;
-                                    }
-                                    vs[0]->start().x() = vs[2]->start().x();
-                                    vs[2]->start() = Coordinate(-1, -1, -1);
-                                    vs[2]->end() = Coordinate(-1, -1, -1);
-                                }
-                            }
-                            else if (std::fabs(vs[0]->end().x() - vs[2]->start().x()) < 1e-5)
-                            {
-                                vs[1]->start().x() = vs[2]->end().x();
-                                vs[1]->end().x() = vs[2]->end().x();
-                                if (vs[2]->end().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
-                                    vs[2]->end().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
-                                {
-                                    if (std::fabs(vs[1]->start().y() - vs[2]->end().y()) < 1e-5)
-                                    {
-                                        vs[1]->start().y() -= height;
-                                    }
-                                    else
-                                    {
-                                        vs[1]->end().y() -= height;
-                                    }
-                                    vs[0]->end().x() = vs[2]->end().x();
-                                    vs[2]->start() = Coordinate(-1, -1, -1);
-                                    vs[2]->end() = Coordinate(-1, -1, -1);
-                                }
-                            }
-                            else if (std::fabs(vs[0]->end().x() - vs[2]->end().x()) < 1e-5)
-                            {
-                                vs[1]->start().x() = vs[2]->start().x();
-                                vs[1]->end().x() = vs[2]->start().x();
-                                if (vs[2]->start().x() < std::max(vs[0]->start().x(), vs[0]->end().x()) &&
-                                    vs[2]->start().x() > std::min(vs[0]->start().x(), vs[0]->end().x()))
-                                {
-                                    if (std::fabs(vs[1]->start().y() - vs[2]->start().y()) < 1e-5)
-                                    {
-                                        vs[1]->start().y() -= height;
-                                    }
-                                    else
-                                    {
-                                        vs[1]->end().y() -= height;
-                                    }
-                                    vs[0]->end().x() = vs[2]->start().x();
-                                    vs[2]->start() = Coordinate(-1, -1, -1);
-                                    vs[2]->end() = Coordinate(-1, -1, -1);
-                                }
-                            }
-                        }
-                    }
+                    s.start() = other_s.end(); // update start point
+                    s.net_id() = std::max(s.net_id(), other_s.net_id());
+                    other_s.start() = Coordinate(-1, -1, -1);
+                    other_s.end() = Coordinate(-1, -1, -1);
+                    merged = true;
                     break;
                 }
-                for (auto &o_s : m_router->segments())
+                else if (s.end().isCloseTo(other_s.start()))
                 {
-                    Segment *other_seg = &o_s;
-                    if (*seg != *other_seg)
+                    if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
-                        if (other_seg->start() == cur || other_seg->end() == cur)
-                        {
-                            cur = other_seg->start() == cur ? other_seg->end() : other_seg->start();
-                            keep_going = true;
-                            seg = other_seg;
-                            break;
-                        }
+                        other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        continue;
                     }
+                    s.end() = other_s.end(); // extend end point
+                    merged = true;
+                    s.net_id() = std::max(s.net_id(), other_s.net_id());
+                    other_s.start() = Coordinate(-1, -1, -1);
+                    other_s.end() = Coordinate(-1, -1, -1);
+                    break;
                 }
-                vs.push_back(seg);
-            } while (keep_going);
-            // ---merge the segments with the same slope---
+                else if (s.start().isCloseTo(other_s.end()))
+                {
+                    if (fabs(s.slope() - other_s.slope()) > 5e-1)
+                    {
+                        other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        continue;
+                    }
+                    s.start() = other_s.start(); // update start point
+                    merged = true;
+                    s.net_id() = std::max(s.net_id(), other_s.net_id());
+                    other_s.start() = Coordinate(-1, -1, -1);
+                    other_s.end() = Coordinate(-1, -1, -1);
+                    break;
+                }
+                else if (s.end().isCloseTo(other_s.end()))
+                {
+                    if (fabs(s.slope() - other_s.slope()) > 5e-1)
+                    {
+                        other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        continue;
+                    }
+                    s.end() = other_s.start(); // extend end point
+                    merged = true;
+                    s.net_id() = std::max(s.net_id(), other_s.net_id());
+                    other_s.start() = Coordinate(-1, -1, -1);
+                    other_s.end() = Coordinate(-1, -1, -1);
+                    break;
+                }
+                if (merged)
+                    break;
+            }
         }
     }
     // remove empty segments
-    m_router->segments().erase(std::remove_if(m_router->segments().begin(),
-                                              m_router->segments().end(),
-                                              [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
-                               m_router->segments().end());
-    */
+    m_segments.erase(std::remove_if(m_segments.begin(),
+                                    m_segments.end(),
+                                    [](const Segment &seg) { return seg.start() == Coordinate(-1, -1, -1); }),
+                     m_segments.end());
+}
+
+void Router::setViaNetId()
+{
+    // find overlap with which segments then update the net_id
+    for (auto &v : m_vias)
+    {
+        for (auto &seg : m_segments)
+        {
+            if (seg.isOverlap(v))
+            {
+                v.net_id() = std::max(seg.net_id(), v.net_id());
+                break;
+            }
+        }
+    }
+}
+
+void Router::setSegmentNetId()
+{
+    for (auto &seg : m_segments)
+    {
+
+        for (auto &v : m_vias)
+        {
+            if (seg.start().z() == 1)
+            {
+                if (seg.start().x() >= 4875 && seg.start().x() <= 4907)
+                {
+                    if (seg.start().y() >= 2784 && seg.start().y() <= 2787)
+                    {
+                        if (v.net_id() == 4)
+                        {
+                            int debug = 0;
+                        }
+                    }
+                }
+            }
+            if (seg.isOverlap(v))
+            {
+                if (seg.net_id() != -1 && seg.net_id() != v.net_id())
+                {
+                    throw std::runtime_error("Error: Segment net_id != Via net_id");
+                }
+                seg.net_id() = std::max(seg.net_id(), v.net_id());
+            }
+        }
+    }
+    // // set overlapping segments to the same net_id
+    for (auto &seg : m_segments)
+    {
+        for (auto &other_seg : m_segments)
+        {
+            if (seg == other_seg)
+                continue;
+            if (seg.isOverlap(other_seg.start()) || seg.isOverlap(other_seg.end()))
+            {
+                seg.net_id() = std::max(seg.net_id(), other_seg.net_id());
+            }
+        }
+    }
 }

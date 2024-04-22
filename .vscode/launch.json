@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/build/ADRouter",
             "args": [
                 "/DATA/darren/PCB/PCB-ADR-Routing/case/",
-                "6"
+                "2"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/",
