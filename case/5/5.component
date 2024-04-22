@@ -1,0 +1,124 @@
+{
+  "components": [
+    {
+      "id": "U14",
+      "group": "CPU",
+      "boundaries": {
+        "N": true,
+        "E": false,
+        "S": false,
+        "W": false
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U147",
+      "group": "group1",
+      "boundaries": {
+        "N": false,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U148",
+      "group": "group1",
+      "boundaries": {
+        "N": true,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U149",
+      "group": "group1",
+      "boundaries": {
+        "N": true,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U150",
+      "group": "group1",
+      "boundaries": {
+        "N": false,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U151",
+      "group": "group2",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": false
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U145",
+      "group": "group2",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U146",
+      "group": "group2",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U144",
+      "group": "group2",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U143",
+      "group": "group2",
+      "boundaries": {
+        "N": false,
+        "E": false,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    }
+  ]
+}

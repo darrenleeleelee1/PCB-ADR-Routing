@@ -60,11 +60,11 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
     int maximum_via_count = 1; // One via per row(column) of one layer
     int num_pin_rows = component.rows();
     int num_pin_columns = component.columns();
-    int num_tile_rows = component.rows() + 1 + (!m_component->is_verticle_stack() ? expand : 0);
-    int num_tile_columns = component.columns() + 1 + (m_component->is_verticle_stack() ? expand : 0);
+    int num_tile_rows = component.rows() + 1 + (!m_component->is_vertical_stack() ? expand : 0);
+    int num_tile_columns = component.columns() + 1 + (m_component->is_vertical_stack() ? expand : 0);
     int num_layers = std::min(maximum_layer, data_manager.layers().size());
-    int base_tile_row_idx = (!m_component->is_verticle_stack() ? expand : 0);
-    int base_tile_column_idx = (m_component->is_verticle_stack() ? expand : 0);
+    int base_tile_row_idx = (!m_component->is_vertical_stack() ? expand : 0);
+    int base_tile_column_idx = (m_component->is_vertical_stack() ? expand : 0);
     // Create the graph
     g = Graph();
     // Create the source and sink
@@ -229,7 +229,7 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
     // Decide Rows to target or columns to target
     if (m_component->is_cpu())
         return;
-    else if (!m_component->is_verticle_stack())
+    else if (!m_component->is_vertical_stack())
     {
         for (int i = 0; i < num_tile_rows; ++i)
         {
@@ -239,7 +239,7 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
             }
         }
     }
-    else if (m_component->is_verticle_stack())
+    else if (m_component->is_vertical_stack())
     {
         for (int i = 0; i < num_tile_columns; ++i)
         {
@@ -282,7 +282,6 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
     // std::cout << "o_cap: " << o_cap << std::endl;
     // std::cout << "d_cap: " << d_cap << std::endl;
     // std::cout << "d_cap - 2 * std::floor(o_cap / 2): " << d_cap - 2 * std::floor(o_cap / 2) << std::endl;
-
 #endif
     // Create the graph
     // Create the graph
@@ -768,7 +767,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
         }
     }
 
-    if (m_component->is_verticle_stack())
+    if (m_component->is_vertical_stack())
     {
         //
         Coordinate top_bound = Coordinate{

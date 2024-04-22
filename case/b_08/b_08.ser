@@ -1,0 +1,181 @@
+Cell_width: 6000 Cell_height: 6000
+LEFT BOT: ( 284792 194669 )
+U29 387221 262381
+U34 387221 215381
+U37 303119 236349
+Net_name: DDR4_DMN0 ID: 29 WCS: 1
+Pin_name: U37.G3 ID: 78 coor: ( 12 8 1 ) ( 13 8 1 ) ( 14 8 1 ) 
+Pin_name: U34.E7 ID: 77 coor: ( 19 6 1 ) ( 18 6 1 ) ( 17 6 1 ) ( 16 6 1 ) 
+Net_END
+Net_name: DDR4_DMN1 ID: 30 WCS: 1
+Pin_name: U37.L1 ID: 80 coor: ( 13 10 0 ) ( 14 10 0 ) 
+Pin_name: U29.E2 ID: 79 coor: ( 19 11 0 ) ( 18 11 0 ) ( 17 11 0 ) ( 16 11 0 ) 
+Net_END
+Net_name: DDR4_DMN2 ID: 31 WCS: 1
+Pin_name: U37.W3 ID: 82 coor: ( 12 12 0 ) ( 13 12 0 ) ( 14 12 0 ) 
+Pin_name: U29.E7 ID: 81 coor: ( 19 14 0 ) ( 18 14 0 ) ( 17 14 0 ) ( 16 14 0 ) 
+Net_END
+Net_name: DDR4_DMN3 ID: 32 WCS: 1
+Pin_name: U37.A7 ID: 84 coor: ( 11 7 1 ) ( 11 6 1 ) 
+Pin_name: U34.E2 ID: 83 coor: ( 19 3 1 ) ( 19 4 1 ) ( 18 4 1 ) ( 17 4 1 ) ( 16 4 1 ) 
+Net_END
+Net_name: DDR4_MDQ0 ID: 33 WCS: 1
+Pin_name: U37.H2 ID: 86 coor: ( 13 9 0 ) ( 14 9 0 ) 
+Pin_name: U34.H7 ID: 85 coor: ( 20 7 0 ) ( 19 7 0 ) ( 18 7 0 ) ( 17 7 0 ) ( 16 7 0 ) ( 20 6 0 ) ( 19 6 0 ) ( 18 6 0 ) ( 17 6 0 ) ( 16 6 0 ) 
+Net_END
+Net_name: DDR4_MDQ1 ID: 34 WCS: 0
+Pin_name: U37.G1 ID: 88 coor: ( 13 8 1 ) ( 12 8 1 ) ( 11 8 1 ) ( 11 7 1 ) ( 11 6 1 ) ( 12 6 1 ) ( 13 6 1 ) ( 14 6 1 ) 
+Pin_name: U34.G2 ID: 87 coor: ( 20 3 1 ) ( 19 3 1 ) ( 18 3 1 ) ( 17 3 1 ) ( 16 3 1 ) 
+Net_END
+Net_name: DDR4_MDQ2 ID: 35 WCS: 1
+Pin_name: U37.F2 ID: 90 coor: ( 13 8 0 ) ( 14 8 0 ) 
+Pin_name: U34.J3 ID: 89 coor: ( 21 4 0 ) ( 21 5 0 ) ( 20 5 0 ) ( 19 5 0 ) ( 18 5 0 ) ( 17 5 0 ) ( 16 5 0 ) 
+Net_END
+Net_name: DDR4_MDQ3 ID: 36 WCS: 1
+Pin_name: U37.C1 ID: 92 coor: ( 13 7 2 ) ( 14 7 2 ) 
+Pin_name: U34.J7 ID: 91 coor: ( 21 6 2 ) ( 21 7 2 ) ( 20 7 2 ) ( 19 7 2 ) ( 18 7 2 ) ( 17 7 2 ) ( 16 7 2 ) 
+Net_END
+Net_name: DDR4_MDQ4 ID: 37 WCS: 1
+Pin_name: U37.A3 ID: 94 coor: ( 13 7 3 ) ( 13 6 3 ) ( 12 7 3 ) ( 12 6 3 ) 
+Pin_name: U34.H8 ID: 93 coor: ( 20 7 3 ) ( 19 7 3 ) ( 18 7 3 ) ( 17 7 3 ) ( 16 7 3 ) 
+Net_END
+Net_name: DDR4_MDQ5 ID: 38 WCS: 1
+Pin_name: U37.B2 ID: 96 coor: ( 13 7 2 ) ( 14 7 2 ) 
+Pin_name: U34.F7 ID: 95 coor: ( 19 6 2 ) ( 19 7 2 ) ( 18 7 2 ) ( 17 7 2 ) ( 16 7 2 ) 
+Net_END
+Net_name: DDR4_MDQ6 ID: 39 WCS: 0
+Pin_name: U37.C3 ID: 98 coor: ( 12 7 1 ) ( 11 7 1 ) ( 11 6 1 ) ( 12 6 1 ) ( 13 6 1 ) ( 14 6 1 ) 
+Pin_name: U34.H2 ID: 97 coor: ( 20 3 1 ) ( 19 3 1 ) ( 18 3 1 ) ( 17 3 1 ) ( 16 3 1 ) 
+Net_END
+Net_name: DDR4_MDQ7 ID: 40 WCS: 1
+Pin_name: U37.E1 ID: 100 coor: ( 13 8 1 ) ( 14 8 1 ) 
+Pin_name: U34.H3 ID: 99 coor: ( 20 4 1 ) ( 19 4 1 ) ( 18 4 1 ) ( 17 4 1 ) ( 16 4 1 ) 
+Net_END
+Net_name: DDR4_MDQ8 ID: 41 WCS: 1
+Pin_name: U37.L3 ID: 102 coor: ( 12 10 3 ) ( 13 10 3 ) ( 14 10 3 ) 
+Pin_name: U29.C8 ID: 101 coor: ( 18 14 3 ) ( 18 15 3 ) ( 17 15 3 ) ( 16 15 3 ) 
+Net_END
+Net_name: DDR4_MDQ9 ID: 42 WCS: 1
+Pin_name: U37.J3 ID: 104 coor: ( 12 9 2 ) ( 13 9 2 ) ( 14 9 2 ) 
+Pin_name: U29.D7 ID: 103 coor: ( 18 14 2 ) ( 18 13 2 ) ( 17 13 2 ) ( 16 13 2 ) 
+Net_END
+Net_name: DDR4_MDQ10 ID: 43 WCS: 1
+Pin_name: U37.R1 ID: 106 coor: ( 13 11 0 ) ( 14 11 0 ) 
+Pin_name: U29.D3 ID: 105 coor: ( 18 13 0 ) ( 17 13 0 ) ( 16 13 0 ) ( 18 12 0 ) ( 17 12 0 ) ( 16 12 0 ) 
+Net_END
+Net_name: DDR4_MDQ11 ID: 44 WCS: 1
+Pin_name: U37.N1 ID: 108 coor: ( 13 10 0 ) ( 14 10 0 ) 
+Pin_name: U29.A3 ID: 107 coor: ( 17 12 0 ) ( 16 12 0 ) 
+Net_END
+Net_name: DDR4_MDQ12 ID: 45 WCS: 1
+Pin_name: U37.P2 ID: 110 coor: ( 13 10 1 ) ( 14 10 1 ) ( 13 11 1 ) ( 14 11 1 ) 
+Pin_name: U29.C2 ID: 109 coor: ( 18 11 1 ) ( 17 11 1 ) ( 16 11 1 ) 
+Net_END
+Net_name: DDR4_MDQ13 ID: 46 WCS: 1
+Pin_name: U37.J1 ID: 112 coor: ( 13 9 3 ) ( 14 9 3 ) 
+Pin_name: U29.B8 ID: 111 coor: ( 17 15 3 ) ( 16 15 3 ) ( 17 14 3 ) ( 16 14 3 ) 
+Net_END
+Net_name: DDR4_MDQ14 ID: 47 WCS: 1
+Pin_name: U37.K2 ID: 114 coor: ( 13 9 2 ) ( 14 9 2 ) 
+Pin_name: U29.C7 ID: 113 coor: ( 18 13 2 ) ( 17 13 2 ) ( 16 13 2 ) ( 18 14 2 ) ( 17 14 2 ) ( 16 14 2 ) 
+Net_END
+Net_name: DDR4_MDQ15 ID: 48 WCS: 1
+Pin_name: U37.R3 ID: 116 coor: ( 12 10 0 ) ( 13 10 0 ) ( 14 10 0 ) ( 12 11 0 ) ( 13 11 0 ) ( 14 11 0 ) 
+Pin_name: U29.C3 ID: 115 coor: ( 18 12 0 ) ( 17 12 0 ) ( 16 12 0 ) 
+Net_END
+Net_name: DDR4_MDQ16 ID: 49 WCS: 0
+Pin_name: U37.T2 ID: 118 coor: ( 13 11 1 ) ( 13 12 1 ) ( 14 12 1 ) 
+Pin_name: U29.H3 ID: 117 coor: ( 20 12 1 ) ( 19 12 1 ) ( 18 12 1 ) ( 17 12 1 ) ( 16 12 1 ) 
+Net_END
+Net_name: DDR4_MDQ17 ID: 50 WCS: 0
+Pin_name: U37.U3 ID: 120 coor: ( 12 11 1 ) ( 13 11 1 ) ( 14 11 1 ) 
+Pin_name: U29.G2 ID: 119 coor: ( 20 11 1 ) ( 19 11 1 ) ( 18 11 1 ) ( 17 11 1 ) ( 16 11 1 ) 
+Net_END
+Net_name: DDR4_MDQ18 ID: 51 WCS: 1
+Pin_name: U37.AA3 ID: 122 coor: ( 12 13 1 ) ( 13 13 1 ) ( 14 13 1 ) 
+Pin_name: U29.J7 ID: 121 coor: ( 21 13 1 ) ( 20 13 1 ) ( 19 13 1 ) ( 18 13 1 ) ( 17 13 1 ) ( 16 13 1 ) ( 21 14 1 ) ( 20 14 1 ) ( 19 14 1 ) ( 18 14 1 ) ( 17 14 1 ) ( 16 14 1 ) 
+Net_END
+Net_name: DDR4_MDQ19 ID: 52 WCS: 1
+Pin_name: U37.V2 ID: 124 coor: ( 13 12 0 ) ( 14 12 0 ) 
+Pin_name: U29.J3 ID: 123 coor: ( 21 12 0 ) ( 21 13 0 ) ( 20 13 0 ) ( 19 13 0 ) ( 18 13 0 ) ( 17 13 0 ) ( 16 13 0 ) 
+Net_END
+Net_name: DDR4_MDQ20 ID: 53 WCS: 1
+Pin_name: U37.AC1 ID: 126 coor: ( 13 13 0 ) ( 14 13 0 ) 
+Pin_name: U29.H8 ID: 125 coor: ( 20 15 0 ) ( 19 15 0 ) ( 18 15 0 ) ( 17 15 0 ) ( 16 15 0 ) ( 20 14 0 ) ( 19 14 0 ) ( 18 14 0 ) ( 17 14 0 ) ( 16 14 0 ) 
+Net_END
+Net_name: DDR4_MDQ21 ID: 54 WCS: 1
+Pin_name: U37.AB2 ID: 128 coor: ( 13 13 2 ) ( 14 13 2 ) 
+Pin_name: U29.H7 ID: 127 coor: ( 20 14 2 ) ( 20 15 2 ) ( 19 15 2 ) ( 18 15 2 ) ( 17 15 2 ) ( 16 15 2 ) 
+Net_END
+Net_name: DDR4_MDQ22 ID: 55 WCS: 1
+Pin_name: U37.AA1 ID: 130 coor: ( 13 13 0 ) ( 14 13 0 ) 
+Pin_name: U29.F7 ID: 129 coor: ( 19 14 0 ) ( 18 14 0 ) ( 17 14 0 ) ( 16 14 0 ) 
+Net_END
+Net_name: DDR4_MDQ23 ID: 56 WCS: 0
+Pin_name: U37.U1 ID: 132 coor: ( 13 11 1 ) ( 14 11 1 ) 
+Pin_name: U29.H2 ID: 131 coor: ( 20 11 1 ) ( 19 11 1 ) ( 18 11 1 ) ( 17 11 1 ) ( 16 11 1 ) 
+Net_END
+Net_name: DDR4_MDQ24 ID: 57 WCS: 1
+Pin_name: U37.A5 ID: 134 coor: ( 12 7 2 ) ( 12 6 2 ) 
+Pin_name: U34.D7 ID: 133 coor: ( 18 7 2 ) ( 17 7 2 ) ( 16 7 2 ) ( 18 6 2 ) ( 17 6 2 ) ( 16 6 2 ) 
+Net_END
+Net_name: DDR4_MDQ25 ID: 58 WCS: 0
+Pin_name: U37.B4 ID: 136 coor: ( 12 7 2 ) ( 12 6 2 ) 
+Pin_name: U34.C7 ID: 135 coor: ( 18 6 2 ) ( 17 6 2 ) ( 16 6 2 ) 
+Net_END
+Net_name: DDR4_MDQ26 ID: 59 WCS: 1
+Pin_name: U37.B6 ID: 138 coor: ( 12 7 3 ) ( 12 6 3 ) ( 11 7 3 ) ( 11 6 3 ) 
+Pin_name: U34.B8 ID: 137 coor: ( 17 7 3 ) ( 16 7 3 ) 
+Net_END
+Net_name: DDR4_MDQ27 ID: 60 WCS: 1
+Pin_name: U37.C5 ID: 140 coor: ( 12 7 3 ) ( 12 6 3 ) 
+Pin_name: U34.C8 ID: 139 coor: ( 18 7 3 ) ( 17 7 3 ) ( 16 7 3 ) 
+Net_END
+Net_name: DDR4_MDQ28 ID: 61 WCS: 1
+Pin_name: U37.C9 ID: 142 coor: ( 10 7 0 ) ( 10 6 0 ) ( 11 7 0 ) ( 11 6 0 ) 
+Pin_name: U34.A3 ID: 141 coor: ( 17 4 0 ) ( 16 4 0 ) 
+Net_END
+Net_name: DDR4_MDQ29 ID: 62 WCS: 1
+Pin_name: U37.A11 ID: 144 coor: ( 10 7 0 ) ( 10 6 0 ) 
+Pin_name: U34.D3 ID: 143 coor: ( 18 4 0 ) ( 18 3 0 ) ( 17 3 0 ) ( 16 3 0 ) 
+Net_END
+Net_name: DDR4_MDQ30 ID: 63 WCS: 1
+Pin_name: U37.A9 ID: 146 coor: ( 10 7 1 ) ( 10 6 1 ) ( 11 7 1 ) ( 11 6 1 ) 
+Pin_name: U34.C2 ID: 145 coor: ( 18 4 1 ) ( 17 4 1 ) ( 16 4 1 ) ( 18 3 1 ) ( 17 3 1 ) ( 16 3 1 ) 
+Net_END
+Net_name: DDR4_MDQ31 ID: 64 WCS: 1
+Pin_name: U37.B10 ID: 148 coor: ( 10 7 0 ) ( 10 6 0 ) 
+Pin_name: U34.C3 ID: 147 coor: ( 18 4 0 ) ( 17 4 0 ) ( 16 4 0 ) 
+Net_END
+Net_name: DDR4_MDQS0 ID: 65 WCS: 1
+Pin_name: U37.D2 ID: 150 coor: ( 13 7 0 ) ( 14 7 0 ) ( 13 8 0 ) ( 14 8 0 ) 
+Pin_name: U34.G3 ID: 149 coor: ( 20 4 0 ) ( 19 4 0 ) ( 18 4 0 ) ( 17 4 0 ) ( 16 4 0 ) 
+Net_END
+Net_name: DDR4_MDQS1 ID: 66 WCS: 1
+Pin_name: U37.N3 ID: 152 coor: ( 12 10 2 ) ( 13 10 2 ) ( 14 10 2 ) 
+Pin_name: U29.B7 ID: 151 coor: ( 17 14 2 ) ( 16 14 2 ) 
+Net_END
+Net_name: DDR4_MDQS2 ID: 67 WCS: 1
+Pin_name: U37.W1 ID: 154 coor: ( 13 12 1 ) ( 14 12 1 ) 
+Pin_name: U29.G3 ID: 153 coor: ( 20 11 1 ) ( 19 11 1 ) ( 18 11 1 ) ( 17 11 1 ) ( 16 11 1 ) ( 20 12 1 ) ( 19 12 1 ) ( 18 12 1 ) ( 17 12 1 ) ( 16 12 1 ) 
+Net_END
+Net_name: DDR4_MDQS3 ID: 68 WCS: 1
+Pin_name: U37.B8 ID: 156 coor: ( 11 7 2 ) ( 11 6 2 ) 
+Pin_name: U34.B7 ID: 155 coor: ( 17 6 2 ) ( 16 6 2 ) 
+Net_END
+Net_name: DDR4_MDQSN0 ID: 69 WCS: 1
+Pin_name: U37.E3 ID: 158 coor: ( 12 8 1 ) ( 13 8 1 ) ( 14 8 1 ) 
+Pin_name: U34.F3 ID: 157 coor: ( 19 4 1 ) ( 18 4 1 ) ( 17 4 1 ) ( 16 4 1 ) 
+Net_END
+Net_name: DDR4_MDQSN1 ID: 70 WCS: 1
+Pin_name: U37.M2 ID: 160 coor: ( 13 10 2 ) ( 14 10 2 ) 
+Pin_name: U29.A7 ID: 159 coor: ( 17 14 2 ) ( 16 14 2 ) 
+Net_END
+Net_name: DDR4_MDQSN2 ID: 71 WCS: 1
+Pin_name: U37.Y2 ID: 162 coor: ( 13 12 1 ) ( 14 12 1 ) 
+Pin_name: U29.F3 ID: 161 coor: ( 19 12 1 ) ( 18 12 1 ) ( 17 12 1 ) ( 16 12 1 ) 
+Net_END
+Net_name: DDR4_MDQSN3 ID: 72 WCS: 1
+Pin_name: U37.C7 ID: 164 coor: ( 11 7 2 ) ( 11 6 2 ) 
+Pin_name: U34.A7 ID: 163 coor: ( 17 6 2 ) ( 16 6 2 ) 
+Net_END

@@ -1,0 +1,40 @@
+{
+  "components": [
+    {
+      "id": "U45",
+      "group": "CPU",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": false
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U109",
+      "group": "group1",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": false
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U61",
+      "group": "group1",
+      "boundaries": {
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    }
+  ]
+}

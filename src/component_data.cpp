@@ -3,32 +3,34 @@
 #include "graph.hpp"
 #include <cmath>
 #include <fstream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
 #ifdef VERBOSE
 #include <iostream>
 #endif
-// Find the corner points of the component
-std::pair<Coordinate, Coordinate> Component::findBoundingBox()
-{
-    double min_x = std::numeric_limits<double>::max();
-    double min_y = std::numeric_limits<double>::max();
-    double max_x = std::numeric_limits<double>::lowest();
-    double max_y = std::numeric_limits<double>::lowest();
 
-    for (const auto &pin : m_pins)
+// Find the corner points of the component
+std::vector<Coordinate> Component::findBoundingBox()
+{
+    std::vector<Coordinate> rectCorners;
+    double left_most_x = std::numeric_limits<double>::max(), right_most_x = std::numeric_limits<double>::min();
+    double top_most_y = std::numeric_limits<double>::min(), bottom_most_y = std::numeric_limits<double>::max();
+    for (const auto &p : m_pins)
     {
-        min_x = std::min(min_x, pin->coordinate().x());
-        min_y = std::min(min_y, pin->coordinate().y());
-        max_x = std::max(max_x, pin->coordinate().x());
-        max_y = std::max(max_y, pin->coordinate().y());
+        left_most_x = std::min(left_most_x, p->coordinate().x());
+        right_most_x = std::max(right_most_x, p->coordinate().x());
+        top_most_y = std::max(top_most_y, p->coordinate().y());
+        bottom_most_y = std::min(bottom_most_y, p->coordinate().y());
     }
 
-    Coordinate bottom_left{min_x, min_y, 0};
-    Coordinate top_right{max_x, max_y, 0};
+    rectCorners.push_back(Coordinate(left_most_x, bottom_most_y, 0));
+    rectCorners.push_back(Coordinate(left_most_x, top_most_y, 0));
+    rectCorners.push_back(Coordinate(right_most_x, top_most_y, 0));
+    rectCorners.push_back(Coordinate(right_most_x, bottom_most_y, 0));
 
-    return {bottom_left, top_right};
+    return rectCorners;
 }
 double Component::calculateTileWidth(double y_tolerance)
 {
@@ -97,30 +99,29 @@ double Component::calculateTileHeight(double x_tolerance)
 void Component::createPinArr()
 {
     // Find the corner points of the component
-    auto [bottom_left, top_right] = findBoundingBox();
-    m_bottom_left = bottom_left;
-    m_top_right = top_right;
+    auto rectCorners = findBoundingBox();
+    m_bottom_left = rectCorners[0];
+    m_top_left = rectCorners[1];
+    m_top_right = rectCorners[2];
+    m_bottom_right = rectCorners[3];
+
     // Calculate the tile width and height
-    double tile_width = calculateTileWidth();
-    double tile_height = calculateTileHeight();
-    m_tile_width = tile_width;
-    m_tile_height = tile_height;
+    m_tile_width = calculateTileWidth();
+    m_tile_height = calculateTileHeight();
 
     // Calculate the number of rows and columns
-    int rows = static_cast<int>(std::round((m_top_right.y() - m_bottom_left.y()) / tile_height)) + 1;
-    int columns = static_cast<int>(std::round((m_top_right.x() - m_bottom_left.x()) / tile_width)) + 1;
-    m_rows = rows;
-    m_columns = columns;
+    m_rows = static_cast<int>(std::round((m_top_right.y() - m_bottom_left.y()) / m_tile_height)) + 1;
+    m_columns = static_cast<int>(std::round((m_top_right.x() - m_bottom_left.x()) / m_tile_width)) + 1;
 
     // Initialize the pin_arr
     m_pin_arr =
-        std::vector<std::vector<std::shared_ptr<Pin>>>(rows, std::vector<std::shared_ptr<Pin>>(columns, nullptr));
+        std::vector<std::vector<std::shared_ptr<Pin>>>(m_rows, std::vector<std::shared_ptr<Pin>>(m_columns, nullptr));
 
     // Fill the pin_arr
     for (const auto &pin : m_pins)
     {
-        int row = static_cast<int>(std::round((pin->coordinate().y() - m_bottom_left.y()) / tile_height));
-        int column = static_cast<int>(std::round((pin->coordinate().x() - m_bottom_left.x()) / tile_width));
+        int row = static_cast<int>(std::round((pin->coordinate().y() - m_bottom_left.y()) / m_tile_height));
+        int column = static_cast<int>(std::round((pin->coordinate().x() - m_bottom_left.x()) / m_tile_width));
         m_pin_arr.at(row).at(column) = pin;
     }
 #ifdef VERBOSE
@@ -165,160 +166,11 @@ void DataManager::addCompPin(std::string comp_name, std::shared_ptr<Pin> pin)
 }
 void DataManager::preprocess(int threshold)
 {
-    UnionFind uf;
     for (auto &comp_pair : m_components)
     {
         auto &comp = comp_pair.second;
         comp->createPinArr();
-        for (auto &other_pair : m_components)
-        {
-            if (comp_pair.first != other_pair.first)
-            {
-                if (*comp_pair.second == *other_pair.second)
-                {
-                    uf.unite(comp_pair.second.get(), other_pair.second.get());
-                }
-            }
-        }
     }
-    for (auto &comp_pair : m_components)
-    {
-        m_groups[uf.find(comp_pair.second.get())].push_back(comp_pair.first);
-    }
-    // Grouping
-    std::vector<Edge> edges;
-    for (const auto &group : m_groups)
-    {
-        const auto &components = group.second;
-
-        //  Check if it is a single component grouping
-        if (components.size() == 1)
-        {
-            Component *singleComponent = m_components[components.front()].get();
-            singleComponent->is_cpu() = true;
-            // // Add edges between single component and all other components
-            for (const auto &other_group : m_groups)
-            {
-                if (other_group.first != group.first)
-                { // Avoid connecting with itself
-                    for (const auto &other_comp_key : other_group.second)
-                    {
-                        Component *otherComponent = m_components[other_comp_key].get();
-                        edges.push_back({singleComponent,
-                                         otherComponent,
-                                         distanceBetweenComponent(singleComponent, otherComponent)});
-                    }
-                }
-            }
-        }
-        else
-        {
-            // Normal processing of multiple component grouping
-            for (size_t i = 0; i < components.size(); ++i)
-            {
-                for (size_t j = i + 1; j < components.size(); ++j)
-                {
-                    Component *a = m_components[components[i]].get();
-                    Component *b = m_components[components[j]].get();
-                    edges.push_back({a, b, distanceBetweenComponent(a, b)});
-                }
-            }
-        }
-    }
-    std::vector<Edge> mst = kruskalMST(edges);
-    // mst result
-    for (const auto &edge : mst)
-    {
-        if (edge.a->is_cpu())
-        {
-            edge.b->neighboors().at(0) = true;
-            edge.b->neighboors().at(1) = true;
-            edge.a->cpu_connected_components().push_back(edge.b);
-            continue;
-        }
-        if (edge.b->is_cpu())
-        {
-            edge.a->neighboors().at(0) = true;
-            edge.a->neighboors().at(1) = true;
-            edge.b->cpu_connected_components().push_back(edge.a);
-            continue;
-        }
-        if (std::abs(std::ceil(edge.a->bottom_left().x()) - std::ceil(edge.b->bottom_left().x())) < threshold &&
-            std::abs(std::ceil(edge.a->top_right().x()) - std::ceil(edge.b->top_right().x())) < threshold)
-        {
-            edge.a->is_verticle_stack() = true;
-            edge.b->is_verticle_stack() = true;
-            // who is on top
-            if (edge.a->bottom_left().y() > edge.b->bottom_left().y())
-            {
-                // a is on top
-                edge.a->neighboors().at(1) = true; // means a have bot neighboor
-                edge.a->ddr_neighboors().at(1) = true; // means a have bot ddr neighboor
-                edge.b->neighboors().at(0) = true; // means b have top neighboor
-                edge.b->ddr_neighboors().at(0) = true; // means b have top ddr neighboor
-            }
-            else
-            {
-                // b is on top
-                edge.a->neighboors().at(0) = true; // means a have top neighboor
-                edge.a->ddr_neighboors().at(0) = true; // means a have top ddr neighboor
-                edge.b->neighboors().at(1) = true; // means b have bot neighboor
-                edge.b->ddr_neighboors().at(1) = true; // means b have bot ddr neighboor
-            }
-        }
-        if (std::abs(std::ceil(edge.a->bottom_left().y()) - std::ceil(edge.b->bottom_left().y())) < threshold &&
-            std::abs(std::ceil(edge.a->top_right().y()) - std::ceil(edge.b->top_right().y())) < threshold)
-        {
-            edge.a->is_verticle_stack() = false;
-            edge.b->is_verticle_stack() = false;
-            // who is on right
-            if (edge.a->bottom_left().x() > edge.b->bottom_left().x())
-            {
-                // a is on right
-                edge.a->neighboors().at(0) = true; // means a have left neighboor
-                edge.a->ddr_neighboors().at(0) = true; // means a have left ddr neighboor
-                edge.b->neighboors().at(1) = true; // means b have right neighboor
-                edge.b->ddr_neighboors().at(1) = true; // means b have right ddr neighboor
-            }
-            else
-            {
-                // b is on right
-                edge.a->neighboors().at(1) = true; // means a have right neighboor
-                edge.a->ddr_neighboors().at(1) = true; // means a have right ddr neighboor
-                edge.b->neighboors().at(0) = true; // means b have left neighboor
-                edge.b->ddr_neighboors().at(0) = true; // means b have left ddr neighboor
-            }
-        }
-    }
-#ifdef VERBOSE
-    // print mst result
-    // for (const auto &edge : mst)
-    // {
-    //     std::cout << "Edge: " << edge.a->comp_name() << " " << edge.b->comp_name() << std::endl;
-    // }
-    // print out every component's information
-    // for (const auto &comp_pair : m_components)
-    // {
-    //     if (comp_pair.second->is_cpu())
-    //     {
-    //         std::cout << "CPU Connected Components: ";
-    //         for (const auto &connected_comp : comp_pair.second->cpu_connected_components())
-    //         {
-    //             std::cout << connected_comp->comp_name() << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    //     else
-    //     {
-    //         std::cout << "Component: " << comp_pair.first << std::endl;
-    //         std::cout << "Is CPU: " << comp_pair.second->is_cpu() << std::endl;
-    //         std::cout << "Is Verticle Stack: " << comp_pair.second->is_verticle_stack() << std::endl;
-    //         std::cout << "Neighboors: " << comp_pair.second->neighboors().at(0) << " "
-    //                   << comp_pair.second->neighboors().at(1) << std::endl;
-    //         std::cout << std::endl;
-    //     }
-    // }
-#endif
 }
 void DataManager::DDR2DDR()
 {
@@ -346,8 +198,6 @@ void DataManager::DDR2DDR()
 void DataManager::CPU2DDR()
 {
     std::shared_ptr<GraphManager> graph_manager;
-    double wire_spacing = 4.8;
-    double wire_width = 4.0;
     double bump_ball_radius = 7.5;
     double flow;
 
@@ -357,7 +207,8 @@ void DataManager::CPU2DDR()
         if (comp->is_cpu())
         {
             graph_manager = std::make_shared<GraphManager>();
-            graph_manager->CPU2DDRInit(*this, *comp, wire_spacing, wire_width, bump_ball_radius, m_cpu_escape_boundry);
+            graph_manager->CPU2DDRInit(
+                *this, *comp, m_wire_spacing, m_wire_width, bump_ball_radius, m_cpu_escape_boundry);
             flow = graph_manager->minCostMaxFlow();
 #ifdef VERBOSE
             // std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
@@ -370,7 +221,7 @@ void DataManager::CPU2DDR()
 
             for (auto connected_comp : comp->cpu_connected_components())
             {
-                if (connected_comp->is_verticle_stack())
+                if (connected_comp->is_vertical_stack())
                 {
                     if (connected_comp->ddr_neighboors().at(0))
                     {
@@ -404,7 +255,7 @@ void DataManager::CPU2DDR()
         }
     }
 }
-void DataManager::areaRouting(Coordinate diagonal_start_line)
+void DataManager::areaRouting(double height_of_diagonal)
 {
 
     // lambda for add snaking wires
@@ -522,7 +373,7 @@ void DataManager::areaRouting(Coordinate diagonal_start_line)
         auto east_first = comp_pair.first->wire_on_boundary()[p->net_name()].at(1);
         auto east_second = comp_pair.second->wire_on_boundary()[p->net_name()].at(1);
         double first_offset = east_first.x() < east_second.x() ? east_second.x() - east_first.x() : 0;
-        first_offset += diagonal_start_line.y() - east_second.y();
+        first_offset += height_of_diagonal;
         // CPU horizontal
         m_area_router->addSegment(
             Segment{east_first,
@@ -542,8 +393,8 @@ void DataManager::areaRouting(Coordinate diagonal_start_line)
                                east_second.y(),
                                east_second.z()},
                     Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
-                                   diagonal_start_line.y() - east_second.y(),
-                               diagonal_start_line.y(),
+                                   height_of_diagonal,
+                               east_second.y() + height_of_diagonal,
                                east_second.z()}});
         // CPU to DDR
         m_area_router->addVia(
@@ -559,8 +410,8 @@ void DataManager::areaRouting(Coordinate diagonal_start_line)
         m_area_router->addSegment(
             Segment{cur,
                     Coordinate{secod_offset + east_second.x() + x.at(east_second.z() - 1).at(orders.at(cnt)) +
-                                   diagonal_start_line.y() - east_second.y(),
-                               diagonal_start_line.y(),
+                                   height_of_diagonal,
+                               east_second.y() + height_of_diagonal,
                                east_second.z()}});
     }
 }

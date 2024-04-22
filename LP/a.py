@@ -8,50 +8,63 @@ num = 9
 layer = 2
 x = LpVariable.dicts("x", (range(layer), range(num)), lowBound=0)  # Creates x0, x1, x2, and x3
 s = LpVariable.dicts("s", (range(layer), range(num)), lowBound=0)
-# z = LpVariable.dicts("z", range(num), lowBound=0, cat='Binary')
+f = LpVariable.dicts("f", (range(layer), range(num)), lowBound=0)
+# y = LpVariable.dicts("y", (range(layer), range(num)), cat='Binary')
+
+# ho = LpVariable.dicts("ho", (range(layer), range(num)), lowBound=0)
+# hd = LpVariable.dicts("hd", (range(layer), range(num)), lowBound=0)
+
 d_max = LpVariable("d_max")
 d_min = LpVariable("d_min")
 
 # 常量
 e = [[518.76, 581.164, 600.9, 676.302, 549.706, 613.296, 707.774, 833.138, 738.646]
      , [707.731, 707.746, 612.607, 549.72, 739.288, 833.762, 675.63, 644.115, 928.228]]
-ho = [[578.77, 745.105, 719.515, 732.31, 770.695, 706.72, 681.13, 693.925, 642.745]
-      , [629.95, 834.67, 796.285, 821.875, 655.54, 809.08, 668.335, 617.155, 604.36]]
-hd = [[38.395, 69.885, 101.375, 132.865, 164.355, 195.845, 227.335, 258.825, 290.315]
-      , [38.395, 69.885, 101.375, 132.865, 164.355, 195.845, 227.335, 258.825, 290.315]]
+ho = [[537.165, 734.99, 740.89, 785.175, 855.05, 822.565, 828.465, 872.75, 853.06]
+            , [588.345, 824.555, 817.66, 874.74, 739.895, 924.925, 815.67, 795.98, 814.675]]
+hd = [[80, 80, 80, 80, 80, 80, 80, 80, 80]
+            , [80, 80, 80, 80, 80, 80, 80, 80, 80]]
+
 c = [[0 for _ in sublist] for sublist in e]
 
 for k in range(0, layer):
     for i in range(num):
         c[k][i] = e[k][i] + ho[k][i] + math.sqrt(2) * hd[k][i]
-# show the size of e, ho, hd, c
-print(len(e), len(e[0]))
-print(len(ho), len(ho[0]))
-print(len(hd), len(hd[0]))
-print(len(c), len(c[0])) # 9, 2
-# show the size of x, s
-print(len(x), len(x[0]))
-print(len(s), len(s[0])) # 9, 2
 
 L = 150
-P = 9
+P = 15
 l_dia = 5
 MW = 5
 h_sna = 15
 M = 100000
 # 目標函數
-# prob += d_max - d_min
-prob += x[0][8] + x[1][8]
+prob += d_max
+# prob += x[0][8] + x[1][8]
 
 # 約束條件
+# # 對於所有x, 相同層同一個 num 至少要差 P
 for k in range(0, layer):
     for i in range(1, num):
-        prob += x[k][i] - x[k][i-1] >= P + ( (2/math.sqrt(2)) * l_dia) # f"Min_distance_between_x{i-1}_and_x{i}"
+        prob += x[k][i] - x[k][i-1] >= P + ((2/math.sqrt(2)) * l_dia + h_sna)
+# for i in range(0, num):
+#     for k in range(1, layer):
+#         prob += x[k][i] - x[k-1][i] >= P + ((2/math.sqrt(2)) * l_dia + h_sna)
+# for i in range(1, num):
+#     prob += x[0][i] - x[layer-1][i-1] >= P + ((2/math.sqrt(2)) * l_dia + h_sna)
+        
+# for k in range(0, layer):
+#     for i in range(0, num):
+#         # 確保 s[k][i] >= 1 時，y[k][i] = 1
+#         prob += s[k][i] - 0 <= M * y[k][i]
+#         # 如果 s[k][i] < 1，則防止 y[k][i] 被設置為 1
+#         prob += s[k][i] >= 0 - M * (1 - y[k][i])
+        
 for k in range(0, layer):
     for i in range(0, num):
         prob += s[k][i] <= (ho[k][i] + math.sqrt(2) * hd[k][i]) / (4 / math.sqrt(2) * l_dia + 2 * MW)
-        prob += d_max >= c[k][i] + 2 * x[k][i] + s[k][i] * (4 * (1 - (1 / math.sqrt(2))) * l_dia + 2 * h_sna)
-        prob += d_min <= c[k][i] + 2 * x[k][i] + s[k][i] * (4 * (1 - (1 / math.sqrt(2))) * l_dia + 2 * h_sna)
+        prob += f[k][i] <= (ho[k][i] + math.sqrt(2) * hd[k][i]) / (2 / math.sqrt(2) * l_dia + 2 * MW)
+        prob += d_max >= c[k][i] + 2 * x[k][i] + s[k][i] * (4 * (1 - (1 / math.sqrt(2))) * l_dia + 2 * h_sna) + f[k][i] * (2 * (1 - (1 / math.sqrt(2))) * l_dia)
+        prob += d_min <= c[k][i] + 2 * x[k][i] + s[k][i] * (4 * (1 - (1 / math.sqrt(2))) * l_dia + 2 * h_sna) + f[k][i] * (2 * (1 - (1 / math.sqrt(2))) * l_dia)
 
 prob += d_max - d_min <= L
 
@@ -66,10 +79,11 @@ results = {
     "Objective": value(prob.objective),
     "x_values": {k: {i: value(x[k][i]) for i in range(num)} for k in range(layer)},
     "s_values": {k: {i: value(s[k][i]) for i in range(num)} for k in range(layer)},
+    "f_values": {k: {i: value(f[k][i]) for i in range(num)} for k in range(layer)},
+    # "y_values": {k: {i: value(y[k][i]) for i in range(num)} for k in range(layer)},
     "sum_values": {k: {i: value(c[k][i] + 2 * x[k][i] + s[k][i] * (4 * (1 - (1 / math.sqrt(2))) * l_dia + 2 * h_sna)) for i in range(num)} for k in range(layer)},
-    "e_values": e,
-    "ho_values": ho,
-    "hd_values": hd,
+    "ho_values": {k: {i: value(ho[k][i]) for i in range(num)} for k in range(layer)},
+    "hd_values": {k: {i: value(hd[k][i]) for i in range(num)} for k in range(layer)},
     "c_values": c
 }
 
@@ -82,8 +96,8 @@ print("Objective Function Value:", results["Objective"])
 for k in range(layer):
     print(f"\nLayer {k+1}:")
     for i in range(num):
-        print(f"  x[{k}][{i}]: {results['x_values'][k][i]}, s[{k}][{i}]: {results['s_values'][k][i]}, sum[{k}][{i}]: {results['sum_values'][k][i]}")
-        print(f"  \te[{k}][{i}]: {results['e_values'][k][i]}, ho[{k}][{i}]: {results['ho_values'][k][i]}, hd[{k}][{i}]: {results['hd_values'][k][i]}, c[{k}][{i}]: {results['c_values'][k][i]}")
+        print(f"  x[{k}][{i}]: {results['x_values'][k][i]}, t[{k}][{i}]: {results['s_values'][k][i]}, f[{k}][{i}]: {results['f_values'][k][i]}, sum[{k}][{i}]: {results['sum_values'][k][i]}")
+        # print(f"  \tho[{k}][{i}]: {results['ho_values'][k][i]}, hd[{k}][{i}]: {results['hd_values'][k][i]}, c[{k}][{i}]: {results['c_values'][k][i]}")
         
 with open('../outputs/x_values.csv', 'w') as file:
     for k in range(layer):

@@ -32,7 +32,7 @@ add_executable(ADRouter ${SOURCES})
 
 # add_subdirectory(or-tools)
 
-target_link_libraries(ADRouter stdc++fs)
+# target_link_libraries(ADRouter stdc++fs)
 # target_link_libraries(ADRouter stdc++fs ortools::ortools)
 
 
@@ -46,20 +46,20 @@ target_link_libraries(ADRouter stdc++fs)
 
 
 # Add the json library
-# include(FetchContent)
+include(FetchContent)
 
-# FetchContent_Declare(
-#     json
-#     GIT_REPOSITORY https://github.com/nlohmann/json.git
-#     GIT_TAG v3.10.5  # or whichever version you prefer
-# )
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.10.5  # or whichever version you prefer
+)
 
-# FetchContent_GetProperties(json)
-# if(NOT json_POPULATED)
-#     FetchContent_Populate(json)
-#     add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
-# endif()
-# target_link_libraries(ADRouter PRIVATE nlohmann_json::nlohmann_json)
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+    FetchContent_Populate(json)
+    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+target_link_libraries(ADRouter stdc++fs nlohmann_json::nlohmann_json)
 # End of json library
 
 

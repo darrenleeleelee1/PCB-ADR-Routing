@@ -1,0 +1,52 @@
+{
+  "components": [
+    {
+      "id": "U27",
+      "group": "CPU",
+      "boundaries": {
+        "N": false,
+        "E": false,
+        "S": false,
+        "W": true
+      },
+      "is_vertical_stack": false,
+      "angle": 0
+    },
+    {
+      "id": "U20",
+      "group": "group1",
+      "boundaries": {
+        "N": false,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U22",
+      "group": "group1",
+      "boundaries": {
+        "N": true,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    },
+    {
+      "id": "U25",
+      "group": "group1",
+      "boundaries": {
+        "N": true,
+        "E": false,
+        "S": true,
+        "W": false
+      },
+      "is_vertical_stack": true,
+      "angle": 0
+    }
+  ]
+}

@@ -1,9 +1,13 @@
 #include "io.hpp"
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <regex>
 #include <sstream>
 #include <stdexcept>
+
+using json = nlohmann::json;
+
 ADRParser::ADRParser(const std::string &filename)
 {
     file.open(filename);
@@ -69,7 +73,8 @@ void ADRParser::parse(DataManager &data_manager)
         }
     }
     // Check if netlist count matches
-    if (data_manager.netlists().at(number).nets().size() != static_cast<std::size_t>(count))
+    // If number is 0, then we are not checking, means no address signal
+    if (number && data_manager.netlists().at(number).nets().size() != static_cast<std::size_t>(count))
     {
         throw std::runtime_error("Error: Netlist count does not match");
     }
@@ -126,5 +131,114 @@ void LayerParser::parse(DataManager &data_manager)
         } // error reading number
 
         data_manager.layers().emplace(layer_name, layer_number);
+    }
+}
+
+ObstaclesParser::ObstaclesParser(const std::string &filename)
+{
+    file.open(filename);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Could not open " + filename);
+    }
+}
+
+ObstaclesParser::~ObstaclesParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
+
+void ObstaclesParser::parse(DataManager &data_manager)
+{
+    /*
+    Pattern: bottom_left_x bottom_left_y top_right_x top_right_y layer_number
+    */
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        int bottom_left_x, bottom_left_y, top_right_x, top_right_y, layer_number;
+        if (!(iss >> bottom_left_x >> bottom_left_y >> top_right_x >> top_right_y >> layer_number))
+        {
+            std::cerr << "Failed to read obstacle" << std::endl;
+            continue;
+        }
+
+        data_manager.addObstacle(Obstacle{Coordinate(bottom_left_x / 100.0, bottom_left_y / 100.0, layer_number),
+                                          Coordinate(top_right_x / 100.0, top_right_y / 100.0, layer_number),
+                                          layer_number});
+        data_manager.pcb_bounding_box().at(0).x() =
+            std::min(data_manager.pcb_bounding_box().at(0).x(), bottom_left_x / 100.0);
+        data_manager.pcb_bounding_box().at(0).y() =
+            std::min(data_manager.pcb_bounding_box().at(0).y(), bottom_left_y / 100.0);
+        data_manager.pcb_bounding_box().at(1).x() =
+            std::max(data_manager.pcb_bounding_box().at(1).x(), top_right_x / 100.0);
+        data_manager.pcb_bounding_box().at(1).y() =
+            std::max(data_manager.pcb_bounding_box().at(1).y(), top_right_y / 100.0);
+    }
+}
+
+ComponentParser::ComponentParser(const std::string &filename)
+{
+    file.open(filename);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Could not open " + filename);
+    }
+}
+
+ComponentParser::~ComponentParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
+
+void ComponentParser::parse(DataManager &data_manager)
+{
+    json config;
+    file >> config;
+
+    for (auto &component : config["components"])
+    {
+        data_manager.components()[component["id"]]->group() = component["group"];
+        data_manager.components()[component["id"]]->is_45_degree() = component["angle"] == 0 ? false : true;
+        data_manager.components()[component["id"]]->is_vertical_stack() = component["is_vertical_stack"];
+        if (data_manager.components()[component["id"]]->is_vertical_stack())
+        {
+            data_manager.components()[component["id"]]->neighboors().at(0) = component["boundaries"]["N"];
+            data_manager.components()[component["id"]]->neighboors().at(1) = component["boundaries"]["S"];
+        }
+        else
+        {
+            data_manager.components()[component["id"]]->neighboors().at(0) = component["boundaries"]["W"];
+            data_manager.components()[component["id"]]->neighboors().at(1) = component["boundaries"]["E"];
+        }
+        if (component["group"] == "CPU")
+        {
+            data_manager.components()[component["id"]]->is_cpu() = true;
+            if (component["boundaries"]["N"])
+            {
+                data_manager.cpu_escape_boundry() = "N";
+            }
+            else if (component["boundaries"]["E"])
+            {
+                data_manager.cpu_escape_boundry() = "E";
+            }
+            else if (component["boundaries"]["S"])
+            {
+                data_manager.cpu_escape_boundry() = "S";
+            }
+            else if (component["boundaries"]["W"])
+            {
+                data_manager.cpu_escape_boundry() = "W";
+            }
+        }
+        data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);
     }
 }

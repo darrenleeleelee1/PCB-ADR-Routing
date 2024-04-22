@@ -36,6 +36,30 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
+class ObstaclesParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit ObstaclesParser(const std::string &filename);
+    ~ObstaclesParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
+class ComponentParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit ComponentParser(const std::string &filename);
+    ~ComponentParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
 class ParserManager
 {
 private:

@@ -109,6 +109,7 @@ void GDTWriter::preprocess()
     file << "gds2{5\n";
     file << "m=" << formatted_time_str << " a=" << formatted_time_str << "\nlib 'preprocessed' 0.001 1e-09\n";
     file << "cell{c=" << formatted_time_str << " m=" << formatted_time_str << " 'pins'\n";
+    // pins
     for (auto comp_pair : m_data_manager.components())
     {
         auto &comp = comp_pair.second;
@@ -131,6 +132,31 @@ void GDTWriter::preprocess()
                     file << "b{0 xy(" << generateCirclePoints(missing_pin) << ")}\n";
                 }
             }
+        }
+    }
+    // obstacles
+    for (auto obs : m_data_manager.obstacles())
+    {
+        file << "b{244 dt" << obs.layer() << " xy(" << generateRectanglePoints(obs.bottom_left(), obs.top_right())
+             << ")}\n";
+    }
+    // tiling
+    double tile_size = 300.0;
+    int columns = std::ceil(
+        (m_data_manager.pcb_bounding_box().at(1).x() - m_data_manager.pcb_bounding_box().at(0).x()) / tile_size);
+    int rows = std::ceil((m_data_manager.pcb_bounding_box().at(1).y() - m_data_manager.pcb_bounding_box().at(0).y()) /
+                         tile_size);
+    for (int i = -1; i < rows + 1; ++i)
+    {
+        for (int j = -1; j < columns + 1; ++j)
+        {
+            Coordinate bottom_left(j * tile_size + m_data_manager.pcb_bounding_box().at(0).x(),
+                                   i * tile_size + m_data_manager.pcb_bounding_box().at(0).y(),
+                                   0);
+            Coordinate top_right((j + 1) * tile_size + m_data_manager.pcb_bounding_box().at(0).x(),
+                                 (i + 1) * tile_size + m_data_manager.pcb_bounding_box().at(0).y(),
+                                 0);
+            file << "b{243 dt0 xy(" << generateRectanglePoints(bottom_left, top_right) << ")}\n";
         }
     }
     /*

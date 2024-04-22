@@ -127,13 +127,15 @@ class Component
 private:
     std::string m_comp_name;
     std::vector<std::shared_ptr<Pin>> m_pins;
+    std::string m_group;
     int m_rows;
     int m_columns;
     std::vector<std::vector<std::shared_ptr<Pin>>> m_pin_arr;
-    Coordinate m_bottom_left, m_top_right;
+    Coordinate m_bottom_left, m_top_left, m_top_right, m_bottom_right;
     double m_tile_width, m_tile_height;
     bool m_is_cpu;
-    bool m_is_verticle_stack; // true for vericle stack, false for horizontal stack
+    bool m_is_vertical_stack; // true for vericle stack, false for horizontal stack
+    bool m_is_45_degree;
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
     std::vector<bool> m_ddr_neighboors; // 0 for left/top, 1 for right/bottom, for CPU know which side to connect
     std::vector<Component *> m_cpu_connected_components;
@@ -142,7 +144,7 @@ private:
     // collect for area routing
     std::unordered_map<std::string, std::vector<Coordinate>> m_wire_on_boundary; // N:0, E:1, S:2, W:3
     // Private Methods
-    std::pair<Coordinate, Coordinate> findBoundingBox();
+    std::vector<Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
     double calculateTileHeight(double x_tolerance = 5e-2);
 
@@ -152,7 +154,7 @@ public:
     Component(const std::string &comp_name)
         : m_comp_name(comp_name)
         , m_is_cpu(false)
-        , m_is_verticle_stack(false)
+        , m_is_vertical_stack(false)
         , m_neighboors(2, false)
         , m_ddr_neighboors(2, false)
     {
@@ -189,6 +191,9 @@ public:
     // Access for pins
     const std::vector<std::shared_ptr<Pin>> &pins() const { return m_pins; }
     std::vector<std::shared_ptr<Pin>> &pins() { return m_pins; }
+    // Access for group
+    const std::string &group() const { return m_group; }
+    std::string &group() { return m_group; }
     // Access for rows
     const int &rows() const { return m_rows; }
     int &rows() { return m_rows; }
@@ -201,9 +206,15 @@ public:
     // Access for bottom_left
     const Coordinate &bottom_left() const { return m_bottom_left; }
     Coordinate &bottom_left() { return m_bottom_left; }
+    // Access for top_left
+    const Coordinate &top_left() const { return m_top_left; }
+    Coordinate &top_left() { return m_top_left; }
     // Access for top_right
     const Coordinate &top_right() const { return m_top_right; }
     Coordinate &top_right() { return m_top_right; }
+    // Access for bottom_right
+    const Coordinate &bottom_right() const { return m_bottom_right; }
+    Coordinate &bottom_right() { return m_bottom_right; }
     // Access for tile_width
     const double &tile_width() const { return m_tile_width; }
     double &tile_width() { return m_tile_width; }
@@ -213,9 +224,12 @@ public:
     // Access for is_cpu
     const bool &is_cpu() const { return m_is_cpu; }
     bool &is_cpu() { return m_is_cpu; }
-    // Access for is_verticle_stack
-    const bool &is_verticle_stack() const { return m_is_verticle_stack; }
-    bool &is_verticle_stack() { return m_is_verticle_stack; }
+    // Access for is_vertical_stack
+    const bool &is_vertical_stack() const { return m_is_vertical_stack; }
+    bool &is_vertical_stack() { return m_is_vertical_stack; }
+    // Access for is_45_degree
+    const bool &is_45_degree() const { return m_is_45_degree; }
+    bool &is_45_degree() { return m_is_45_degree; }
     // Access for neighboor
     const std::vector<bool> &neighboors() const { return m_neighboors; }
     std::vector<bool> &neighboors() { return m_neighboors; }
@@ -319,50 +333,97 @@ public:
     }
 #endif
 };
+class Obstacle
+{
+private:
+    Coordinate m_bottom_left;
+    Coordinate m_top_right;
+    int m_layer;
 
+public:
+    // Constructor
+    Obstacle() = default;
+    Obstacle(const Coordinate &bottom_left, const Coordinate &top_right, const int &layer)
+        : m_bottom_left(bottom_left)
+        , m_top_right(top_right)
+        , m_layer(layer)
+    {
+    }
+    // Accessor
+    // Access for bottom_left
+    const Coordinate &bottom_left() const { return m_bottom_left; }
+    Coordinate &bottom_left() { return m_bottom_left; }
+    // Access for top_right
+    const Coordinate &top_right() const { return m_top_right; }
+    Coordinate &top_right() { return m_top_right; }
+    // Access for layer
+    const int &layer() const { return m_layer; }
+    int &layer() { return m_layer; }
+    // Methods
+};
 class DataManager
 {
 private:
     std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
-    std::unordered_map<Component *, std::vector<std::string>> m_groups;
+    std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_groups;
     std::unordered_map<int, Netlist> m_netlists;
     std::unordered_map<std::string, int> m_layers;
+    std::vector<Obstacle> m_obstacles;
     std::shared_ptr<Router> m_area_router;
     std::string m_cpu_escape_boundry;
+    std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
+    double m_wire_spacing;
+    double m_wire_width;
 
 public:
     // Constructor
     DataManager()
     {
         m_area_router = std::make_shared<Router>();
-        m_cpu_escape_boundry = "E";
+        m_pcb_bounding_box.resize(2);
+        m_pcb_bounding_box.at(0) = Coordinate(1000000.0, 1000000.0, 0);
+        m_pcb_bounding_box.at(1) = Coordinate(0.0, 0.0, 0);
+        m_wire_spacing = 4.8;
+        m_wire_width = 4.0;
     };
     // Accessor
     // Access for components
     const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
     std::unordered_map<std::string, std::shared_ptr<Component>> &components() { return m_components; }
     // Access for groups
-    const std::unordered_map<Component *, std::vector<std::string>> &groups() const { return m_groups; }
-    std::unordered_map<Component *, std::vector<std::string>> &groups() { return m_groups; }
+    const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() const { return m_groups; }
+    std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() { return m_groups; }
     // Access for netlists
     const std::unordered_map<int, Netlist> &netlists() const { return m_netlists; }
     std::unordered_map<int, Netlist> &netlists() { return m_netlists; }
     // Accessor for layers
     const std::unordered_map<std::string, int> &layers() const { return m_layers; }
     std::unordered_map<std::string, int> &layers() { return m_layers; }
+    // Access for obstacles
+    const std::vector<Obstacle> &obstacles() const { return m_obstacles; }
+    std::vector<Obstacle> &obstacles() { return m_obstacles; }
     // Access for area_router
     const std::shared_ptr<Router> &area_router() const { return m_area_router; }
     std::shared_ptr<Router> &area_router() { return m_area_router; }
     // Access for cpu_escape_boundry
     const std::string &cpu_escape_boundry() const { return m_cpu_escape_boundry; }
     std::string &cpu_escape_boundry() { return m_cpu_escape_boundry; }
+    // Access for PCB_bounding_box
+    const std::vector<Coordinate> &pcb_bounding_box() const { return m_pcb_bounding_box; }
+    std::vector<Coordinate> &pcb_bounding_box() { return m_pcb_bounding_box; }
+    // Access for wire_spacing
+    const double &wire_spacing() const { return m_wire_spacing; }
+    double &wire_spacing() { return m_wire_spacing; }
+    // Access for wire_width
+    const double &wire_width() const { return m_wire_width; }
     // Methods
     void createNetlist(int count);
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
+    void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
     void preprocess(int threshold = 250); // 250 for case 4, 5, 6, and 25 for case 2
     void DDR2DDR();
     void CPU2DDR();
-    void areaRouting(Coordinate diagonal_start_line);
+    void areaRouting(double height_of_diagonal);
 };
 class Via
 {
