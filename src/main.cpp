@@ -50,6 +50,7 @@ int main(int argc, char const *argv[])
     utils::printlog("Preprocessing data...");
     data_manager->preprocess();
 #ifdef GDT
+    gdt_writer.pins();
     gdt_writer.preprocess();
 #endif
 
@@ -63,9 +64,13 @@ int main(int argc, char const *argv[])
 
     utils::printlog("Area Routing DDR2DDR...");
     data_manager->AreaRouting();
+#ifdef GDT
+    gdt_writer.areaRouting();
+#endif
 
     // Produce all gds
 #ifdef GDT
+gdt2gds:
     utils::printlog("Converting GDT to GDS...");
     gdt_writer.gdt2gds(case_number);
 #endif

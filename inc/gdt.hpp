@@ -32,6 +32,7 @@ public:
         std::filesystem::remove_all("outputs/GDT_files");
     }
     // Methods
+    void pins();
     void preprocess();
     void routing();
     void areaRouting();

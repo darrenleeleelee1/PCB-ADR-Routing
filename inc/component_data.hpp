@@ -132,13 +132,14 @@ private:
     int m_rows;
     int m_columns;
     std::vector<std::vector<std::shared_ptr<Pin>>> m_pin_arr;
-    Coordinate m_bottom_left, m_top_left, m_top_right, m_bottom_right;
+    Coordinate m_bottom_left, m_top_left, m_top_right, m_bottom_right; // pin array bounding box
     double m_tile_width, m_tile_height;
     bool m_is_cpu;
     bool m_is_vertical_stack; // true for vericle stack, false for horizontal stack
     bool m_is_45_degree;
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
-    std::vector<bool> m_ddr_neighboors; // 0 for left/top, 1 for right/bottom, for CPU know which side to connect
+    // wires bound for calculate escape point
+    std::vector<double> m_wire_bound; // 0 for left x/ top y, 1 for right x/ bottom y
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
     // collect for area routing
@@ -156,7 +157,7 @@ public:
         , m_is_cpu(false)
         , m_is_vertical_stack(false)
         , m_neighboors(2, false)
-        , m_ddr_neighboors(2, false)
+        , m_wire_bound(2, 0)
     {
         m_router = std::make_shared<Router>();
     }
@@ -233,9 +234,9 @@ public:
     // Access for neighboor
     const std::vector<bool> &neighboors() const { return m_neighboors; }
     std::vector<bool> &neighboors() { return m_neighboors; }
-    // Access for ddr_neighboor
-    const std::vector<bool> &ddr_neighboors() const { return m_ddr_neighboors; }
-    std::vector<bool> &ddr_neighboors() { return m_ddr_neighboors; }
+    // Access for wire_bound
+    const std::vector<double> &wire_bound() const { return m_wire_bound; }
+    std::vector<double> &wire_bound() { return m_wire_bound; }
     // Access for router
     const std::shared_ptr<Router> &router() const { return m_router; }
     std::shared_ptr<Router> &router() { return m_router; }
@@ -250,6 +251,7 @@ public:
     std::unordered_map<std::string, std::vector<Coordinate>> &wire_on_boundary() { return m_wire_on_boundary; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
+    void rotateComponent45degree();
     void createPinArr();
     void initializeAreaRouting();
 };
@@ -357,6 +359,7 @@ private:
     std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
     double m_wire_spacing;
     double m_wire_width;
+    double m_minumum_segment;
     std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
         m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
 
@@ -370,6 +373,7 @@ public:
         m_pcb_bounding_box.at(1) = Coordinate(0.0, 0.0, 0);
         m_wire_spacing = 4.8;
         m_wire_width = 4.0;
+        m_minumum_segment = 5.0;
     };
     // Accessor
     // Access for components
@@ -402,6 +406,9 @@ public:
     // Access for wire_width
     const double &wire_width() const { return m_wire_width; }
     double &wire_width() { return m_wire_width; }
+    // Access for minumum_segment
+    const double &minumum_segment() const { return m_minumum_segment; }
+    double &minumum_segment() { return m_minumum_segment; }
     // Access for ddr2ddr_edges
     const std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
     {

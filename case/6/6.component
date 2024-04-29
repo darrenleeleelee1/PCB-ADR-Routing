@@ -40,9 +40,9 @@
       "id": "U21",
       "group": "group1",
       "boundaries": {
-        "N": false,
+        "N": true,
         "E": false,
-        "S": true,
+        "S": false,
         "W": false
       },
       "is_vertical_stack": true,

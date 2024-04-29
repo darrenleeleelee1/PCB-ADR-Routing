@@ -1,6 +1,7 @@
 #include "component_data.hpp"
 #include "basic_ds.hpp"
 #include "graph.hpp"
+#include "math.hpp"
 #include <cmath>
 #include <fstream>
 #include <limits>
@@ -15,8 +16,8 @@
 std::vector<Coordinate> Component::findBoundingBox()
 {
     std::vector<Coordinate> rectCorners;
-    double left_most_x = std::numeric_limits<double>::max(), right_most_x = std::numeric_limits<double>::min();
-    double top_most_y = std::numeric_limits<double>::min(), bottom_most_y = std::numeric_limits<double>::max();
+    double left_most_x = std::numeric_limits<double>::max(), right_most_x = std::numeric_limits<double>::lowest();
+    double top_most_y = std::numeric_limits<double>::lowest(), bottom_most_y = std::numeric_limits<double>::max();
     for (const auto &p : m_pins)
     {
         left_most_x = std::min(left_most_x, p->coordinate().x());
@@ -44,7 +45,7 @@ double Component::calculateTileWidth(double y_tolerance)
             if (pin1 != pin2)
             {
                 double y_diff = std::abs(pin1->coordinate().y() - pin2->coordinate().y());
-                if (y_diff > y_tolerance)
+                if (y_diff <= y_tolerance)
                 { // Check if y difference is within tolerance
                     double x_offset = std::abs(pin1->coordinate().x() - pin2->coordinate().x());
                     if (x_offset > 0)
@@ -67,7 +68,7 @@ double Component::calculateTileWidth(double y_tolerance)
 
 double Component::calculateTileHeight(double x_tolerance)
 {
-    // Tolerance is for x difference that is considered to be the same row
+    // Tolerance is for x difference that is considered to be the same column
     double min_offset = std::numeric_limits<double>::max();
     for (const auto &pin1 : m_pins)
     {
@@ -76,7 +77,7 @@ double Component::calculateTileHeight(double x_tolerance)
             if (pin1 != pin2)
             {
                 double x_diff = std::abs(pin1->coordinate().x() - pin2->coordinate().x());
-                if (x_diff > x_tolerance)
+                if (x_diff <= x_tolerance)
                 { // Check if x difference is within tolerance
                     double y_offset = std::abs(pin1->coordinate().y() - pin2->coordinate().y());
                     if (y_offset > 0)
@@ -96,6 +97,15 @@ double Component::calculateTileHeight(double x_tolerance)
     }
 
     return result;
+}
+
+void Component::rotateComponent45degree()
+{
+    // rotate pins
+    for (auto &pin : m_pins)
+    {
+        pin->coordinate() = math::rotatePoints(pin->coordinate(), -45);
+    }
 }
 
 void Component::createPinArr()
@@ -128,12 +138,12 @@ void Component::createPinArr()
     }
 #ifdef VERBOSE
     // Print component information
-    // std::cout << "Component: " << m_comp_name << std::endl;
-    // std::cout << "Bottom Left: " << m_bottom_left.x() << " " << m_bottom_left.y() << std::endl;
-    // std::cout << "Top Right: " << m_top_right.x() << " " << m_top_right.y() << std::endl;
-    // std::cout << "Tile Width: " << m_tile_width << std::endl;
-    // std::cout << "Tile Height: " << m_tile_height << std::endl;
-    // std::cout << std::endl;
+    std::cout << "Component: " << m_comp_name << std::endl;
+    std::cout << "Bottom Left: " << m_bottom_left.x() << " " << m_bottom_left.y() << std::endl;
+    std::cout << "Top Right: " << m_top_right.x() << " " << m_top_right.y() << std::endl;
+    std::cout << "Tile Width: " << m_tile_width << std::endl;
+    std::cout << "Tile Height: " << m_tile_height << std::endl;
+    std::cout << std::endl;
 #endif
 }
 
@@ -181,14 +191,14 @@ void DataManager::sumEscapeLength()
         }
     }
 #ifdef VERBOSE
-    for (auto net : m_netlists.nets())
-    {
-        std::cout << "Net: " << net->net_id() << std::endl;
-        for (auto group : net->group_escape_length())
-        {
-            std::cout << "Group: " << group.first << " Escape Length: " << group.second << std::endl;
-        }
-    }
+    // for (auto net : m_netlists.nets())
+    // {
+    //     std::cout << "Net: " << net->net_id() << std::endl;
+    //     for (auto group : net->group_escape_length())
+    //     {
+    //         std::cout << "Group: " << group.first << " Escape Length: " << group.second << std::endl;
+    //     }
+    // }
 #endif
 }
 
@@ -197,6 +207,8 @@ void DataManager::preprocess()
     for (auto &comp_pair : m_components)
     {
         auto &comp = comp_pair.second;
+        if (comp->is_45_degree())
+            comp->rotateComponent45degree();
         comp->createPinArr();
     }
 }
@@ -264,7 +276,124 @@ void DataManager::CPU2DDR()
     }
 }
 
-void DataManager::AreaRouting() { sumEscapeLength(); }
+void DataManager::AreaRouting()
+{
+    // DDR2DDR area routing
+    for (auto p : m_ddr2ddr_edges)
+    {
+        auto comp1 = m_components[p.first.first];
+        auto comp2 = m_components[p.second.first];
+        if ((p.first.second == 'E' && p.second.second == 'W') || (p.first.second == 'W' && p.second.second == 'E'))
+        {
+            // sort components vias 1. layer increasing 2, y increasing
+            std::sort(comp1->router()->vias().begin(),
+                      comp1->router()->vias().end(),
+                      [](Via v1, Via v2)
+                      {
+                          if (v1.layer() != v2.layer())
+                          {
+                              return v1.layer() < v2.layer();
+                          }
+                          return v1.coordinate().y() < v2.coordinate().y();
+                      });
+            std::sort(comp2->router()->vias().begin(),
+                      comp2->router()->vias().end(),
+                      [](Via v1, Via v2)
+                      {
+                          if (v1.layer() != v2.layer())
+                          {
+                              return v1.layer() < v2.layer();
+                          }
+                          return v1.coordinate().y() < v2.coordinate().y();
+                      });
+            // check the numbers are same and every via net_id is the same
+            if (comp1->router()->vias().size() != comp2->router()->vias().size())
+            {
+                throw std::runtime_error("Error: DDR2DDR Area Routing via msize not equal");
+            }
+            for (size_t i = 0; i < comp1->router()->vias().size(); i++)
+            {
+                if (comp1->router()->vias()[i].net_id() != comp2->router()->vias()[i].net_id())
+                {
+                    // show which component and net_id is not equal in runtime_error
+                    throw std::runtime_error("Error: DDR2DDR Area Routing via net_id not equal, " + comp1->comp_name() +
+                                             " " + std::to_string(comp1->router()->vias()[i].net_id()) + " " +
+                                             comp2->comp_name() + " " +
+                                             std::to_string(comp2->router()->vias()[i].net_id()));
+                }
+                Coordinate escape_point1 = Coordinate{comp1->router()->vias()[i].coordinate().x(),
+                                                      comp1->router()->vias()[i].coordinate().y(),
+                                                      comp1->router()->vias()[i].layer()};
+                Coordinate escape_point2 = Coordinate{comp2->router()->vias()[i].coordinate().x(),
+                                                      comp2->router()->vias()[i].coordinate().y(),
+                                                      comp2->router()->vias()[i].layer()};
+                escape_point1.x() = p.first.second == 'W' ? comp1->wire_bound().at(0) : comp1->wire_bound().at(1);
+                escape_point1.y() -= 0.5 * comp1->tile_height();
+                escape_point2.x() = p.second.second == 'W' ? comp2->wire_bound().at(0) : comp2->wire_bound().at(1);
+                escape_point2.y() -= 0.5 * comp2->tile_height();
+
+                m_area_router->addSegment(Segment(escape_point1, escape_point2, comp1->router()->vias()[i].net_id()));
+            }
+        }
+        else if ((p.first.second == 'N' && p.second.second == 'S') || (p.first.second == 'S' && p.second.second == 'N'))
+        {
+            // sort components vias 1. layer increasing 2, x increasing
+            std::sort(comp1->router()->vias().begin(),
+                      comp1->router()->vias().end(),
+                      [](Via v1, Via v2)
+                      {
+                          if (v1.layer() != v2.layer())
+                          {
+                              return v1.layer() < v2.layer();
+                          }
+                          return v1.coordinate().x() < v2.coordinate().x();
+                      });
+            std::sort(comp2->router()->vias().begin(),
+                      comp2->router()->vias().end(),
+                      [](Via v1, Via v2)
+                      {
+                          if (v1.layer() != v2.layer())
+                          {
+                              return v1.layer() < v2.layer();
+                          }
+                          return v1.coordinate().x() < v2.coordinate().x();
+                      });
+            // check the numbers are same and every via net_id is the same
+            if (comp1->router()->vias().size() != comp2->router()->vias().size())
+            {
+                throw std::runtime_error("Error: DDR2DDR Area Routing via msize not equal");
+            }
+            for (size_t i = 0; i < comp1->router()->vias().size(); i++)
+            {
+                if (comp1->router()->vias()[i].net_id() != comp2->router()->vias()[i].net_id())
+                {
+                    // show which component and net_id is not equal in runtime_error
+                    throw std::runtime_error("Error: DDR2DDR Area Routing via net_id not equal, " + comp1->comp_name() +
+                                             " " + std::to_string(comp1->router()->vias()[i].net_id()) + " " +
+                                             comp2->comp_name() + " " +
+                                             std::to_string(comp2->router()->vias()[i].net_id()));
+                }
+                Coordinate escape_point1 = Coordinate{comp1->router()->vias()[i].coordinate().x(),
+                                                      comp1->router()->vias()[i].coordinate().y(),
+                                                      comp1->router()->vias()[i].layer()};
+                Coordinate escape_point2 = Coordinate{comp2->router()->vias()[i].coordinate().x(),
+                                                      comp2->router()->vias()[i].coordinate().y(),
+                                                      comp2->router()->vias()[i].layer()};
+                escape_point1.x() -= 0.5 * comp1->tile_width();
+                escape_point1.y() = p.first.second == 'N' ? comp1->wire_bound().at(0) : comp1->wire_bound().at(1);
+                escape_point2.x() -= 0.5 * comp2->tile_width();
+                escape_point2.y() = p.second.second == 'N' ? comp2->wire_bound().at(0) : comp2->wire_bound().at(1);
+
+                m_area_router->addSegment(Segment(escape_point1, escape_point2, comp1->router()->vias()[i].net_id()));
+            }
+        }
+        else
+        {
+            throw std::runtime_error("Error: DDR2DDR Area Routing undifined direction");
+        }
+    }
+    sumEscapeLength();
+}
 
 void Router::addSegment(Segment segment)
 {
@@ -370,19 +499,6 @@ void Router::setSegmentNetId()
 
         for (auto &v : m_vias)
         {
-            if (seg.start().z() == 1)
-            {
-                if (seg.start().x() >= 4875 && seg.start().x() <= 4907)
-                {
-                    if (seg.start().y() >= 2784 && seg.start().y() <= 2787)
-                    {
-                        if (v.net_id() == 4)
-                        {
-                            int debug = 0;
-                        }
-                    }
-                }
-            }
             if (seg.isOverlap(v))
             {
                 if (seg.net_id() != -1 && seg.net_id() != v.net_id())
