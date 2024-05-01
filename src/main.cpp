@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
 
     // Preprocess data
     utils::printlog("Preprocessing data...");
-    data_manager->preprocess();
+    data_manager->preprocess_ER();
 #ifdef GDT
     gdt_writer.pins();
     gdt_writer.preprocess();
@@ -58,6 +58,7 @@ int main(int argc, char const *argv[])
     data_manager->DDR2DDR();
     utils::printlog("Escape Routing CPU2DDR...");
     data_manager->CPU2DDR();
+    data_manager->postprocess_ER();
 #ifdef GDT
     gdt_writer.routing();
 #endif

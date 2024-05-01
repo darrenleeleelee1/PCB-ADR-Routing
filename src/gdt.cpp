@@ -1,4 +1,5 @@
 #include "gdt.hpp"
+#include "math.hpp"
 #include <cmath>
 #include <ctime>
 #include <iomanip>
@@ -237,9 +238,14 @@ void GDTWriter::routing()
                 }
                 else
                 {
-                    Coordinate missing_pin(j * comp->tile_width() + comp->bottom_left().x(),
-                                           i * comp->tile_height() + comp->bottom_left().y(),
+                    Coordinate zero_degree_bottom_left_x =
+                        math::rotateCoordinate(comp->bottom_left(), -comp->rotation_angle());
+
+                    Coordinate missing_pin(j * comp->tile_width() + zero_degree_bottom_left_x.x(),
+                                           i * comp->tile_height() + zero_degree_bottom_left_x.y(),
                                            0);
+
+                    missing_pin = math::rotateCoordinate(missing_pin, comp->rotation_angle());
                     file << "b{0 dt255 xy(" << generateCirclePoints(missing_pin) << ")}\n";
                 }
             }
@@ -301,14 +307,20 @@ void GDTWriter::areaRouting()
                 }
                 else
                 {
-                    Coordinate missing_pin(j * comp->tile_width() + comp->bottom_left().x(),
-                                           i * comp->tile_height() + comp->bottom_left().y(),
+                    Coordinate zero_degree_bottom_left_x =
+                        math::rotateCoordinate(comp->bottom_left(), -comp->rotation_angle());
+
+                    Coordinate missing_pin(j * comp->tile_width() + zero_degree_bottom_left_x.x(),
+                                           i * comp->tile_height() + zero_degree_bottom_left_x.y(),
                                            0);
+
+                    missing_pin = math::rotateCoordinate(missing_pin, comp->rotation_angle());
                     file << "b{0 dt255 xy(" << generateCirclePoints(missing_pin) << ")}\n";
                 }
             }
         }
     }
+
     for (auto comp_pair : m_data_manager.components())
     {
         auto comp = comp_pair.second;
@@ -327,6 +339,7 @@ void GDTWriter::areaRouting()
             }
         }
     }
+
     auto router = m_data_manager.area_router();
     for (auto &seg : router->segments())
     {

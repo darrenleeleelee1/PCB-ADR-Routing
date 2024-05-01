@@ -212,7 +212,7 @@ void ComponentParser::parse(DataManager &data_manager)
     for (auto &component : config["components"])
     {
         data_manager.components()[component["id"]]->group() = component["group"];
-        data_manager.components()[component["id"]]->is_45_degree() = component["angle"] == 0 ? false : true;
+        data_manager.components()[component["id"]]->rotation_angle() = component["angle"];
         data_manager.components()[component["id"]]->is_vertical_stack() = component["is_vertical_stack"];
         if (data_manager.components()[component["id"]]->is_vertical_stack())
         {
@@ -246,7 +246,18 @@ void ComponentParser::parse(DataManager &data_manager)
         }
         data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);
     }
-
+#ifdef VERBOSE
+    for (const auto &component : data_manager.components())
+    {
+        std::cout << "Component ID: " << component.first << std::endl;
+        std::cout << "Group: " << component.second->group() << std::endl;
+        std::cout << "Rotation Angle: " << component.second->rotation_angle() << std::endl;
+        std::cout << "Is Vertical Stack: " << component.second->is_vertical_stack() << std::endl;
+        std::cout << "Neighboors: " << component.second->neighboors().at(0) << " "
+                  << component.second->neighboors().at(1) << std::endl;
+        std::cout << "Is CPU: " << component.second->is_cpu() << std::endl;
+    }
+#endif
     return;
 }
 

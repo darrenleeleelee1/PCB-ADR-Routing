@@ -136,14 +136,15 @@ private:
     double m_tile_width, m_tile_height;
     bool m_is_cpu;
     bool m_is_vertical_stack; // true for vericle stack, false for horizontal stack
-    bool m_is_45_degree;
+    double m_rotation_angle; // 0, 45, 90, 135, 180, 225, 270, 315
     std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
     // wires bound for calculate escape point
     std::vector<double> m_wire_bound; // 0 for left x/ top y, 1 for right x/ bottom y
+    // escape point
+    std::vector<std::vector<std::pair<Coordinate, int>>>
+        m_escape_points; // 0 for left/top, 1 for right/bottom pair<coordinate, net_id>
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
-    // collect for area routing
-    std::unordered_map<std::string, std::vector<Coordinate>> m_wire_on_boundary; // N:0, E:1, S:2, W:3
     // Private Methods
     std::vector<Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -158,6 +159,7 @@ public:
         , m_is_vertical_stack(false)
         , m_neighboors(2, false)
         , m_wire_bound(2, 0)
+        , m_escape_points(2)
     {
         m_router = std::make_shared<Router>();
     }
@@ -228,32 +230,33 @@ public:
     // Access for is_vertical_stack
     const bool &is_vertical_stack() const { return m_is_vertical_stack; }
     bool &is_vertical_stack() { return m_is_vertical_stack; }
-    // Access for is_45_degree
-    const bool &is_45_degree() const { return m_is_45_degree; }
-    bool &is_45_degree() { return m_is_45_degree; }
+    // Access for rotation_angle
+    const double &rotation_angle() const { return m_rotation_angle; }
+    double &rotation_angle() { return m_rotation_angle; }
     // Access for neighboor
     const std::vector<bool> &neighboors() const { return m_neighboors; }
     std::vector<bool> &neighboors() { return m_neighboors; }
     // Access for wire_bound
     const std::vector<double> &wire_bound() const { return m_wire_bound; }
     std::vector<double> &wire_bound() { return m_wire_bound; }
+    // Access for escape_points
+    const std::vector<std::vector<std::pair<Coordinate, int>>> &escape_points() const { return m_escape_points; }
+    std::vector<std::vector<std::pair<Coordinate, int>>> &escape_points() { return m_escape_points; }
     // Access for router
     const std::shared_ptr<Router> &router() const { return m_router; }
     std::shared_ptr<Router> &router() { return m_router; }
     // Access for bounding_box
     const std::pair<Coordinate, Coordinate> &bounding_box() const { return m_bounding_box; }
     std::pair<Coordinate, Coordinate> &bounding_box() { return m_bounding_box; }
-    // Access for wire_on_boundary
-    const std::unordered_map<std::string, std::vector<Coordinate>> &wire_on_boundary() const
-    {
-        return m_wire_on_boundary;
-    }
-    std::unordered_map<std::string, std::vector<Coordinate>> &wire_on_boundary() { return m_wire_on_boundary; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
-    void rotateComponent45degree();
+    void rotateComponentPins(bool clockwise = true);
+    void rotateEscapePoints(bool clockwise = true);
+    void rotateBoundingBox(bool clockwise = true);
+    void rotateWires(bool clockwise = true);
+    void rotateAll(bool clockwise = true);
     void createPinArr();
-    void initializeAreaRouting();
+    void calculateEscapePoints();
 };
 
 class Nets
@@ -422,9 +425,10 @@ public:
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
     void sumEscapeLength();
-    void preprocess();
+    void preprocess_ER();
     void DDR2DDR();
     void CPU2DDR();
+    void postprocess_ER();
     void AreaRouting();
 };
 class Via

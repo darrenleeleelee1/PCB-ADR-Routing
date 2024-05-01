@@ -5,8 +5,8 @@
       "group": "CPU",
       "boundaries": {
         "N": false,
-        "E": false,
-        "S": true,
+        "E": true,
+        "S": false,
         "W": false
       },
       "is_vertical_stack": false,

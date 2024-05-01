@@ -3,6 +3,6 @@
 #include "component_data.hpp"
 namespace math
 {
-Coordinate rotatePoints(const Coordinate &point, const double &angle);
+Coordinate rotateCoordinate(const Coordinate &point, const double &angle);
 }
 #endif // MATH_HPP

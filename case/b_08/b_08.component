@@ -16,25 +16,25 @@
       "id": "U29",
       "group": "group1",
       "boundaries": {
-        "N": true,
-        "E": false,
-        "S": true,
-        "W": false
+        "N": false,
+        "E": true,
+        "S": false,
+        "W": true
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 90
     },
     {
       "id": "U34",
       "group": "group1",
       "boundaries": {
-        "N": true,
-        "E": false,
+        "N": false,
+        "E": true,
         "S": false,
         "W": false
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 90
     }
   ]
 }

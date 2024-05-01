@@ -17,48 +17,48 @@
       "group": "group1",
       "boundaries": {
         "N": false,
-        "E": false,
-        "S": true,
+        "E": true,
+        "S": false,
         "W": false
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 270
     },
     {
       "id": "U6",
       "group": "group1",
       "boundaries": {
-        "N": true,
+        "N": false,
         "E": false,
         "S": false,
-        "W": false
+        "W": true
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 270
     },
     {
       "id": "U4",
       "group": "group2",
       "boundaries": {
         "N": false,
-        "E": false,
+        "E": true,
         "S": true,
         "W": false
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 270
     },
     {
       "id": "U3",
       "group": "group2",
       "boundaries": {
-        "N": true,
+        "N": false,
         "E": false,
         "S": false,
-        "W": false
+        "W": true
       },
-      "is_vertical_stack": true,
-      "angle": 0
+      "is_vertical_stack": false,
+      "angle": 270
     }
   ]
 }
