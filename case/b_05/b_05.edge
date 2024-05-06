@@ -1,12 +1,27 @@
-[
-     {
-        "from": {
-            "comp_name": "U3",
-            "escaepe_dir": "S"
-        },
-        "to": {
-            "comp_name": "U2",
-            "escaepe_dir": "N"
+{
+    "ddr2ddr": [
+        {
+            "from": {
+                "comp_name": "U3",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U2",
+                "escaepe_dir": "N"
+            }
         }
-    }
-]
+    ],
+    "cpu2ddr": [
+        {
+            "from": {
+                "comp_name": "U1",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U3",
+                "escaepe_dir": "N"
+            },
+            "fly-by": true
+        }
+    ]
+}

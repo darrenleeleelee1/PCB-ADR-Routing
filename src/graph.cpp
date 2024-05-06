@@ -126,8 +126,7 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
     residual_capacity = get(edge_residual_capacity, g);
     rev = get(edge_reverse, g);
 
-    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost)
-    {
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
         auto e = add_edge(u, v, g).first;
         auto rev_e = add_edge(v, u, g).first;
         capacity[e] = cap;
@@ -321,8 +320,7 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
     residual_capacity = get(edge_residual_capacity, g);
     rev = get(edge_reverse, g);
 
-    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost)
-    {
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
         auto e = add_edge(u, v, g).first;
         auto rev_e = add_edge(v, u, g).first;
         capacity[e] = cap;
@@ -454,6 +452,7 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
         }
     }
 }
+
 long GraphManager::minCostMaxFlow()
 {
     // Calculate minimum cost maximum flow
@@ -483,6 +482,7 @@ long GraphManager::minCostMaxFlow()
 #endif
     return total_flow;
 }
+
 std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> router)
 {
     std::regex vertex_pattern("v([0-9]{1,2})_([0-9]{1,2})");
@@ -596,7 +596,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
                                                      t_j};
                     Coordinate first_bend =
-                        Coordinate{via_coor.x() - 1.5 * m_data_manager->minumum_segment(), via_coor.y(), via_coor.z()};
+                        Coordinate{via_coor.x() - 1.5 * m_data_manager->miniumum_segment(), via_coor.y(), via_coor.z()};
                     Coordinate second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                                         first_bend.y() - (m_component->tile_height() / 2),
                                                         first_bend.z()};
@@ -607,7 +607,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{second_bend, left_bound, -1});
 
                     first_bend =
-                        Coordinate{via_coor.x() + 1.5 * m_data_manager->minumum_segment(), via_coor.y(), via_coor.z()};
+                        Coordinate{via_coor.x() + 1.5 * m_data_manager->miniumum_segment(), via_coor.y(), via_coor.z()};
                     second_bend = Coordinate{first_bend.x() + (m_component->tile_width() / 2),
                                              first_bend.y() - (m_component->tile_height() / 2),
                                              first_bend.z()};
@@ -671,7 +671,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
                                                      t_j};
                     Coordinate first_bend =
-                        Coordinate{via_coor.x(), via_coor.y() + 1.5 * m_data_manager->minumum_segment(), via_coor.z()};
+                        Coordinate{via_coor.x(), via_coor.y() + 1.5 * m_data_manager->miniumum_segment(), via_coor.z()};
                     Coordinate second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                                         first_bend.y() + (m_component->tile_height() / 2),
                                                         first_bend.z()};
@@ -685,7 +685,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{second_bend, top_bound, -1});
 
                     first_bend =
-                        Coordinate{via_coor.x(), via_coor.y() - 1.5 * m_data_manager->minumum_segment(), via_coor.z()};
+                        Coordinate{via_coor.x(), via_coor.y() - 1.5 * m_data_manager->miniumum_segment(), via_coor.z()};
                     second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                              first_bend.y() - (m_component->tile_height() / 2),
                                              first_bend.z()};

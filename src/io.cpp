@@ -230,33 +230,37 @@ void ComponentParser::parse(DataManager &data_manager)
             if (component["boundaries"]["N"])
             {
                 data_manager.cpu_escape_boundry() = "N";
+                data_manager.components()[component["id"]]->cpu_escape_boundry() = "N";
             }
             else if (component["boundaries"]["E"])
             {
                 data_manager.cpu_escape_boundry() = "E";
+                data_manager.components()[component["id"]]->cpu_escape_boundry() = "E";
             }
             else if (component["boundaries"]["S"])
             {
                 data_manager.cpu_escape_boundry() = "S";
+                data_manager.components()[component["id"]]->cpu_escape_boundry() = "S";
             }
             else if (component["boundaries"]["W"])
             {
                 data_manager.cpu_escape_boundry() = "W";
+                data_manager.components()[component["id"]]->cpu_escape_boundry() = "W";
             }
         }
         data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);
     }
 #ifdef VERBOSE
-    for (const auto &component : data_manager.components())
-    {
-        std::cout << "Component ID: " << component.first << std::endl;
-        std::cout << "Group: " << component.second->group() << std::endl;
-        std::cout << "Rotation Angle: " << component.second->rotation_angle() << std::endl;
-        std::cout << "Is Vertical Stack: " << component.second->is_vertical_stack() << std::endl;
-        std::cout << "Neighboors: " << component.second->neighboors().at(0) << " "
-                  << component.second->neighboors().at(1) << std::endl;
-        std::cout << "Is CPU: " << component.second->is_cpu() << std::endl;
-    }
+    // for (const auto &component : data_manager.components())
+    // {
+    //     std::cout << "Component ID: " << component.first << std::endl;
+    //     std::cout << "Group: " << component.second->group() << std::endl;
+    //     std::cout << "Rotation Angle: " << component.second->rotation_angle() << std::endl;
+    //     std::cout << "Is Vertical Stack: " << component.second->is_vertical_stack() << std::endl;
+    //     std::cout << "Neighboors: " << component.second->neighboors().at(0) << " "
+    //               << component.second->neighboors().at(1) << std::endl;
+    //     std::cout << "Is CPU: " << component.second->is_cpu() << std::endl;
+    // }
 #endif
     return;
 }
@@ -282,23 +286,45 @@ void EdgeParser::parse(DataManager &data_manager)
 {
     json config;
     file >> config;
-    for (const auto &element : config)
+
+    for (const auto &pair : config.items()) // Loop through each key-value pair
     {
-        std::pair<std::string, char> from = {
-            element["from"]["comp_name"],
-            element["from"]["escaepe_dir"].get<std::string>()[0] // string to char
-        };
-        std::pair<std::string, char> to = {
-            element["to"]["comp_name"],
-            element["to"]["escaepe_dir"].get<std::string>()[0] // string to char
-        };
+        const std::string &key = pair.key();
+        const json &elements = pair.value();
 
-        if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
+        if (key == "ddr2ddr" || key == "cpu2ddr") // Check if key is "ddr2ddr" or "cpu2ddr"
         {
-            throw std::runtime_error("Error: Component not found");
-        }
+            for (const auto &element : elements) // Loop through each edge
+            {
+                std::pair<std::string, char> from = {
+                    element["from"]["comp_name"],
+                    element["from"]["escaepe_dir"].get<std::string>()[0] // string to char
+                };
+                std::pair<std::string, char> to = {
+                    element["to"]["comp_name"],
+                    element["to"]["escaepe_dir"].get<std::string>()[0] // string to char
+                };
 
-        data_manager.ddr2ddr_edges().push_back({from, to});
+                if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
+                {
+                    throw std::runtime_error("Error: Component not found");
+                }
+
+                if (key == "ddr2ddr")
+                {
+                    data_manager.ddr2ddr_edges().push_back({from, to});
+                }
+                else if (key == "cpu2ddr")
+                {
+                    bool fly_by = element.value("fly-by", false);
+                    data_manager.cpu2ddr_edges().push_back({from, to, fly_by});
+                }
+            }
+        }
+        else
+        {
+            throw std::runtime_error("Error: Unknown edge type");
+        }
     }
 
     return;

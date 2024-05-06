@@ -11,7 +11,15 @@
 #ifdef VERBOSE
 #include <iostream>
 #endif
-
+// Float point comparison
+bool deq(double a, double b, double epsilon = 1e-4)
+{
+    if (a == std::numeric_limits<double>::infinity() && b == std::numeric_limits<double>::infinity())
+    {
+        return true;
+    }
+    return std::abs(a - b) < epsilon;
+}
 // Find the corner points of the component
 std::vector<Coordinate> Component::findBoundingBox()
 {
@@ -208,21 +216,94 @@ void Component::createPinArr()
         m_pin_arr.at(row).at(column) = pin;
     }
 #ifdef VERBOSE
-    // Print component information
-    std::cout << "Component: " << m_comp_name << std::endl;
-    std::cout << "Bottom Left: " << m_bottom_left.x() << " " << m_bottom_left.y() << std::endl;
-    std::cout << "Top Right: " << m_top_right.x() << " " << m_top_right.y() << std::endl;
-    std::cout << "Tile Width: " << m_tile_width << std::endl;
-    std::cout << "Tile Height: " << m_tile_height << std::endl;
-    std::cout << std::endl;
+    // // Print component information
+    // std::cout << "Component: " << m_comp_name << std::endl;
+    // std::cout << "Bottom Left: " << m_bottom_left.x() << " " << m_bottom_left.y() << std::endl;
+    // std::cout << "Top Right: " << m_top_right.x() << " " << m_top_right.y() << std::endl;
+    // std::cout << "Tile Width: " << m_tile_width << std::endl;
+    // std::cout << "Tile Height: " << m_tile_height << std::endl;
+    // std::cout << std::endl;
 #endif
 }
 
 void Component::calculateEscapePoints()
 {
-    if (m_is_cpu) {
-        
+    if (m_is_cpu)
+    {
+        double boundary_point = 0;
+        if (m_cpu_escape_boundry == "N")
+        {
+            boundary_point = m_top_right.y() + tile_height();
+            for (auto &seg : m_router->segments())
+            {
+                if (deq(seg.start().y(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(0).emplace_back(seg.start(), seg.net_id());
+                }
+                else if (deq(seg.end().y(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(0).emplace_back(seg.end(), seg.net_id());
+                }
+            }
+        }
+        else if (m_cpu_escape_boundry == "E")
+        {
+            boundary_point = m_top_right.x() + tile_width();
+            for (auto &seg : m_router->segments())
+            {
+                if (deq(seg.start().x(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(1).emplace_back(seg.start(), seg.net_id());
+                }
+                else if (deq(seg.end().x(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(1).emplace_back(seg.end(), seg.net_id());
+                }
+            }
+        }
+        else if (m_cpu_escape_boundry == "S")
+        {
+            boundary_point = m_bottom_left.y() - tile_height();
+            for (auto &seg : m_router->segments())
+            {
+                if (deq(seg.start().y(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(2).emplace_back(seg.start(), seg.net_id());
+                }
+                else if (deq(seg.end().y(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(2).emplace_back(seg.end(), seg.net_id());
+                }
+            }
+        }
+        else if (m_cpu_escape_boundry == "W")
+        {
+            boundary_point = m_bottom_left.x() - tile_width();
+            for (auto &seg : m_router->segments())
+            {
+                if (deq(seg.start().x(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(3).emplace_back(seg.start(), seg.net_id());
+                }
+                else if (deq(seg.end().x(), boundary_point, 5e-1))
+                {
+                    m_cpu_escape_points.at(3).emplace_back(seg.end(), seg.net_id());
+                }
+            }
+        }
+        else
+        {
+            throw std::runtime_error("Error: CPU escape boundry not found");
+        }
 
+#ifdef VERBOSE
+        std::cout << "CPU escape boundry: " << m_cpu_escape_boundry << std::endl;
+        std::cout << "Boundary point: " << boundary_point << std::endl;
+        std::cout << "# Escape points N: " << m_cpu_escape_points.at(0).size() << std::endl;
+        std::cout << "# Escape points E: " << m_cpu_escape_points.at(1).size() << std::endl;
+        std::cout << "# Escape points S: " << m_cpu_escape_points.at(2).size() << std::endl;
+        std::cout << "# Escape points W: " << m_cpu_escape_points.at(3).size() << std::endl;
+#endif
         return;
     }
     // if not vertical stack
@@ -308,15 +389,98 @@ void DataManager::sumEscapeLength()
         }
     }
 #ifdef VERBOSE
-    // for (auto net : m_netlists.nets())
-    // {
-    //     std::cout << "Net: " << net->net_id() << std::endl;
-    //     for (auto group : net->group_escape_length())
-    //     {
-    //         std::cout << "Group: " << group.first << " Escape Length: " << group.second << std::endl;
-    //     }
-    // }
+    // print a Group all net wirelength in increasing order
+    for (auto group : m_groups)
+    {
+        std::cout << "Group: " << group.first << std::endl;
+        std::vector<std::shared_ptr<Nets>> group_nets;
+        // (wirelength, net_id)
+        std::pair<double, int> shortest = std::make_pair(std::numeric_limits<double>::max(), -1);
+        std::pair<double, int> longest = std::make_pair(std::numeric_limits<double>::lowest(), -1);
+        for (auto net : m_netlists.nets())
+        {
+            if (net->group_escape_length().count(group.first))
+            {
+                group_nets.emplace_back(net);
+            }
+        }
+        // lambda capture group
+        sort(group_nets.begin(), group_nets.end(), [&group](std::shared_ptr<Nets> n1, std::shared_ptr<Nets> n2) {
+            return n1->group_escape_length().at(group.first) < n2->group_escape_length().at(group.first);
+        });
+        // shortest and longest wirelength
+        for (auto n : group_nets)
+        {
+            if (n->group_escape_length().at(group.first) < shortest.first)
+            {
+                shortest.first = n->group_escape_length().at(group.first);
+                shortest.second = n->net_id();
+            }
+            if (n->group_escape_length().at(group.first) > longest.first)
+            {
+                longest.first = n->group_escape_length().at(group.first);
+                longest.second = n->net_id();
+            }
+        }
+        unordered_map<int, int> count; //  layer, ordercount
+        for (auto n : group_nets)
+        {
+            std::cout << "Net ID: " << n->net_id() << " Wirelength: " << n->group_escape_length().at(group.first)
+                      << " Layer: " << n->group_layer().at(group.first) << std::endl;
+            if (!count.count(n->group_layer().at(group.first)))
+            {
+                count[n->group_layer().at(group.first)] = 0;
+            }
+            else
+            {
+                count[n->group_layer().at(group.first)]++;
+            }
+            m_group_escape_layer_order[group.first][n->net_id()] =
+                std::make_pair(n->group_layer().at(group.first), count[n->group_layer().at(group.first)]);
+        }
+        // show m_group_escape_layer&order to check
+        // for (auto n : m_group_escape_layer&order[group.first])
+        // {
+        //     std::cout << "Net ID: " << n.first << " Layer: " << n.second.first << " Order: " << n.second.second
+        //               << std::endl;
+        // }
+        std::cout << "Shortest: " << shortest.first << " Net ID: " << shortest.second << std::endl;
+        std::cout << "Longest: " << longest.first << " Net ID: " << longest.second << std::endl;
+        std::cout << std::endl;
+    }
 #endif
+}
+
+void DataManager::storeGroupLayer()
+{
+    for (auto group : m_groups)
+    {
+        if (group.first == "CPU")
+        {
+            for (auto n : m_netlists.nets())
+            {
+                n->group_layer()["CPU"] = 0;
+            }
+        }
+        std::string group_name = group.first;
+        for (auto comp : group.second)
+        {
+            for (auto v : comp->router()->vias())
+            {
+                if (!m_netlists.nets().at(v.net_id())->group_layer().count(group_name))
+                {
+                    m_netlists.nets().at(v.net_id())->group_layer()[group_name] = v.layer();
+                }
+                else
+                {
+                    if (m_netlists.nets().at(v.net_id())->group_layer()[group_name] != v.layer())
+                    {
+                        throw std::runtime_error("Error: Same net different layer in the same group");
+                    }
+                }
+            }
+        }
+    }
 }
 
 void DataManager::preprocess_ER()
@@ -386,7 +550,9 @@ void DataManager::CPU2DDR()
             }
             catch (const std::runtime_error &e)
             {
-                // not doing anything right now
+#ifdef VERBOSE
+                std::cout << e.what() << std::endl;
+#endif
             }
         }
     }
@@ -402,6 +568,42 @@ void DataManager::postprocess_ER()
     }
 }
 
+std::vector<std::pair<Coordinate, Coordinate>> connectDiagonal(Coordinate p1, Coordinate p2)
+{
+    int dx = p2.x() - p1.x();
+    int dy = p2.y() - p1.y();
+
+    std::vector<std::pair<Coordinate, Coordinate>> segments;
+    Coordinate bend;
+
+    if (std::abs(dx) < std::abs(dy))
+    {
+        if (p1.y() < p2.y())
+        {
+            bend = Coordinate{p1.x(), p1.y() + std::abs(dy) - std::abs(dx), p1.z()};
+        }
+        else
+        {
+            bend = Coordinate{p2.x(), p2.y() + std::abs(dy) - std::abs(dx), p2.z()};
+        }
+    }
+    else
+    {
+        if (p1.x() < p2.x())
+        {
+            bend = Coordinate{p1.x() + std::abs(dx) - std::abs(dy), p1.y(), p1.z()};
+        }
+        else
+        {
+            bend = Coordinate{p2.x() + std::abs(dx) - std::abs(dy), p2.y(), p2.z()};
+        }
+    }
+    segments.emplace_back(std::make_pair(p1, bend));
+    segments.emplace_back(std::make_pair(bend, p2));
+
+    return segments;
+}
+
 void DataManager::AreaRouting()
 {
     // DDR2DDR area routing
@@ -411,7 +613,6 @@ void DataManager::AreaRouting()
         auto comp2 = m_components[p.second.first];
         auto comp1_escape_points = comp1->escape_points().at(p.first.second == 'W' || p.first.second == 'N' ? 0 : 1);
         auto comp2_escape_points = comp2->escape_points().at(p.second.second == 'W' || p.second.second == 'N' ? 0 : 1);
-
         if (comp1_escape_points.size() != comp2_escape_points.size())
         {
             throw std::runtime_error("Error: DDR2DDR Area Routing number of escape points are not equal");
@@ -426,12 +627,162 @@ void DataManager::AreaRouting()
                                          " " + std::to_string(net_id1) + " " + comp2->comp_name() + " " +
                                          std::to_string(net_id2));
             }
+            if (comp1_escape_points.at(i).first.z() != comp2_escape_points.at(i).first.z())
+            {
+                throw std::runtime_error("Error: DDR2DDR Area Routing via layer not equal");
+            }
             auto escape_point1 = comp1_escape_points.at(i).first;
             auto escape_point2 = comp2_escape_points.at(i).first;
-            m_area_router->addSegment(Segment(escape_point1, escape_point2, net_id1));
+            Segment test_slope(escape_point1, escape_point2);
+            // if is vertical or horizontal placement or 45 degree
+            if (deq(test_slope.slope(), 0) || deq(test_slope.slope(), 1) ||
+                deq(test_slope.slope(), std::numeric_limits<double>::infinity()))
+            {
+
+                m_area_router->addSegment(Segment(escape_point1, escape_point2, net_id1));
+            }
+            else
+            {
+                // if is diagonal placement, only can 45 degree in corner
+                auto segments = connectDiagonal(escape_point1, escape_point2);
+                for (auto s : segments)
+                {
+                    m_area_router->addSegment(Segment(s.first, s.second, net_id1));
+                }
+            }
         }
     }
+    storeGroupLayer();
     sumEscapeLength();
+    // cpu2ddr
+    for (auto p : m_cpu2ddr_edges)
+    {
+        auto from_pair = std::get<0>(p); // 获取第一个组件对
+        auto to_pair = std::get<1>(p); // 获取第二个组件对
+        bool fly_by = std::get<2>(p);
+        auto comp1 = m_components[from_pair.first];
+        auto comp2 = m_components[to_pair.first];
+        double comp1_shift_x = 0, comp1_shift_y = 0, comp2_shift_x = 0, comp2_shift_y = 0;
+        // find out which group contain the comp2
+        std::string group_name;
+        for (auto group : m_groups)
+        {
+            for (auto &v : group.second)
+            {
+                if (v == comp2)
+                {
+                    group_name = group.first;
+                    break;
+                }
+            }
+        }
+        // cpu escape points
+        // check m_cpu_escape_boundry is "N" or "E" or "S" or "W" to get the exact cpu_escape_points
+        int cpu_escape_boundry_idx = -1;
+        if (m_cpu_escape_boundry == "N")
+        {
+            cpu_escape_boundry_idx = 0;
+            comp1_shift_y = std::max(comp2->top_right().y() - comp1->bottom_left().y(), 0.0);
+            comp2_shift_y = std::max(comp1->top_right().y() - comp2->bottom_left().y(), 0.0);
+        }
+        else if (m_cpu_escape_boundry == "E")
+        {
+            cpu_escape_boundry_idx = 1;
+            comp1_shift_x = std::max(comp2->top_right().x() - comp1->bottom_left().x(), 0.0);
+            comp2_shift_x = std::max(comp1->top_right().x() - comp2->bottom_left().x(), 0.0);
+        }
+        else if (m_cpu_escape_boundry == "S")
+        {
+            cpu_escape_boundry_idx = 2;
+            comp1_shift_y = std::max(comp1->top_right().y() - comp2->bottom_left().y(), 0.0);
+            comp1_shift_y *= -1;
+            comp2_shift_y = std::max(comp2->top_right().y() - comp1->bottom_left().y(), 0.0);
+            comp2_shift_y *= -1;
+        }
+        else if (m_cpu_escape_boundry == "W")
+        {
+            cpu_escape_boundry_idx = 3;
+            comp1_shift_x = std::max(comp1->top_right().x() - comp2->bottom_left().x(), 0.0);
+            comp1_shift_x *= -1;
+            comp2_shift_x = std::max(comp2->top_right().x() - comp1->bottom_left().x(), 0.0);
+            comp2_shift_x *= -1;
+        }
+        auto cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
+        double space = 20;
+        // perserve for T, or FLy-by, now true for fly_by
+
+        if (fly_by)
+        {
+            double x_escape_boundary = 0;
+            double y_escape_boundary = 0;
+            if (from_pair.second == 'N')
+            {
+                x_escape_boundary = 0;
+                y_escape_boundary = comp1->top_right().y() + comp1->tile_height();
+            }
+            else if (from_pair.second == 'E')
+            {
+                x_escape_boundary = comp1->top_right().x() + comp1->tile_width();
+                y_escape_boundary = 0;
+            }
+            else if (from_pair.second == 'S')
+            {
+                x_escape_boundary = 0;
+                y_escape_boundary = comp1->bottom_left().y() - comp1->tile_height();
+            }
+            else if (from_pair.second == 'W')
+            {
+                x_escape_boundary = comp1->bottom_left().x() - comp1->tile_width();
+                y_escape_boundary = 0;
+            }
+
+            for (auto &point : cpu_escape_point)
+            {
+                auto net_id = point.second;
+                auto escape_point = point.first;
+                auto [layer, order] = m_group_escape_layer_order[group_name][net_id];
+                double x_offset = 0;
+                double y_offset = 0;
+                if (m_cpu_escape_boundry == "N")
+                {
+                    x_offset = 0;
+                    y_offset = space * order;
+                }
+                else if (m_cpu_escape_boundry == "E")
+                {
+                    x_offset = space * order;
+                    y_offset = 0;
+                }
+                else if (m_cpu_escape_boundry == "S")
+                {
+                    x_offset = 0;
+                    y_offset = -1 * space * order;
+                }
+                else if (m_cpu_escape_boundry == "W")
+                {
+                    x_offset = -1 * space * order;
+                    y_offset = 0;
+                }
+                Coordinate via_coor = Coordinate{escape_point.x() + x_offset + comp1_shift_x,
+                                                 escape_point.y() + y_offset + comp1_shift_y,
+                                                 escape_point.z()};
+                m_area_router->addSegment(Segment(escape_point, via_coor, net_id));
+                m_area_router->addVia(Via(via_coor, layer, net_id));
+                if (x_escape_boundary == 0)
+                {
+                    m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
+                                                      Coordinate{via_coor.x(), y_escape_boundary, layer},
+                                                      net_id));
+                }
+                else if (y_escape_boundary == 0)
+                {
+                    m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
+                                                      Coordinate{x_escape_boundary, via_coor.y(), layer},
+                                                      net_id));
+                }
+            }
+        }
+    }
 }
 
 void Router::addSegment(Segment segment)
@@ -447,11 +798,89 @@ void Router::addSegment(Segment segment)
             {
                 if (s == other_s)
                     continue;
+                double diagonal_factor = 0.25;
+                double daigonal_short_segments = 30.0;
                 if (s.start().isCloseTo(other_s.start()))
                 {
                     if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
                         other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+
+                        // 如果兩條線垂直(slope相乘等於-1), 連接的部分必須變成45度, s.start() 和 other_s.start() 連接
+                        if (s.slope() == std::numeric_limits<double>::infinity() && deq(other_s.slope(), 0))
+                        {
+                            if (s.start().y() > s.end().y())
+                            {
+                                s.start().y() = s.start().y() - diagonal_factor * daigonal_short_segments;
+                                if (other_s.start().x() > other_s.end().x())
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() - diagonal_factor * daigonal_short_segments;
+                                }
+                                else
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() + diagonal_factor * daigonal_short_segments;
+                                }
+                                Segment diagonal(s.start(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                s.start().y() = s.start().y() + diagonal_factor * daigonal_short_segments;
+                                if (other_s.start().x() > other_s.end().x())
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() - diagonal_factor * daigonal_short_segments;
+                                }
+                                else
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() + diagonal_factor * daigonal_short_segments;
+                                }
+                                Segment diagonal(s.start(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+                        else if (other_s.slope() == std::numeric_limits<double>::infinity() && deq(s.slope(), 0))
+                        {
+                            if (other_s.start().y() > other_s.end().y())
+                            {
+                                other_s.start().y() =
+                                    other_s.start().y() -
+                                    diagonal_factor * (std::fabs(other_s.start().y() - other_s.end().y()));
+                                if (s.start().x() > s.end().x())
+                                {
+                                    s.start().x() =
+                                        s.start().x() - diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                else
+                                {
+                                    s.start().x() =
+                                        s.start().x() + diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                other_s.start().y() =
+                                    other_s.start().y() +
+                                    diagonal_factor * (std::fabs(other_s.start().y() - other_s.end().y()));
+                                if (s.start().x() > s.end().x())
+                                {
+                                    s.start().x() =
+                                        s.start().x() - diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                else
+                                {
+                                    s.start().x() =
+                                        s.start().x() + diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
                         continue;
                     }
                     s.start() = other_s.end(); // update start point
@@ -466,6 +895,83 @@ void Router::addSegment(Segment segment)
                     if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
                         other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+
+                        // 如果兩條線垂直(slope相乘等於-1), 連接的部分必須變成45度, s.end() 和 other_s.start() 連接
+                        if (s.slope() == std::numeric_limits<double>::infinity() && deq(other_s.slope(), 0))
+                        {
+                            if (s.end().y() > s.start().y())
+                            {
+                                s.end().y() = s.end().y() - diagonal_factor * (std::fabs(s.end().y() - s.start().y()));
+                                if (other_s.start().x() > other_s.end().x())
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() - diagonal_factor * daigonal_short_segments;
+                                }
+                                else
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() + diagonal_factor * daigonal_short_segments;
+                                }
+                                Segment diagonal(s.end(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                s.end().y() = s.end().y() + diagonal_factor * (std::fabs(s.end().y() - s.start().y()));
+                                if (other_s.start().x() > other_s.end().x())
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() - diagonal_factor * daigonal_short_segments;
+                                }
+                                else
+                                {
+                                    other_s.start().x() =
+                                        other_s.start().x() + diagonal_factor * daigonal_short_segments;
+                                }
+                                Segment diagonal(s.end(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+                        else if (other_s.slope() == std::numeric_limits<double>::infinity() && deq(s.slope(), 0))
+                        {
+                            if (other_s.start().y() > other_s.end().y())
+                            {
+                                other_s.start().y() =
+                                    other_s.start().y() -
+                                    diagonal_factor * (std::fabs(other_s.start().y() - other_s.end().y()));
+                                if (s.end().x() > s.start().x())
+                                {
+                                    s.end().x() =
+                                        s.end().x() - diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                else
+                                {
+                                    s.end().x() =
+                                        s.end().x() + diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                other_s.start().y() =
+                                    other_s.start().y() +
+                                    diagonal_factor * (std::fabs(other_s.start().y() - other_s.end().y()));
+                                if (s.end().x() > s.start().x())
+                                {
+                                    s.end().x() =
+                                        s.end().x() - diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                else
+                                {
+                                    s.end().x() =
+                                        s.end().x() + diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.start(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+
                         continue;
                     }
                     s.end() = other_s.end(); // extend end point
@@ -480,6 +986,86 @@ void Router::addSegment(Segment segment)
                     if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
                         other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        // 如果兩條線垂直(slope相乘等於-1), 連接的部分必須變成45度, s.start() 和 other_s.end() 連接
+                        if (s.slope() == std::numeric_limits<double>::infinity() && deq(other_s.slope(), 0))
+                        {
+                            if (s.start().y() > s.end().y())
+                            {
+                                s.start().y() = s.start().y() - diagonal_factor * daigonal_short_segments;
+                                if (other_s.end().x() > other_s.start().x())
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() -
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                else
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() +
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                s.start().y() = s.start().y() + diagonal_factor * daigonal_short_segments;
+                                if (other_s.end().x() > other_s.start().x())
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() -
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                else
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() +
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+                        else if (other_s.slope() == std::numeric_limits<double>::infinity() && deq(s.slope(), 0))
+                        {
+                            if (other_s.end().y() > other_s.start().y())
+                            {
+                                other_s.end().y() =
+                                    other_s.end().y() -
+                                    diagonal_factor * (std::fabs(other_s.end().y() - other_s.start().y()));
+                                if (s.start().x() > s.end().x())
+                                {
+                                    s.start().x() =
+                                        s.start().x() - diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                else
+                                {
+                                    s.start().x() =
+                                        s.start().x() + diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                other_s.end().y() =
+                                    other_s.end().y() +
+                                    diagonal_factor * (std::fabs(other_s.end().y() - other_s.start().y()));
+                                if (s.start().x() > s.end().x())
+                                {
+                                    s.start().x() =
+                                        s.start().x() - diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                else
+                                {
+                                    s.start().x() =
+                                        s.start().x() + diagonal_factor * (std::fabs(s.start().x() - s.end().x()));
+                                }
+                                Segment diagonal(s.start(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+
                         continue;
                     }
                     s.start() = other_s.start(); // update start point
@@ -494,6 +1080,85 @@ void Router::addSegment(Segment segment)
                     if (fabs(s.slope() - other_s.slope()) > 5e-1)
                     {
                         other_s.net_id() = std::max(other_s.net_id(), s.net_id());
+                        // 如果兩條線垂直(slope相乘等於-1), 連接的部分必須變成45度, s.end() 和 other_s.end() 連接
+                        if (s.slope() == std::numeric_limits<double>::infinity() && deq(other_s.slope(), 0))
+                        {
+                            if (s.end().y() > s.start().y())
+                            {
+                                s.end().y() = s.end().y() - diagonal_factor * (std::fabs(s.end().y() - s.start().y()));
+                                if (other_s.end().x() > other_s.start().x())
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() -
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                else
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() +
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                s.end().y() = s.end().y() + diagonal_factor * (std::fabs(s.end().y() - s.start().y()));
+                                if (other_s.end().x() > other_s.start().x())
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() -
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                else
+                                {
+                                    other_s.end().x() =
+                                        other_s.end().x() +
+                                        diagonal_factor * (std::fabs(other_s.end().x() - other_s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
+                        else if (other_s.slope() == std::numeric_limits<double>::infinity() && deq(s.slope(), 0))
+                        {
+                            if (other_s.end().y() > other_s.start().y())
+                            {
+                                other_s.end().y() =
+                                    other_s.end().y() -
+                                    diagonal_factor * (std::fabs(other_s.end().y() - other_s.start().y()));
+                                if (s.end().x() > s.start().x())
+                                {
+                                    s.end().x() =
+                                        s.end().x() - diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                else
+                                {
+                                    s.end().x() =
+                                        s.end().x() + diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                            else
+                            {
+                                other_s.end().y() =
+                                    other_s.end().y() +
+                                    diagonal_factor * (std::fabs(other_s.end().y() - other_s.start().y()));
+                                if (s.end().x() > s.start().x())
+                                {
+                                    s.end().x() =
+                                        s.end().x() - diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                else
+                                {
+                                    s.end().x() =
+                                        s.end().x() + diagonal_factor * (std::fabs(s.end().x() - s.start().x()));
+                                }
+                                Segment diagonal(s.end(), other_s.end(), s.net_id());
+                                m_segments.push_back(diagonal);
+                            }
+                        }
                         continue;
                     }
                     s.end() = other_s.start(); // extend end point

@@ -123,6 +123,7 @@ public:
     Coordinate &coordinate() { return m_coordinate; }
     // Methods
 };
+
 class Component
 {
 private:
@@ -143,8 +144,11 @@ private:
     // escape point
     std::vector<std::vector<std::pair<Coordinate, int>>>
         m_escape_points; // 0 for left/top, 1 for right/bottom pair<coordinate, net_id>
+    std::vector<std::vector<std::pair<Coordinate, int>>>
+        m_cpu_escape_points; // pair<coordinate, net_id>, only m_is_cpu == true will be used
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
+    std::string m_cpu_escape_boundry; // only m_is_cpu == true will be used
     // Private Methods
     std::vector<Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -160,6 +164,7 @@ public:
         , m_neighboors(2, false)
         , m_wire_bound(2, 0)
         , m_escape_points(2)
+        , m_cpu_escape_points(4)
     {
         m_router = std::make_shared<Router>();
     }
@@ -242,12 +247,21 @@ public:
     // Access for escape_points
     const std::vector<std::vector<std::pair<Coordinate, int>>> &escape_points() const { return m_escape_points; }
     std::vector<std::vector<std::pair<Coordinate, int>>> &escape_points() { return m_escape_points; }
+    // Access for cpu_escape_points
+    const std::vector<std::vector<std::pair<Coordinate, int>>> &cpu_escape_points() const
+    {
+        return m_cpu_escape_points;
+    }
+    std::vector<std::vector<std::pair<Coordinate, int>>> &cpu_escape_points() { return m_cpu_escape_points; }
     // Access for router
     const std::shared_ptr<Router> &router() const { return m_router; }
     std::shared_ptr<Router> &router() { return m_router; }
     // Access for bounding_box
     const std::pair<Coordinate, Coordinate> &bounding_box() const { return m_bounding_box; }
     std::pair<Coordinate, Coordinate> &bounding_box() { return m_bounding_box; }
+    // Access for cpu_escape_boundry
+    const std::string &cpu_escape_boundry() const { return m_cpu_escape_boundry; }
+    std::string &cpu_escape_boundry() { return m_cpu_escape_boundry; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void rotateComponentPins(bool clockwise = true);
@@ -266,6 +280,7 @@ private:
     int m_net_id;
     std::vector<std::shared_ptr<Pin>> m_pins;
     std::unordered_map<std::string, double> m_group_escape_length; // group name, escape length
+    std::unordered_map<std::string, int> m_group_layer; // group name, layer
 public:
     // Constructor
     Nets() = default;
@@ -287,6 +302,9 @@ public:
     // Access for group_escape_length
     const std::unordered_map<std::string, double> &group_escape_length() const { return m_group_escape_length; }
     std::unordered_map<std::string, double> &group_escape_length() { return m_group_escape_length; }
+    // Access for group_layer
+    const std::unordered_map<std::string, int> &group_layer() const { return m_group_layer; }
+    std::unordered_map<std::string, int> &group_layer() { return m_group_layer; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
 };
@@ -321,6 +339,7 @@ public:
     }
 #endif
 };
+
 class Obstacle
 {
 private:
@@ -349,6 +368,7 @@ public:
     int &layer() { return m_layer; }
     // Methods
 };
+
 class DataManager
 {
 private:
@@ -362,9 +382,14 @@ private:
     std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
     double m_wire_spacing;
     double m_wire_width;
-    double m_minumum_segment;
+    double m_miniumum_segment;
     std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
         m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
+    std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>>
+        m_cpu2ddr_edges; // tuple< pair<cpu name, escape direction>, <ddr name, escape direction>, fly-by >
+    // escape wirelength by layer, [group name][net_id][(layer), (order)]
+    std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>>
+        m_group_escape_layer_order; // group name, escape length
 
 public:
     // Constructor
@@ -376,7 +401,7 @@ public:
         m_pcb_bounding_box.at(1) = Coordinate(0.0, 0.0, 0);
         m_wire_spacing = 4.8;
         m_wire_width = 4.0;
-        m_minumum_segment = 5.0;
+        m_miniumum_segment = 5.0;
     };
     // Accessor
     // Access for components
@@ -409,9 +434,9 @@ public:
     // Access for wire_width
     const double &wire_width() const { return m_wire_width; }
     double &wire_width() { return m_wire_width; }
-    // Access for minumum_segment
-    const double &minumum_segment() const { return m_minumum_segment; }
-    double &minumum_segment() { return m_minumum_segment; }
+    // Access for miniumum_segment
+    const double &miniumum_segment() const { return m_miniumum_segment; }
+    double &miniumum_segment() { return m_miniumum_segment; }
     // Access for ddr2ddr_edges
     const std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
     {
@@ -421,16 +446,37 @@ public:
     {
         return m_ddr2ddr_edges;
     }
+    // Access for cpu2ddr_edges
+    const std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges() const
+    {
+        return m_cpu2ddr_edges;
+    }
+    std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges()
+    {
+        return m_cpu2ddr_edges;
+    }
+    // Access for group_escape_layer_order
+    const std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>> &
+    group_escape_layer_order() const
+    {
+        return m_group_escape_layer_order;
+    }
+    std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>> &group_escape_layer_order()
+    {
+        return m_group_escape_layer_order;
+    }
     // Methods
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
     void sumEscapeLength();
+    void storeGroupLayer();
     void preprocess_ER();
     void DDR2DDR();
     void CPU2DDR();
     void postprocess_ER();
     void AreaRouting();
 };
+
 class Via
 {
 private:
@@ -452,6 +498,16 @@ public:
         }
         m_net_id = -1;
     }
+    Via(const Coordinate &coordinate, const int &layer, const int &net_id)
+        : m_coordinate(coordinate)
+        , m_layer(layer)
+        , m_net_id(net_id)
+    {
+        if (m_coordinate.z() >= m_layer)
+        {
+            std::swap(m_coordinate.z(), m_layer);
+        }
+    }
     // Accessor
     // Access for coordinate
     const Coordinate &coordinate() const { return m_coordinate; }
@@ -464,6 +520,7 @@ public:
     int &net_id() { return m_net_id; }
     // Methods
 };
+
 class Segment
 {
 private:

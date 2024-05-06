@@ -1,12 +1,27 @@
-[
-    {
-        "from": {
-            "comp_name": "U64",
-            "escaepe_dir": "E"
-        },
-        "to": {
-            "comp_name": "U61",
-            "escaepe_dir": "W"
+{
+    "ddr2ddr": [
+        {
+            "from": {
+                "comp_name": "U64",
+                "escaepe_dir": "E"
+            },
+            "to": {
+                "comp_name": "U61",
+                "escaepe_dir": "W"
+            }
         }
-    }
-]
+    ],
+    "cpu2ddr": [
+        {
+            "from": {
+                "comp_name": "U45",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U61",
+                "escaepe_dir": "E"
+            },
+            "fly-by": true
+        }
+    ]
+}

@@ -1,22 +1,37 @@
-[
-    {
-        "from": {
-            "comp_name": "U20",
-            "escaepe_dir": "S"
+{
+    "ddr2ddr": [
+        {
+            "from": {
+                "comp_name": "U20",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U22",
+                "escaepe_dir": "N"
+            }
         },
-        "to": {
-            "comp_name": "U22",
-            "escaepe_dir": "N"
+        {
+            "from": {
+                "comp_name": "U22",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U25",
+                "escaepe_dir": "N"
+            }
         }
-    },
-    {
-        "from": {
-            "comp_name": "U22",
-            "escaepe_dir": "S"
-        },
-        "to": {
-            "comp_name": "U25",
-            "escaepe_dir": "N"
+    ], 
+    "cpu2ddr": [
+        {
+            "from": {
+                "comp_name": "U27",
+                "escaepe_dir": "S"
+            },
+            "to": {
+                "comp_name": "U25",
+                "escaepe_dir": "E"
+            },
+            "fly-by": true
         }
-    }
-]
+    ]
+}
