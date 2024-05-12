@@ -641,6 +641,41 @@ public:
                    epsilon;
         }
     }
+    Segment createExtendedSegmentByDegree(double angle_degrees,
+                                          double target_x = std::numeric_limits<double>::quiet_NaN(),
+                                          double target_y = std::numeric_limits<double>::quiet_NaN())
+    {
+        // First, calculate the current angle of the segment
+        double current_angle = atan2(m_end.y() - m_start.y(), m_end.x() - m_start.x());
+        // Convert degrees to radians and add to current angle
+        double total_angle_radians = current_angle + angle_degrees * (M_PI / 180.0);
+
+        // Calculate the new endpoint based on the specified target coordinate
+        Coordinate new_end;
+        if (!std::isnan(target_x))
+        {
+            // Calculate y using the known x
+            double delta_x = target_x - m_end.x();
+            double delta_y = tan(total_angle_radians) * delta_x;
+            new_end = Coordinate(target_x, m_end.y() + delta_y, m_end.z());
+        }
+        else if (!std::isnan(target_y))
+        {
+            // Calculate x using the known y
+            double delta_y = target_y - m_end.y();
+            double delta_x = delta_y / tan(total_angle_radians);
+            if (std::isinf(delta_x)) // Handle cases where tan returns infinity
+                throw std::invalid_argument("Angle results in an undefined delta_x (vertical line).");
+            new_end = Coordinate(m_end.x() + delta_x, target_y, m_end.z());
+        }
+        else
+        {
+            throw std::invalid_argument("At least one target coordinate (x or y) must be provided.");
+        }
+
+        // Create the new segment from the current end to the new end
+        return Segment(m_end, new_end);
+    }
 };
 
 class Router

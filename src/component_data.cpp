@@ -157,6 +157,12 @@ void Component::rotateBoundingBox(bool clockwise)
     return;
 }
 
+void rotateSegment(Segment &segment, double angle)
+{
+    segment.start() = math::rotateCoordinate(segment.start(), angle);
+    segment.end() = math::rotateCoordinate(segment.end(), angle);
+}
+
 void Component::rotateWires(bool clockwise)
 {
     if (m_rotation_angle == 0)
@@ -165,8 +171,9 @@ void Component::rotateWires(bool clockwise)
     }
     for (auto &segment : m_router->segments())
     {
-        segment.start() = math::rotateCoordinate(segment.start(), clockwise ? -m_rotation_angle : m_rotation_angle);
-        segment.end() = math::rotateCoordinate(segment.end(), clockwise ? -m_rotation_angle : m_rotation_angle);
+        rotateSegment(segment, clockwise ? -m_rotation_angle : m_rotation_angle);
+        // segment.start() = math::rotateCoordinate(segment.start(), clockwise ? -m_rotation_angle : m_rotation_angle);
+        // segment.end() = math::rotateCoordinate(segment.end(), clockwise ? -m_rotation_angle : m_rotation_angle);
     }
     for (auto &via : m_router->vias())
     {
@@ -245,6 +252,10 @@ void Component::calculateEscapePoints()
                     m_cpu_escape_points.at(0).emplace_back(seg.end(), seg.net_id());
                 }
             }
+            // sort from left to right
+            std::sort(m_cpu_escape_points.at(0).begin(), m_cpu_escape_points.at(0).end(), [](auto a, auto b) {
+                return a.first.x() < b.first.x();
+            });
         }
         else if (m_cpu_escape_boundry == "E")
         {
@@ -260,6 +271,10 @@ void Component::calculateEscapePoints()
                     m_cpu_escape_points.at(1).emplace_back(seg.end(), seg.net_id());
                 }
             }
+            // sort from top to bottom
+            std::sort(m_cpu_escape_points.at(1).begin(), m_cpu_escape_points.at(1).end(), [](auto a, auto b) {
+                return a.first.y() > b.first.y();
+            });
         }
         else if (m_cpu_escape_boundry == "S")
         {
@@ -275,6 +290,10 @@ void Component::calculateEscapePoints()
                     m_cpu_escape_points.at(2).emplace_back(seg.end(), seg.net_id());
                 }
             }
+            // sort from right to left
+            std::sort(m_cpu_escape_points.at(2).begin(), m_cpu_escape_points.at(2).end(), [](auto a, auto b) {
+                return a.first.x() > b.first.x();
+            });
         }
         else if (m_cpu_escape_boundry == "W")
         {
@@ -290,6 +309,10 @@ void Component::calculateEscapePoints()
                     m_cpu_escape_points.at(3).emplace_back(seg.end(), seg.net_id());
                 }
             }
+            // sort from bottom to top
+            std::sort(m_cpu_escape_points.at(3).begin(), m_cpu_escape_points.at(3).end(), [](auto a, auto b) {
+                return a.first.y() < b.first.y();
+            });
         }
         else
         {
@@ -662,6 +685,7 @@ void DataManager::AreaRouting()
         bool fly_by = std::get<2>(p);
         auto comp1 = m_components[from_pair.first];
         auto comp2 = m_components[to_pair.first];
+        comp2->rotateAll(true);
         double comp1_shift_x = 0, comp1_shift_y = 0, comp2_shift_x = 0, comp2_shift_y = 0;
         // find out which group contain the comp2
         std::string group_name;
@@ -682,37 +706,37 @@ void DataManager::AreaRouting()
         if (m_cpu_escape_boundry == "N")
         {
             cpu_escape_boundry_idx = 0;
-            comp1_shift_y = std::max(comp2->top_right().y() - comp1->bottom_left().y(), 0.0);
-            comp2_shift_y = std::max(comp1->top_right().y() - comp2->bottom_left().y(), 0.0);
+            comp1_shift_y = std::max(comp2->top_right().y() - comp1->top_right().y(), 0.0);
+            comp2_shift_y = std::max(comp1->top_right().y() - comp2->top_right().y(), 0.0);
         }
         else if (m_cpu_escape_boundry == "E")
         {
             cpu_escape_boundry_idx = 1;
-            comp1_shift_x = std::max(comp2->top_right().x() - comp1->bottom_left().x(), 0.0);
-            comp2_shift_x = std::max(comp1->top_right().x() - comp2->bottom_left().x(), 0.0);
+            comp1_shift_x = std::max(comp2->top_right().x() - comp1->top_right().x(), 0.0);
+            comp2_shift_x = std::max(comp1->top_right().x() - comp2->top_right().x(), 0.0);
         }
         else if (m_cpu_escape_boundry == "S")
         {
             cpu_escape_boundry_idx = 2;
-            comp1_shift_y = std::max(comp1->top_right().y() - comp2->bottom_left().y(), 0.0);
+            comp1_shift_y = std::max(comp1->bottom_left().y() - comp2->bottom_left().y(), 0.0);
             comp1_shift_y *= -1;
-            comp2_shift_y = std::max(comp2->top_right().y() - comp1->bottom_left().y(), 0.0);
+            comp2_shift_y = std::max(comp2->bottom_left().y() - comp1->bottom_left().y(), 0.0);
             comp2_shift_y *= -1;
         }
         else if (m_cpu_escape_boundry == "W")
         {
             cpu_escape_boundry_idx = 3;
-            comp1_shift_x = std::max(comp1->top_right().x() - comp2->bottom_left().x(), 0.0);
+            comp1_shift_x = std::max(comp1->bottom_left().x() - comp2->bottom_left().x(), 0.0);
             comp1_shift_x *= -1;
-            comp2_shift_x = std::max(comp2->top_right().x() - comp1->bottom_left().x(), 0.0);
+            comp2_shift_x = std::max(comp2->bottom_left().x() - comp1->bottom_left().x(), 0.0);
             comp2_shift_x *= -1;
         }
         auto cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
-        double space = 20;
         // perserve for T, or FLy-by, now true for fly_by
 
         if (fly_by)
         {
+            /* CPU escape extend to drill via
             double x_escape_boundary = 0;
             double y_escape_boundary = 0;
             if (from_pair.second == 'N')
@@ -735,52 +759,505 @@ void DataManager::AreaRouting()
                 x_escape_boundary = comp1->bottom_left().x() - comp1->tile_width();
                 y_escape_boundary = 0;
             }
-
-            for (auto &point : cpu_escape_point)
+            // for (auto &point : cpu_escape_point)
+            // {
+            //     auto net_id = point.second;
+            //     auto escape_point = point.first;
+            //     auto [layer, order] = m_group_escape_layer_order[group_name][net_id];
+            //     double x_offset = 0;
+            //     double y_offset = 0;
+            //     if (m_cpu_escape_boundry == "N")
+            //     {
+            //         x_offset = 0;
+            //         y_offset = space * order;
+            //     }
+            //     else if (m_cpu_escape_boundry == "E")
+            //     {
+            //         x_offset = space * order;
+            //         y_offset = 0;
+            //     }
+            //     else if (m_cpu_escape_boundry == "S")
+            //     {
+            //         x_offset = 0;
+            //         y_offset = -1 * space * order;
+            //     }
+            //     else if (m_cpu_escape_boundry == "W")
+            //     {
+            //         x_offset = -1 * space * order;
+            //         y_offset = 0;
+            //     }
+            //     // CPU escape direction parrallel to DDR2DDR escape direction
+            //     auto parrallelEscapeDirection = [](std::string a, char b) {
+            //         if (a == "N" || a == "S")
+            //         {
+            //             if (b == 'N' || b == 'S')
+            //             {
+            //                 return true;
+            //             }
+            //         }
+            //         if (a == "E" || a == "W")
+            //         {
+            //             if (b == 'E' || b == 'W')
+            //             {
+            //                 return true;
+            //             }
+            //         }
+            //         return false;
+            //     };
+            //     if (parrallelEscapeDirection(m_cpu_escape_boundry, to_pair.second))
+            //     {
+            //         // Coordinate via_coor = Coordinate{escape_point.x() + x_offset + comp1_shift_x,
+            //         //                                  escape_point.y() + y_offset + comp1_shift_y,
+            //         //                                  escape_point.z()};
+            //         // m_area_router->addSegment(Segment(escape_point, via_coor, net_id));
+            //         // m_area_router->addVia(Via(via_coor, layer, net_id));
+            //         // if (x_escape_boundary == 0)
+            //         // {
+            //         //     m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
+            //         //                                       Coordinate{via_coor.x(), y_escape_boundary, layer},
+            //         //                                       net_id));
+            //         // }
+            //         // else if (y_escape_boundary == 0)
+            //         // {
+            //         //     m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
+            //         //                                       Coordinate{x_escape_boundary, via_coor.y(), layer},
+            //         //                                       net_id));
+            //         // }
+            //     }
+            // }
+                CPU escape extend to drill via */
+            // DDR expend
+            if (to_pair.second == 'E')
             {
-                auto net_id = point.second;
-                auto escape_point = point.first;
-                auto [layer, order] = m_group_escape_layer_order[group_name][net_id];
-                double x_offset = 0;
-                double y_offset = 0;
-                if (m_cpu_escape_boundry == "N")
+                if (from_pair.second == 'N' || from_pair.second == 'S')
                 {
-                    x_offset = 0;
-                    y_offset = space * order;
+                    double y_bound_shift = 0;
+                    // calcualte the y_bound shift
+                    bool stop = true; // debug
+                    // bool stop = false;
+                    while (!stop)
+                    {
+                        stop = true;
+                        for (auto &ep_pair : comp2->escape_points().at(1))
+                        {
+                            auto ep = ep_pair.first;
+                            auto net_id = ep_pair.second;
+                            double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                            double x_offset = y_bound - ep.y();
+                            Segment diagonal_segment(ep, Coordinate{ep.x() + x_offset, y_bound, ep.z()}, net_id);
+                            rotateSegment(diagonal_segment, comp2->rotation_angle());
+
+                            Coordinate cpu_ep = Coordinate{0, 0, 0};
+                            for (auto ep : cpu_escape_point)
+                            {
+                                if (ep.second == net_id)
+                                {
+                                    cpu_ep = ep.first;
+                                    break;
+                                }
+                            }
+                            try
+                            {
+                                if (cpu_ep == Coordinate{0, 0, 0})
+                                {
+                                    std::string error_message =
+                                        "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                    throw std::runtime_error(error_message);
+                                }
+                            }
+                            catch (const std::runtime_error &e)
+                            {
+                                continue;
+                            }
+                            bool find_extent_segment = true;
+                            Segment extent_segment;
+                            try
+                            {
+                                extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                                    45.0, std::numeric_limits<double>::quiet_NaN(), cpu_ep.y());
+                            }
+                            catch (const std::runtime_error &e)
+                            {
+                                find_extent_segment = false;
+                            }
+                            if (!find_extent_segment)
+                                continue;
+                            if ((m_cpu_escape_boundry == "W" && extent_segment.end().x() > cpu_ep.x()) ||
+                                (m_cpu_escape_boundry == "E" && extent_segment.end().x() < cpu_ep.x()))
+                            {
+                                y_bound_shift += 10;
+                                stop = false;
+                                break;
+                            }
+                        }
+                    }
+                    // Digonal segment, extent segment and CPU extend to drill via
+                    for (auto &ep_pair : comp2->escape_points().at(1))
+                    {
+                        auto ep = ep_pair.first;
+                        auto net_id = ep_pair.second;
+                        double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                        double x_offset = y_bound - ep.y();
+                        Segment diagonal_segment(ep, Coordinate{ep.x() + x_offset, y_bound, ep.z()}, net_id);
+                        rotateSegment(diagonal_segment, comp2->rotation_angle());
+                        m_area_router->addSegment(diagonal_segment);
+
+                        Coordinate cpu_ep = Coordinate{0, 0, 0};
+                        for (auto ep : cpu_escape_point)
+                        {
+                            if (ep.second == net_id)
+                            {
+                                cpu_ep = ep.first;
+                                break;
+                            }
+                        }
+                        try
+                        {
+                            if (cpu_ep == Coordinate{0, 0, 0})
+                            {
+                                std::string error_message =
+                                    "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                throw std::runtime_error(error_message);
+                            }
+                        }
+                        catch (const std::runtime_error &e)
+                        {
+#ifdef VERBOSE
+                            std::cout << e.what() << std::endl;
+#endif
+                            continue;
+                        }
+
+                        Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                            45.0, std::numeric_limits<double>::quiet_NaN(), cpu_ep.y());
+                        m_area_router->addSegment(extent_segment);
+
+                        Segment cpu_extend_to_drill_via(
+                            cpu_ep, Coordinate{extent_segment.end().x(), extent_segment.end().y(), cpu_ep.z()}, net_id);
+                        m_area_router->addSegment(cpu_extend_to_drill_via);
+                        m_area_router->addVia(Via(extent_segment.end(), cpu_ep.z(), net_id));
+                    }
                 }
-                else if (m_cpu_escape_boundry == "E")
+                else if (from_pair.second == 'W' || from_pair.second == 'E')
                 {
-                    x_offset = space * order;
-                    y_offset = 0;
-                }
-                else if (m_cpu_escape_boundry == "S")
-                {
-                    x_offset = 0;
-                    y_offset = -1 * space * order;
-                }
-                else if (m_cpu_escape_boundry == "W")
-                {
-                    x_offset = -1 * space * order;
-                    y_offset = 0;
-                }
-                Coordinate via_coor = Coordinate{escape_point.x() + x_offset + comp1_shift_x,
-                                                 escape_point.y() + y_offset + comp1_shift_y,
-                                                 escape_point.z()};
-                m_area_router->addSegment(Segment(escape_point, via_coor, net_id));
-                m_area_router->addVia(Via(via_coor, layer, net_id));
-                if (x_escape_boundary == 0)
-                {
-                    m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
-                                                      Coordinate{via_coor.x(), y_escape_boundary, layer},
-                                                      net_id));
-                }
-                else if (y_escape_boundary == 0)
-                {
-                    m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
-                                                      Coordinate{x_escape_boundary, via_coor.y(), layer},
-                                                      net_id));
+                    double y_bound_shift = 0;
+                    // calcualte the y_bound shift
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        stop = true;
+                        for (auto &ep_pair : comp2->escape_points().at(1))
+                        {
+                            auto ep = ep_pair.first;
+                            auto net_id = ep_pair.second;
+                            double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                            double x_offset = y_bound - ep.y();
+                            Segment diagonal_segment(ep, Coordinate{ep.x() + x_offset, y_bound, ep.z()}, net_id);
+                            rotateSegment(diagonal_segment, comp2->rotation_angle());
+
+                            Coordinate cpu_ep = Coordinate{0, 0, 0};
+                            for (auto ep : cpu_escape_point)
+                            {
+                                if (ep.second == net_id)
+                                {
+                                    cpu_ep = ep.first;
+                                    break;
+                                }
+                            }
+                            try
+                            {
+                                if (cpu_ep == Coordinate{0, 0, 0})
+                                {
+                                    std::string error_message =
+                                        "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                    throw std::runtime_error(error_message);
+                                }
+                            }
+                            catch (const std::runtime_error &e)
+                            {
+                                continue;
+                            }
+
+                            Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                                45.0, cpu_ep.x(), std::numeric_limits<double>::quiet_NaN());
+                            // 算算看最後的線段有沒有超過cpu escape point，因為超過的話CPU escpae
+                            // point就不可以延伸去接via
+                            if ((m_cpu_escape_boundry == "N" && extent_segment.end().y() < cpu_ep.y()) ||
+                                (m_cpu_escape_boundry == "S" && extent_segment.end().y() > cpu_ep.y()))
+                            {
+                                y_bound_shift += 10;
+                                stop = false;
+                                break;
+                            }
+                        }
+                    }
+                    // Digonal segment, extent segment and CPU extend to drill via
+                    for (auto &ep_pair : comp2->escape_points().at(1))
+                    {
+                        auto ep = ep_pair.first;
+                        auto net_id = ep_pair.second;
+                        double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                        double x_offset = y_bound - ep.y();
+                        Segment diagonal_segment(ep, Coordinate{ep.x() + x_offset, y_bound, ep.z()}, net_id);
+                        rotateSegment(diagonal_segment, comp2->rotation_angle());
+                        m_area_router->addSegment(diagonal_segment);
+
+                        Coordinate cpu_ep = Coordinate{0, 0, 0};
+                        for (auto ep : cpu_escape_point)
+                        {
+                            if (ep.second == net_id)
+                            {
+                                cpu_ep = ep.first;
+                                break;
+                            }
+                        }
+                        try
+                        {
+                            if (cpu_ep == Coordinate{0, 0, 0})
+                            {
+                                std::string error_message =
+                                    "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                throw std::runtime_error(error_message);
+                            }
+                        }
+                        catch (const std::runtime_error &e)
+                        {
+#ifdef VERBOSE
+                            std::cout << e.what() << std::endl;
+#endif
+                            continue;
+                        }
+
+                        Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                            45.0, cpu_ep.x(), std::numeric_limits<double>::quiet_NaN());
+                        m_area_router->addSegment(extent_segment);
+
+                        Segment cpu_extend_to_drill_via(
+                            cpu_ep, Coordinate{extent_segment.end().x(), extent_segment.end().y(), cpu_ep.z()}, net_id);
+                        m_area_router->addSegment(cpu_extend_to_drill_via);
+                        m_area_router->addVia(Via(extent_segment.end(), cpu_ep.z(), net_id));
+                    }
                 }
             }
+            else if (to_pair.second == 'W')
+            {
+                if (from_pair.second == 'N' || from_pair.second == 'S')
+                {
+                    double y_bound_shift = 0;
+                    // calcualte the y_bound shift
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        stop = true;
+                        for (auto &ep_pair : comp2->escape_points().at(0))
+                        {
+                            auto ep = ep_pair.first;
+                            auto net_id = ep_pair.second;
+                            double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                            double x_offset = y_bound - ep.y();
+                            Segment diagonal_segment(ep, Coordinate{ep.x() - x_offset, y_bound, ep.z()}, net_id);
+                            rotateSegment(diagonal_segment, comp2->rotation_angle());
+
+                            Coordinate cpu_ep = Coordinate{0, 0, 0};
+                            for (auto ep : cpu_escape_point)
+                            {
+                                if (ep.second == net_id)
+                                {
+                                    cpu_ep = ep.first;
+                                    break;
+                                }
+                            }
+                            try
+                            {
+                                if (cpu_ep == Coordinate{0, 0, 0})
+                                {
+                                    std::string error_message =
+                                        "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                    throw std::runtime_error(error_message);
+                                }
+                            }
+                            catch (const std::runtime_error &e)
+                            {
+                                continue;
+                            }
+                            bool find_extent_segment = true;
+                            Segment extent_segment;
+                            try
+                            {
+                                extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                                    -45.0, std::numeric_limits<double>::quiet_NaN(), cpu_ep.y());
+                            }
+                            catch (const std::invalid_argument &e)
+                            {
+                                find_extent_segment = false;
+                            }
+                            if (!find_extent_segment)
+                                continue;
+                            if (extent_segment.end().x() < cpu_ep.x())
+                            {
+                                y_bound_shift += 10;
+                                stop = false;
+                                break;
+                            }
+                        }
+                    }
+                    // Digonal segment, extent segment and CPU extend to drill via
+                    for (auto &ep_pair : comp2->escape_points().at(0))
+                    {
+                        auto ep = ep_pair.first;
+                        auto net_id = ep_pair.second;
+                        double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                        double x_offset = y_bound - ep.y();
+                        Segment diagonal_segment(ep, Coordinate{ep.x() - x_offset, y_bound, ep.z()}, net_id);
+                        rotateSegment(diagonal_segment, comp2->rotation_angle());
+                        m_area_router->addSegment(diagonal_segment);
+
+                        Coordinate cpu_ep = Coordinate{0, 0, 0};
+                        for (auto ep : cpu_escape_point)
+                        {
+                            if (ep.second == net_id)
+                            {
+                                cpu_ep = ep.first;
+                                break;
+                            }
+                        }
+                        try
+                        {
+                            if (cpu_ep == Coordinate{0, 0, 0})
+                            {
+                                std::string error_message =
+                                    "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                throw std::runtime_error(error_message);
+                            }
+                        }
+                        catch (const std::runtime_error &e)
+                        {
+#ifdef VERBOSE
+                            std::cout << e.what() << std::endl;
+#endif
+                            continue;
+                        }
+
+                        // Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                        //     -45.0,
+                        //     std::numeric_limits<double>::quiet_NaN(), // Explicitly pass the default NaN value for
+                        //                                               // target_x
+                        //     cpu_ep.y() // Pass the desired value for target_y
+                        // );
+                        // m_area_router->addSegment(extent_segment);
+
+                        // Segment cpu_extend_to_drill_via(
+                        //     cpu_ep, Coordinate{extent_segment.end().x(), extent_segment.end().y(), cpu_ep.z()},
+                        //     net_id);
+                        // m_area_router->addSegment(cpu_extend_to_drill_via);
+                        // m_area_router->addVia(Via(extent_segment.end(), cpu_ep.z(), net_id));
+                    }
+                }
+                else if (from_pair.second == 'W' || from_pair.second == 'E')
+                {
+                    double y_bound_shift = 0;
+                    // calcualte the y_bound shift
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        stop = true;
+                        for (auto &ep_pair : comp2->escape_points().at(0))
+                        {
+                            auto ep = ep_pair.first;
+                            auto net_id = ep_pair.second;
+                            double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                            double x_offset = y_bound - ep.y();
+                            Segment diagonal_segment(ep, Coordinate{ep.x() - x_offset, y_bound, ep.z()}, net_id);
+                            rotateSegment(diagonal_segment, comp2->rotation_angle());
+
+                            Coordinate cpu_ep = Coordinate{0, 0, 0};
+                            for (auto ep : cpu_escape_point)
+                            {
+                                if (ep.second == net_id)
+                                {
+                                    cpu_ep = ep.first;
+                                    break;
+                                }
+                            }
+                            try
+                            {
+                                if (cpu_ep == Coordinate{0, 0, 0})
+                                {
+                                    std::string error_message =
+                                        "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                    throw std::runtime_error(error_message);
+                                }
+                            }
+                            catch (const std::runtime_error &e)
+                            {
+                                continue;
+                            }
+
+                            Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                                -45.0, cpu_ep.x(), std::numeric_limits<double>::quiet_NaN());
+                            if (m_cpu_escape_boundry == "N" && extent_segment.end().y() < cpu_ep.y())
+                            {
+                                y_bound_shift += 10;
+                                stop = false;
+                                break;
+                            }
+                            else if (m_cpu_escape_boundry == "S" && extent_segment.end().y() > cpu_ep.y())
+                            {
+                                y_bound_shift += 10;
+                                stop = false;
+                                break;
+                            }
+                        }
+                    }
+                    // Digonal segment, extent segment and CPU extend to drill via
+                    for (auto &ep_pair : comp2->escape_points().at(0))
+                    {
+                        auto ep = ep_pair.first;
+                        auto net_id = ep_pair.second;
+                        double y_bound = comp2->top_right().y() + y_bound_shift + comp2->tile_height();
+                        double x_offset = y_bound - ep.y();
+                        Segment diagonal_segment(ep, Coordinate{ep.x() - x_offset, y_bound, ep.z()}, net_id);
+                        rotateSegment(diagonal_segment, comp2->rotation_angle());
+                        m_area_router->addSegment(diagonal_segment);
+
+                        Coordinate cpu_ep = Coordinate{0, 0, 0};
+                        for (auto ep : cpu_escape_point)
+                        {
+                            if (ep.second == net_id)
+                            {
+                                cpu_ep = ep.first;
+                                break;
+                            }
+                        }
+                        try
+                        {
+                            if (cpu_ep == Coordinate{0, 0, 0})
+                            {
+                                std::string error_message =
+                                    "Error: CPU escape point not found, net_id: " + std::to_string(net_id);
+                                throw std::runtime_error(error_message);
+                            }
+                        }
+                        catch (const std::runtime_error &e)
+                        {
+#ifdef VERBOSE
+                            std::cout << e.what() << std::endl;
+#endif
+                            continue;
+                        }
+
+                        Segment extent_segment = diagonal_segment.createExtendedSegmentByDegree(
+                            -45.0, cpu_ep.x(), std::numeric_limits<double>::quiet_NaN());
+                        m_area_router->addSegment(extent_segment);
+
+                        Segment cpu_extend_to_drill_via(
+                            cpu_ep, Coordinate{extent_segment.end().x(), extent_segment.end().y(), cpu_ep.z()}, net_id);
+                        m_area_router->addSegment(cpu_extend_to_drill_via);
+                        m_area_router->addVia(Via(extent_segment.end(), cpu_ep.z(), net_id));
+                    }
+                }
+            }
+            comp2->rotateAll(false);
         }
     }
 }

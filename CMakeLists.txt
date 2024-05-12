@@ -64,22 +64,27 @@ target_link_libraries(ADRouter stdc++fs nlohmann_json::nlohmann_json)
 
 
 # Google Test integration
-# include(FetchContent)
-# FetchContent_Declare(
-#     googletest
-#     URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
-# )
-# FetchContent_MakeAvailable(googletest)
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+)
+FetchContent_MakeAvailable(googletest)
 
 # # Create the io_test executable and link it with Google Test
-# add_executable(io_test tests/io_test.cpp)
-# target_link_libraries(io_test gtest gtest_main)
+# io_test
+add_executable(io_test tests/io_test.cpp)
+target_link_libraries(io_test gtest gtest_main)
+# segment_test
+add_executable(segment_test tests/segment_test.cpp)
+target_link_libraries(segment_test gtest gtest_main)
 
-# # Enable testing and specify the tests to run
-# include(GoogleTest)
-# gtest_discover_tests(io_test)
+# Enable testing and specify the tests to run
+include(GoogleTest)
+gtest_discover_tests(io_test)
+gtest_discover_tests(segment_test)
 
-# enable_testing()
+enable_testing()
 
 
 # Uncomment and edit the following lines if you have other directories or libraries to include
