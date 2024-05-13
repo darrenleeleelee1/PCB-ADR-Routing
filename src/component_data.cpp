@@ -684,148 +684,46 @@ void DataManager::AreaRouting()
         auto to_pair = std::get<1>(p); // 获取第二个组件对
         bool fly_by = std::get<2>(p);
         auto comp1 = m_components[from_pair.first];
-        auto comp2 = m_components[to_pair.first];
-        comp2->rotateAll(true);
-        double comp1_shift_x = 0, comp1_shift_y = 0, comp2_shift_x = 0, comp2_shift_y = 0;
-        // find out which group contain the comp2
-        std::string group_name;
-        for (auto group : m_groups)
-        {
-            for (auto &v : group.second)
-            {
-                if (v == comp2)
-                {
-                    group_name = group.first;
-                    break;
-                }
-            }
-        }
+
         // cpu escape points
         // check m_cpu_escape_boundry is "N" or "E" or "S" or "W" to get the exact cpu_escape_points
         int cpu_escape_boundry_idx = -1;
         if (m_cpu_escape_boundry == "N")
         {
             cpu_escape_boundry_idx = 0;
-            comp1_shift_y = std::max(comp2->top_right().y() - comp1->top_right().y(), 0.0);
-            comp2_shift_y = std::max(comp1->top_right().y() - comp2->top_right().y(), 0.0);
         }
         else if (m_cpu_escape_boundry == "E")
         {
             cpu_escape_boundry_idx = 1;
-            comp1_shift_x = std::max(comp2->top_right().x() - comp1->top_right().x(), 0.0);
-            comp2_shift_x = std::max(comp1->top_right().x() - comp2->top_right().x(), 0.0);
         }
         else if (m_cpu_escape_boundry == "S")
         {
             cpu_escape_boundry_idx = 2;
-            comp1_shift_y = std::max(comp1->bottom_left().y() - comp2->bottom_left().y(), 0.0);
-            comp1_shift_y *= -1;
-            comp2_shift_y = std::max(comp2->bottom_left().y() - comp1->bottom_left().y(), 0.0);
-            comp2_shift_y *= -1;
         }
         else if (m_cpu_escape_boundry == "W")
         {
             cpu_escape_boundry_idx = 3;
-            comp1_shift_x = std::max(comp1->bottom_left().x() - comp2->bottom_left().x(), 0.0);
-            comp1_shift_x *= -1;
-            comp2_shift_x = std::max(comp2->bottom_left().x() - comp1->bottom_left().x(), 0.0);
-            comp2_shift_x *= -1;
         }
         auto cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
         // perserve for T, or FLy-by, now true for fly_by
 
         if (fly_by)
         {
-            /* CPU escape extend to drill via
-            double x_escape_boundary = 0;
-            double y_escape_boundary = 0;
-            if (from_pair.second == 'N')
+            auto comp2 = m_components[to_pair.first];
+            comp2->rotateAll(true);
+            // find out which group contain the comp2
+            std::string group_name;
+            for (auto group : m_groups)
             {
-                x_escape_boundary = 0;
-                y_escape_boundary = comp1->top_right().y() + comp1->tile_height();
+                for (auto &v : group.second)
+                {
+                    if (v == comp2)
+                    {
+                        group_name = group.first;
+                        break;
+                    }
+                }
             }
-            else if (from_pair.second == 'E')
-            {
-                x_escape_boundary = comp1->top_right().x() + comp1->tile_width();
-                y_escape_boundary = 0;
-            }
-            else if (from_pair.second == 'S')
-            {
-                x_escape_boundary = 0;
-                y_escape_boundary = comp1->bottom_left().y() - comp1->tile_height();
-            }
-            else if (from_pair.second == 'W')
-            {
-                x_escape_boundary = comp1->bottom_left().x() - comp1->tile_width();
-                y_escape_boundary = 0;
-            }
-            // for (auto &point : cpu_escape_point)
-            // {
-            //     auto net_id = point.second;
-            //     auto escape_point = point.first;
-            //     auto [layer, order] = m_group_escape_layer_order[group_name][net_id];
-            //     double x_offset = 0;
-            //     double y_offset = 0;
-            //     if (m_cpu_escape_boundry == "N")
-            //     {
-            //         x_offset = 0;
-            //         y_offset = space * order;
-            //     }
-            //     else if (m_cpu_escape_boundry == "E")
-            //     {
-            //         x_offset = space * order;
-            //         y_offset = 0;
-            //     }
-            //     else if (m_cpu_escape_boundry == "S")
-            //     {
-            //         x_offset = 0;
-            //         y_offset = -1 * space * order;
-            //     }
-            //     else if (m_cpu_escape_boundry == "W")
-            //     {
-            //         x_offset = -1 * space * order;
-            //         y_offset = 0;
-            //     }
-            //     // CPU escape direction parrallel to DDR2DDR escape direction
-            //     auto parrallelEscapeDirection = [](std::string a, char b) {
-            //         if (a == "N" || a == "S")
-            //         {
-            //             if (b == 'N' || b == 'S')
-            //             {
-            //                 return true;
-            //             }
-            //         }
-            //         if (a == "E" || a == "W")
-            //         {
-            //             if (b == 'E' || b == 'W')
-            //             {
-            //                 return true;
-            //             }
-            //         }
-            //         return false;
-            //     };
-            //     if (parrallelEscapeDirection(m_cpu_escape_boundry, to_pair.second))
-            //     {
-            //         // Coordinate via_coor = Coordinate{escape_point.x() + x_offset + comp1_shift_x,
-            //         //                                  escape_point.y() + y_offset + comp1_shift_y,
-            //         //                                  escape_point.z()};
-            //         // m_area_router->addSegment(Segment(escape_point, via_coor, net_id));
-            //         // m_area_router->addVia(Via(via_coor, layer, net_id));
-            //         // if (x_escape_boundary == 0)
-            //         // {
-            //         //     m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
-            //         //                                       Coordinate{via_coor.x(), y_escape_boundary, layer},
-            //         //                                       net_id));
-            //         // }
-            //         // else if (y_escape_boundary == 0)
-            //         // {
-            //         //     m_area_router->addSegment(Segment(Coordinate{via_coor.x(), via_coor.y(), layer},
-            //         //                                       Coordinate{x_escape_boundary, via_coor.y(), layer},
-            //         //                                       net_id));
-            //         // }
-            //     }
-            // }
-                CPU escape extend to drill via */
             // DDR expend
             if (to_pair.second == 'E')
             {
@@ -833,8 +731,7 @@ void DataManager::AreaRouting()
                 {
                     double y_bound_shift = 0;
                     // calcualte the y_bound shift
-                    bool stop = true; // debug
-                    // bool stop = false;
+                    bool stop = false;
                     while (!stop)
                     {
                         stop = true;
@@ -1258,6 +1155,129 @@ void DataManager::AreaRouting()
                 }
             }
             comp2->rotateAll(false);
+        }
+        else
+        {
+            // comp2 is ddr2dde_edge idx
+            auto ddr2ddr_edge = m_ddr2ddr_edges.at(std::stoi(to_pair.first));
+            auto comp2 = m_components[ddr2ddr_edge.first.first];
+            auto comp3 = m_components[ddr2ddr_edge.second.first];
+
+            double area_wire_top_y =
+                std::max(comp2->escape_points().at(1).at(0).first.y(), comp3->escape_points().at(0).at(0).first.y());
+            double area_wire_bottom_y =
+                std::min(comp2->escape_points().at(1).at(0).first.y(), comp3->escape_points().at(0).at(0).first.y());
+            // find comp2 in which group
+            std::string group_name;
+            for (auto group : m_groups)
+            {
+                for (auto &v : group.second)
+                {
+                    if (v == comp2)
+                    {
+                        group_name = group.first;
+                        break;
+                    }
+                }
+            }
+            // find out the segment between comp2 and comp3 in m_area_router
+            std::vector<Segment> segments;
+            if (ddr2ddr_edge.first.second == 'E' && ddr2ddr_edge.second.second == 'W')
+            {
+                for (auto &s : m_area_router->segments())
+                {
+                    if (s.start().y() <= area_wire_top_y && s.end().y() >= area_wire_bottom_y)
+                    {
+                        segments.push_back(s);
+                    }
+                }
+            }
+            // find out CPU the escape_points in group_name
+            std::vector<std::pair<Coordinate, int>> cpu_group_escape_points;
+            for (auto &ep : cpu_escape_point)
+            {
+                if (m_groups_nets[group_name].count(ep.second))
+                {
+                    cpu_group_escape_points.push_back(ep);
+                }
+            }
+            double area_wirelength = 0;
+            double wire_spacing = 0;
+            if (from_pair.second == 'W')
+            {
+                // from_pair.second == 'W', order is from bottom to top
+                area_wirelength = area_wire_top_y - area_wire_bottom_y;
+                wire_spacing = (comp1->tile_height() / 2) * std::sqrt(2);
+                while (ceil(area_wirelength / wire_spacing) < cpu_group_escape_points.size())
+                {
+                    wire_spacing -= 1.0;
+                    if (wire_spacing < (m_wire_spacing + m_wire_width))
+                    {
+                        throw std::runtime_error("Error: wire_spacing < m_wire_spacing + m_wire_width");
+                    }
+                }
+                double start_y = (area_wirelength - (cpu_group_escape_points.size() - 1) * wire_spacing) / 2;
+                double current_y = start_y + area_wire_bottom_y;
+                double current_x = 0.0;
+                double cpu_x_shift = 0.0, cpu_x_increment = 5.0;
+                if (current_y < cpu_group_escape_points.at(0).first.y())
+                {
+                    cpu_x_shift = 0.0;
+                    cpu_x_increment = 5.0;
+                }
+                else
+                {
+                    cpu_x_shift = cpu_x_increment * (cpu_group_escape_points.size() - 1);
+                    cpu_x_increment = -5.0;
+                }
+                // find segments include current_y and net_id
+                for (auto &cgep : cpu_group_escape_points)
+                {
+                    for (auto &s : segments)
+                    {
+                        if (s.isInclude(std::numeric_limits<double>::quiet_NaN(), current_y) &&
+                            s.net_id() == cgep.second)
+                        {
+                            current_x = s.findCoordinate(std::numeric_limits<double>::quiet_NaN(), current_y);
+                            break;
+                        }
+                    }
+                    for (auto &s : comp1->router()->segments())
+                    {
+                        if (s.isOverlap(cgep.first))
+                        {
+                            double rotate_angle = 0;
+                            bool from_end = s.end() == cgep.first;
+                            if (from_end)
+                            {
+                                s.end().x() -= cpu_x_shift;
+                                cpu_x_shift += cpu_x_increment;
+                            }
+                            else
+                            {
+                                s.start().x() -= cpu_x_shift;
+                                cpu_x_shift += cpu_x_increment;
+                            }
+                            if (cgep.first.y() > current_y)
+                            {
+                                rotate_angle = -135;
+                            }
+                            else
+                            {
+                                rotate_angle = 135;
+                            }
+                            Segment diagonal_segment = s.createExtendedSegmentByDegree(
+                                rotate_angle, std::numeric_limits<double>::quiet_NaN(), current_y, from_end);
+                            m_area_router->addSegment(diagonal_segment);
+                            Segment extent_segment(
+                                Coordinate{current_x, current_y, 0}, diagonal_segment.end(), s.net_id());
+                            m_area_router->addSegment(extent_segment);
+                        }
+                    }
+                    current_y += wire_spacing;
+                }
+            }
+            int debug = 0;
         }
     }
 }

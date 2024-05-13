@@ -249,8 +249,19 @@ void ComponentParser::parse(DataManager &data_manager)
             }
         }
         data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);
+        // push component's nets to m_groups_nets, insert net_id
+        for (auto &n : data_manager.groups()[component["group"]].at(0)->pins())
+        {
+            data_manager.groups_nets()[component["group"]].insert(n->net_id());
+        }
     }
 #ifdef VERBOSE
+    // just print out groups_nets size
+    for (const auto &group : data_manager.groups_nets())
+    {
+        std::cout << "Group: " << group.first << std::endl;
+        std::cout << "Size: " << group.second.size() << std::endl;
+    }
     // for (const auto &component : data_manager.components())
     // {
     //     std::cout << "Component ID: " << component.first << std::endl;
@@ -305,10 +316,10 @@ void EdgeParser::parse(DataManager &data_manager)
                     element["to"]["escaepe_dir"].get<std::string>()[0] // string to char
                 };
 
-                if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
-                {
-                    throw std::runtime_error("Error: Component not found");
-                }
+                // if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
+                // {
+                //     throw std::runtime_error("Error: Component not found");
+                // }
 
                 if (key == "ddr2ddr")
                 {

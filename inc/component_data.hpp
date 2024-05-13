@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 class Router;
 
@@ -374,6 +375,8 @@ class DataManager
 private:
     std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
     std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_groups;
+    std::unordered_map<std::string, std::unordered_set<int>>
+        m_groups_nets; // check net_id in the group, group name, net_id
     Netlist m_netlists;
     std::unordered_map<std::string, int> m_layers;
     std::vector<Obstacle> m_obstacles;
@@ -383,9 +386,9 @@ private:
     double m_wire_spacing;
     double m_wire_width;
     double m_miniumum_segment;
-    std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
+    std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
         m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
-    std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>>
+    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>>
         m_cpu2ddr_edges; // tuple< pair<cpu name, escape direction>, <ddr name, escape direction>, fly-by >
     // escape wirelength by layer, [group name][net_id][(layer), (order)]
     std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>>
@@ -410,6 +413,9 @@ public:
     // Access for groups
     const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() const { return m_groups; }
     std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() { return m_groups; }
+    // Access for groups_nets
+    const std::unordered_map<std::string, std::unordered_set<int>> &groups_nets() const { return m_groups_nets; }
+    std::unordered_map<std::string, std::unordered_set<int>> &groups_nets() { return m_groups_nets; }
     // Access for netlists
     const Netlist &netlists() const { return m_netlists; }
     Netlist &netlists() { return m_netlists; }
@@ -438,20 +444,21 @@ public:
     const double &miniumum_segment() const { return m_miniumum_segment; }
     double &miniumum_segment() { return m_miniumum_segment; }
     // Access for ddr2ddr_edges
-    const std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
+    const std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
     {
         return m_ddr2ddr_edges;
     }
-    std::list<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges()
+    std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges()
     {
         return m_ddr2ddr_edges;
     }
     // Access for cpu2ddr_edges
-    const std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges() const
+    const std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &
+    cpu2ddr_edges() const
     {
         return m_cpu2ddr_edges;
     }
-    std::list<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges()
+    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges()
     {
         return m_cpu2ddr_edges;
     }
@@ -584,6 +591,41 @@ public:
         }
         return delta_y / delta_x;
     }
+    bool isInclude(double target_x = std::numeric_limits<double>::quiet_NaN(),
+                   double target_y = std::numeric_limits<double>::quiet_NaN())
+    {
+        if (!std::isnan(target_x) && !std::isnan(target_y))
+        {
+            throw std::invalid_argument("Segment::isInclude Both target_x and target_y are provided.");
+        }
+        if (!std::isnan(target_x))
+        {
+            return std::min(m_start.x(), m_end.x()) <= target_x && target_x <= std::max(m_start.x(), m_end.x());
+        }
+        else if (!std::isnan(target_y))
+        {
+            return std::min(m_start.y(), m_end.y()) <= target_y && target_y <= std::max(m_start.y(), m_end.y());
+        }
+        return false;
+    }
+    // find corresponding y-coordinate for given x or vice-versa
+    double findCoordinate(double target_x = std::numeric_limits<double>::quiet_NaN(),
+                          double target_y = std::numeric_limits<double>::quiet_NaN()) const
+    {
+        if (!std::isnan(target_x))
+        {
+            if (m_end.x() == m_start.x()) // Check for vertical line
+                throw std::invalid_argument("Vertical line segment, y cannot be determined by x.");
+            return m_start.y() + (m_end.y() - m_start.y()) * (target_x - m_start.x()) / (m_end.x() - m_start.x());
+        }
+        else if (!std::isnan(target_y))
+        {
+            if (m_end.y() == m_start.y()) // Check for horizontal line
+                throw std::invalid_argument("Horizontal line segment, x cannot be determined by y.");
+            return m_start.x() + (m_end.x() - m_start.x()) * (target_y - m_start.y()) / (m_end.y() - m_start.y());
+        }
+        throw std::invalid_argument("Either target_x or target_y must be provided, not both or neither.");
+    }
     bool isOverlap(Coordinate coor) const
     {
         if (m_start.z() != coor.z() && m_start.z() != coor.z())
@@ -643,38 +685,75 @@ public:
     }
     Segment createExtendedSegmentByDegree(double angle_degrees,
                                           double target_x = std::numeric_limits<double>::quiet_NaN(),
-                                          double target_y = std::numeric_limits<double>::quiet_NaN())
+                                          double target_y = std::numeric_limits<double>::quiet_NaN(),
+                                          bool from_end = true)
     {
-        // First, calculate the current angle of the segment
-        double current_angle = atan2(m_end.y() - m_start.y(), m_end.x() - m_start.x());
-        // Convert degrees to radians and add to current angle
-        double total_angle_radians = current_angle + angle_degrees * (M_PI / 180.0);
+        if (from_end)
+        {
+            // First, calculate the current angle of the segment
+            double current_angle = atan2(m_end.y() - m_start.y(), m_end.x() - m_start.x());
+            // Convert degrees to radians and add to current angle
+            double total_angle_radians = current_angle + angle_degrees * (M_PI / 180.0);
 
-        // Calculate the new endpoint based on the specified target coordinate
-        Coordinate new_end;
-        if (!std::isnan(target_x))
-        {
-            // Calculate y using the known x
-            double delta_x = target_x - m_end.x();
-            double delta_y = tan(total_angle_radians) * delta_x;
-            new_end = Coordinate(target_x, m_end.y() + delta_y, m_end.z());
-        }
-        else if (!std::isnan(target_y))
-        {
-            // Calculate x using the known y
-            double delta_y = target_y - m_end.y();
-            double delta_x = delta_y / tan(total_angle_radians);
-            if (std::isinf(delta_x)) // Handle cases where tan returns infinity
-                throw std::invalid_argument("Angle results in an undefined delta_x (vertical line).");
-            new_end = Coordinate(m_end.x() + delta_x, target_y, m_end.z());
+            // Calculate the new endpoint based on the specified target coordinate
+            Coordinate new_end;
+            if (!std::isnan(target_x))
+            {
+                // Calculate y using the known x
+                double delta_x = target_x - m_end.x();
+                double delta_y = tan(total_angle_radians) * delta_x;
+                new_end = Coordinate(target_x, m_end.y() + delta_y, m_end.z());
+            }
+            else if (!std::isnan(target_y))
+            {
+                // Calculate x using the known y
+                double delta_y = target_y - m_end.y();
+                double delta_x = delta_y / tan(total_angle_radians);
+                if (std::isinf(delta_x)) // Handle cases where tan returns infinity
+                    throw std::invalid_argument("Angle results in an undefined delta_x (vertical line).");
+                new_end = Coordinate(m_end.x() + delta_x, target_y, m_end.z());
+            }
+            else
+            {
+                throw std::invalid_argument("At least one target coordinate (x or y) must be provided.");
+            }
+
+            // Create the new segment from the current end to the new end
+            return Segment(m_end, new_end);
         }
         else
         {
-            throw std::invalid_argument("At least one target coordinate (x or y) must be provided.");
-        }
+            // First, calculate the current angle of the segment
+            double current_angle = atan2(m_end.y() - m_start.y(), m_end.x() - m_start.x());
+            // Convert degrees to radians and add to current angle
+            double total_angle_radians = current_angle + angle_degrees * (M_PI / 180.0);
 
-        // Create the new segment from the current end to the new end
-        return Segment(m_end, new_end);
+            // Calculate the new endpoint based on the specified target coordinate
+            Coordinate new_end;
+            if (!std::isnan(target_x))
+            {
+                // Calculate y using the known x
+                double delta_x = target_x - m_start.x();
+                double delta_y = tan(total_angle_radians) * delta_x;
+                new_end = Coordinate(target_x, m_start.y() + delta_y, m_start.z());
+            }
+            else if (!std::isnan(target_y))
+            {
+                // Calculate x using the known y
+                double delta_y = target_y - m_start.y();
+                double delta_x = delta_y / tan(total_angle_radians);
+                if (std::isinf(delta_x)) // Handle cases where tan returns infinity
+                    throw std::invalid_argument("Angle results in an undefined delta_x (vertical line).");
+                new_end = Coordinate(m_start.x() + delta_x, target_y, m_start.z());
+            }
+            else
+            {
+                throw std::invalid_argument("At least one target coordinate (x or y) must be provided.");
+            }
+
+            // Create the new segment from the current end to the new end
+            return Segment(m_start, new_end);
+        }
     }
 };
 
