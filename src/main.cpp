@@ -68,7 +68,9 @@ int main(int argc, char const *argv[])
 #ifdef GDT
     gdt_writer.areaRouting();
 #endif
-
+    // Analyze wirelength
+    utils::printlog("Analyzing wirelength...");
+    data_manager->analyzeWirelength();
     // Produce all gds
 #ifdef GDT
 gdt2gds:

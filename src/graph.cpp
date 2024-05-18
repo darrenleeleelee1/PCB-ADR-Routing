@@ -143,10 +143,12 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
         {
             int shift_i = base_tile_row_idx + i;
             int shift_j = base_tile_column_idx + j;
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j).E(), 1, 0);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j).S(), 1, 0);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j + 1).N(), 1, 0);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j + 1).W(), 1, 0);
+            int top_cost = 1, bot_cost = 1;
+
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j).E(), 1, bot_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j).S(), 1, top_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j + 1).N(), 1, bot_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j + 1).W(), 1, top_cost);
         }
     }
     // Periphery tiles to periphery tiles and intra-edges
@@ -166,14 +168,17 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
             add_edge_with_capacity(m_tiles.at(i).at(j).d_C(), m_tiles.at(i).at(j).W(), INF, 0);
             // periphery tiles to periphery tiles
 
+            int bloat_tile_cost = 1;
+            bloat_tile_cost = j <= 3 ? 10 : 1;
+
             if (i > 0)
-                add_edge_with_capacity(m_tiles.at(i).at(j).S(), m_tiles.at(i - 1).at(j).N(), 1, 1);
+                add_edge_with_capacity(m_tiles.at(i).at(j).S(), m_tiles.at(i - 1).at(j).N(), 1, 1 * bloat_tile_cost);
             if (j > 0)
-                add_edge_with_capacity(m_tiles.at(i).at(j).W(), m_tiles.at(i).at(j - 1).E(), 1, 1);
+                add_edge_with_capacity(m_tiles.at(i).at(j).W(), m_tiles.at(i).at(j - 1).E(), 1, 1 * bloat_tile_cost);
             if (i < component.rows())
-                add_edge_with_capacity(m_tiles.at(i).at(j).N(), m_tiles.at(i + 1).at(j).S(), 1, 1);
+                add_edge_with_capacity(m_tiles.at(i).at(j).N(), m_tiles.at(i + 1).at(j).S(), 1, 1 * bloat_tile_cost);
             if (j < component.columns())
-                add_edge_with_capacity(m_tiles.at(i).at(j).E(), m_tiles.at(i).at(j + 1).W(), 1, 1);
+                add_edge_with_capacity(m_tiles.at(i).at(j).E(), m_tiles.at(i).at(j + 1).W(), 1, 1 * bloat_tile_cost);
         }
     }
     // Center tiles to rows and columns
@@ -456,8 +461,12 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
 long GraphManager::minCostMaxFlow()
 {
     // Calculate minimum cost maximum flow
-    successive_shortest_path_nonnegative_weights(g, s, t);
-    // long cost = find_flow_cost(g);
+    successive_shortest_path_nonnegative_weights(g, s, t); // 直接用於求解最小費用最大流問題。
+    // 先用 Edmonds-Karp 求最大流，再用 Cycle Canceling 優化流量成本。
+    // edmonds_karp_max_flow(g, s, t);
+    // cycle_canceling(g);
+
+    long cost = find_flow_cost(g);
     long total_flow = 0;
     graph_traits<Graph>::out_edge_iterator out_ei, out_e_end;
     for (tie(out_ei, out_e_end) = out_edges(vertex(s, g), g); out_ei != out_e_end; ++out_ei)
@@ -476,9 +485,9 @@ long GraphManager::minCostMaxFlow()
     //                   << " with flow " << flow << std::endl;
     // }
     // Display total flow and cost
-    // std::cout << m_component->comp_name() << std::endl;
-    // std::cout << "Total Flow: " << total_flow << std::endl;
-    // std::cout << "Total Cost: " << cost << std::endl;
+    std::cout << m_component->comp_name() << std::endl;
+    std::cout << "Total Flow: " << total_flow << std::endl;
+    std::cout << "Total Cost: " << cost << std::endl;
 #endif
     return total_flow;
 }
@@ -596,7 +605,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
                                                      t_j};
                     Coordinate first_bend =
-                        Coordinate{via_coor.x() - 1.5 * m_data_manager->miniumum_segment(), via_coor.y(), via_coor.z()};
+                        Coordinate{via_coor.x() - 1.5 * m_data_manager->minimum_segment(), via_coor.y(), via_coor.z()};
                     Coordinate second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                                         first_bend.y() - (m_component->tile_height() / 2),
                                                         first_bend.z()};
@@ -607,7 +616,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{second_bend, left_bound, -1});
 
                     first_bend =
-                        Coordinate{via_coor.x() + 1.5 * m_data_manager->miniumum_segment(), via_coor.y(), via_coor.z()};
+                        Coordinate{via_coor.x() + 1.5 * m_data_manager->minimum_segment(), via_coor.y(), via_coor.z()};
                     second_bend = Coordinate{first_bend.x() + (m_component->tile_width() / 2),
                                              first_bend.y() - (m_component->tile_height() / 2),
                                              first_bend.z()};
@@ -671,7 +680,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
                                                      t_j};
                     Coordinate first_bend =
-                        Coordinate{via_coor.x(), via_coor.y() + 1.5 * m_data_manager->miniumum_segment(), via_coor.z()};
+                        Coordinate{via_coor.x(), via_coor.y() + 1.5 * m_data_manager->minimum_segment(), via_coor.z()};
                     Coordinate second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                                         first_bend.y() + (m_component->tile_height() / 2),
                                                         first_bend.z()};
@@ -685,7 +694,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{second_bend, top_bound, -1});
 
                     first_bend =
-                        Coordinate{via_coor.x(), via_coor.y() - 1.5 * m_data_manager->miniumum_segment(), via_coor.z()};
+                        Coordinate{via_coor.x(), via_coor.y() - 1.5 * m_data_manager->minimum_segment(), via_coor.z()};
                     second_bend = Coordinate{first_bend.x() - (m_component->tile_width() / 2),
                                              first_bend.y() - (m_component->tile_height() / 2),
                                              first_bend.z()};

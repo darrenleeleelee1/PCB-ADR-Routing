@@ -1,6 +1,7 @@
 #include "component_data.hpp"
 #include "basic_ds.hpp"
 #include "graph.hpp"
+#include "log.hpp"
 #include "math.hpp"
 #include <cmath>
 #include <fstream>
@@ -11,6 +12,7 @@
 #ifdef VERBOSE
 #include <iostream>
 #endif
+
 // Float point comparison
 bool deq(double a, double b, double epsilon = 1e-4)
 {
@@ -530,6 +532,8 @@ void DataManager::DDR2DDR()
         {
             graph_manager = std::make_shared<GraphManager>();
             graph_manager->DDR2DDRInit(*this, *comp, expand++, maximum_layer);
+            utils::printlog("DDR: " + comp->comp_name() + " expand: " + std::to_string(expand - 1) +
+                            " maximum_layer: " + std::to_string(maximum_layer));
             if (expand > 5)
             {
                 maximum_layer++;
@@ -705,8 +709,6 @@ void DataManager::AreaRouting()
             cpu_escape_boundry_idx = 3;
         }
         auto cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
-        // perserve for T, or FLy-by, now true for fly_by
-
         if (fly_by)
         {
             auto comp2 = m_components[to_pair.first];
@@ -1162,7 +1164,7 @@ void DataManager::AreaRouting()
             auto ddr2ddr_edge = m_ddr2ddr_edges.at(std::stoi(to_pair.first));
             auto comp2 = m_components[ddr2ddr_edge.first.first];
             auto comp3 = m_components[ddr2ddr_edge.second.first];
-
+            double peak_height = comp1->tile_height() / 2;
             double area_wire_top_y =
                 std::max(comp2->escape_points().at(1).at(0).first.y(), comp3->escape_points().at(0).at(0).first.y());
             double area_wire_bottom_y =
@@ -1181,14 +1183,14 @@ void DataManager::AreaRouting()
                 }
             }
             // find out the segment between comp2 and comp3 in m_area_router
-            std::vector<Segment> segments;
+            std::vector<Segment> area_segments;
             if (ddr2ddr_edge.first.second == 'E' && ddr2ddr_edge.second.second == 'W')
             {
                 for (auto &s : m_area_router->segments())
                 {
                     if (s.start().y() <= area_wire_top_y && s.end().y() >= area_wire_bottom_y)
                     {
-                        segments.push_back(s);
+                        area_segments.push_back(s);
                     }
                 }
             }
@@ -1206,7 +1208,7 @@ void DataManager::AreaRouting()
             if (from_pair.second == 'W')
             {
                 // from_pair.second == 'W', order is from bottom to top
-                area_wirelength = area_wire_top_y - area_wire_bottom_y;
+                area_wirelength = area_segments.at(0).length();
                 wire_spacing = (comp1->tile_height() / 2) * std::sqrt(2);
                 while (ceil(area_wirelength / wire_spacing) < cpu_group_escape_points.size())
                 {
@@ -1233,12 +1235,34 @@ void DataManager::AreaRouting()
                 // find segments include current_y and net_id
                 for (auto &cgep : cpu_group_escape_points)
                 {
-                    for (auto &s : segments)
+                    for (auto &s : area_segments)
                     {
                         if (s.isInclude(std::numeric_limits<double>::quiet_NaN(), current_y) &&
                             s.net_id() == cgep.second)
                         {
+                            m_area_router->removeSegment(s);
                             current_x = s.findCoordinate(std::numeric_limits<double>::quiet_NaN(), current_y);
+                            if (s.start().y() < s.end().y())
+                            {
+                                std::swap(s.start(), s.end());
+                            }
+                            Coordinate first_bend_point(current_x, current_y + 1.5 * peak_height, s.start().z());
+                            Coordinate second_bend_point(current_x, current_y - 1.5 * peak_height, s.start().z());
+                            Segment tmp_s(s.end(), second_bend_point, s.net_id());
+                            s.end() = first_bend_point;
+                            Segment first_bend = s.createExtendedSegmentByDegree(
+                                135, current_x - peak_height, std::numeric_limits<double>::quiet_NaN());
+
+                            Segment second_bend = tmp_s.createExtendedSegmentByDegree(
+                                -135, current_x - peak_height, std::numeric_limits<double>::quiet_NaN());
+                            Segment connect(first_bend.end(), second_bend.end(), s.net_id());
+                            m_area_router->addSegment(s);
+                            m_area_router->addSegment(first_bend);
+                            m_area_router->addSegment(second_bend);
+                            m_area_router->addSegment(tmp_s);
+                            m_area_router->addSegment(connect);
+                            m_area_router->addVia(
+                                Via(Coordinate(current_x - peak_height, current_y, s.end().z()), 0, s.net_id()));
                             break;
                         }
                     }
@@ -1270,16 +1294,68 @@ void DataManager::AreaRouting()
                                 rotate_angle, std::numeric_limits<double>::quiet_NaN(), current_y, from_end);
                             m_area_router->addSegment(diagonal_segment);
                             Segment extent_segment(
-                                Coordinate{current_x, current_y, 0}, diagonal_segment.end(), s.net_id());
+                                Coordinate{current_x - peak_height, current_y, 0}, diagonal_segment.end(), s.net_id());
                             m_area_router->addSegment(extent_segment);
                         }
                     }
                     current_y += wire_spacing;
                 }
             }
-            int debug = 0;
         }
     }
+}
+
+void DataManager::analyzeWirelength()
+{
+    // traverse all components's router segments and calculate every net's wirelength
+    // also calculate the longest and shortest wirelength and their net_id
+    double longest_wirelength = 0;
+    double shortest_wirelength = std::numeric_limits<double>::max();
+    int longest_net_id = -1;
+    int shortest_net_id = -1;
+    for (auto n : m_netlists.nets())
+    {
+        n->final_wirelength() = 0;
+        for (auto comp_pair : m_components)
+        {
+            auto comp = comp_pair.second;
+            for (auto &s : comp->router()->segments())
+            {
+                if (s.net_id() == n->net_id())
+                {
+                    n->final_wirelength() += s.length();
+                }
+            }
+        }
+        for (auto &s : m_area_router->segments())
+        {
+            if (s.net_id() == n->net_id())
+            {
+                n->final_wirelength() += s.length();
+            }
+        }
+        if (n->final_wirelength() > longest_wirelength)
+        {
+            longest_wirelength = n->final_wirelength();
+            longest_net_id = n->net_id();
+        }
+        if (n->final_wirelength() < shortest_wirelength)
+        {
+            shortest_wirelength = n->final_wirelength();
+            shortest_net_id = n->net_id();
+        }
+    }
+    // log longest and shortest wirelength
+    // print every net's wirelength
+    for (auto n : m_netlists.nets())
+    {
+        utils::printlog("Net_id: " + std::to_string(n->net_id()) +
+                        " wirelength: " + std::to_string(n->final_wirelength()));
+    }
+    utils::printlog("Longest wirelength: " + std::to_string(longest_wirelength) +
+                    " net_id: " + std::to_string(longest_net_id));
+    utils::printlog("Shortest wirelength: " + std::to_string(shortest_wirelength) +
+                    " net_id: " + std::to_string(shortest_net_id));
 }
 
 void Router::addSegment(Segment segment)

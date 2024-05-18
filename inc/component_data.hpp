@@ -282,12 +282,15 @@ private:
     std::vector<std::shared_ptr<Pin>> m_pins;
     std::unordered_map<std::string, double> m_group_escape_length; // group name, escape length
     std::unordered_map<std::string, int> m_group_layer; // group name, layer
+    double m_final_wirelength;
+
 public:
     // Constructor
     Nets() = default;
     Nets(const std::string &net_name, const int &net_id)
         : m_net_name(net_name)
         , m_net_id(net_id)
+        , m_final_wirelength(0)
     {
     }
     // Accessor
@@ -306,6 +309,9 @@ public:
     // Access for group_layer
     const std::unordered_map<std::string, int> &group_layer() const { return m_group_layer; }
     std::unordered_map<std::string, int> &group_layer() { return m_group_layer; }
+    // Access for final_wirelength
+    const double &final_wirelength() const { return m_final_wirelength; }
+    double &final_wirelength() { return m_final_wirelength; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
 };
@@ -385,7 +391,7 @@ private:
     std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
     double m_wire_spacing;
     double m_wire_width;
-    double m_miniumum_segment;
+    double m_minimum_segment;
     std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
         m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
     std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>>
@@ -404,7 +410,7 @@ public:
         m_pcb_bounding_box.at(1) = Coordinate(0.0, 0.0, 0);
         m_wire_spacing = 4.8;
         m_wire_width = 4.0;
-        m_miniumum_segment = 5.0;
+        m_minimum_segment = 5.0;
     };
     // Accessor
     // Access for components
@@ -440,9 +446,9 @@ public:
     // Access for wire_width
     const double &wire_width() const { return m_wire_width; }
     double &wire_width() { return m_wire_width; }
-    // Access for miniumum_segment
-    const double &miniumum_segment() const { return m_miniumum_segment; }
-    double &miniumum_segment() { return m_miniumum_segment; }
+    // Access for minimum_segment
+    const double &minimum_segment() const { return m_minimum_segment; }
+    double &minimum_segment() { return m_minimum_segment; }
     // Access for ddr2ddr_edges
     const std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>> &ddr2ddr_edges() const
     {
@@ -482,6 +488,7 @@ public:
     void CPU2DDR();
     void postprocess_ER();
     void AreaRouting();
+    void analyzeWirelength();
 };
 
 class Via
@@ -778,5 +785,21 @@ public:
     void addVia(Via via) { m_vias.push_back(via); }
     void setViaNetId();
     void setSegmentNetId();
+    void removeSegment(Segment segment)
+    {
+        // remove the segment from the vector
+        // iterate the segments it and remove it
+        for (auto it = m_segments.begin(); it != m_segments.end();)
+        {
+            if (*it == segment)
+            {
+                it = m_segments.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+    }
 };
 #endif // COMPONENT_DATA_HPP
