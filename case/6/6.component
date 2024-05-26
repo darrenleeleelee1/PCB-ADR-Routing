@@ -19,7 +19,7 @@
         "N": false,
         "E": true,
         "S": false,
-        "W": false
+        "W": true
       },
       "is_vertical_stack": false,
       "angle": 270
@@ -67,7 +67,7 @@
         "N": false,
         "E": true,
         "S": false,
-        "W": false
+        "W": true
       },
       "is_vertical_stack": false,
       "angle": 180

@@ -9,6 +9,7 @@
 #include <boost/graph/find_flow_cost.hpp>
 #include <boost/graph/depth_first_search.hpp>
 #include <vector>
+#include <map>
 using namespace boost;
 #define INF 1e9
 typedef adjacency_list_traits<vecS, vecS, directedS> Traits;
@@ -78,6 +79,8 @@ private:
     std::vector<std::vector<Traits::vertex_descriptor>> m_columns;
     std::vector<std::vector<Traits::vertex_descriptor>> m_d_columns;
     std::vector<std::string> m_vertex_names;
+    std::map<adjacency_list_traits<vecS, vecS, directedS>::edge_descriptor, std::pair<int, int>>
+        stored_capacity_and_residual;
     // Private Methods
     void add_v(Graph &g, Traits::vertex_descriptor &v, std::string name);
     void add_v(Graph &g, TileNode &tile_node, std::string name);
@@ -87,6 +90,9 @@ public:
     // Constructor
     GraphManager() = default;
     ~GraphManager() = default;
+    void fixFlowResults();
+    void restoreFlowResults();
+    void addSource2Pins(Component &component, std::unordered_set<int> &pinset);
     void DDR2DDRInit(DataManager &data_manager, Component &component, int expand, size_t maximum_layer);
     void CPU2DDRInit(DataManager &data_manager,
                      Component &component,

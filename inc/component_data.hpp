@@ -14,6 +14,16 @@
 #include <vector>
 class Router;
 
+// Float point comparison
+inline bool deq(double a, double b, double epsilon = 1e-4)
+{
+    if (a == std::numeric_limits<double>::infinity() && b == std::numeric_limits<double>::infinity())
+    {
+        return true;
+    }
+    return std::abs(a - b) < epsilon;
+}
+
 class Coordinate
 {
 private:
@@ -394,11 +404,18 @@ private:
     double m_minimum_segment;
     std::vector<std::pair<std::pair<std::string, char>, std::pair<std::string, char>>>
         m_ddr2ddr_edges; // pair< pair<ddr name, escape direction>, <ddr name, escape direction> >
-    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>>
-        m_cpu2ddr_edges; // tuple< pair<cpu name, escape direction>, <ddr name, escape direction>, fly-by >
+    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool, std::optional<int>>>
+        m_cpu2ddr_edges; // tuple< pair<cpu name, escape direction>, <ddr name, escape direction>, fly-by,
+                         // T_topology_layer >
     // escape wirelength by layer, [group name][net_id][(layer), (order)]
     std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>>
         m_group_escape_layer_order; // group name, escape length
+    // helper function
+    void processDiagonalAndExtendSegment(char to_pair_second,
+                                         char from_pair_second,
+                                         std::shared_ptr<Component> comp2,
+                                         std::vector<std::pair<Coordinate, int>> &cpu_escape_point,
+                                         bool continued);
 
 public:
     // Constructor
@@ -459,12 +476,13 @@ public:
         return m_ddr2ddr_edges;
     }
     // Access for cpu2ddr_edges
-    const std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &
-    cpu2ddr_edges() const
+    const std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool, std::optional<int>>>
+        &cpu2ddr_edges() const
     {
         return m_cpu2ddr_edges;
     }
-    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool>> &cpu2ddr_edges()
+    std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool, std::optional<int>>> &
+    cpu2ddr_edges()
     {
         return m_cpu2ddr_edges;
     }
@@ -690,6 +708,45 @@ public:
                    epsilon;
         }
     }
+    Segment createExtendedSegmentByDegreeAndLength(double angle_degrees, double length, bool from_end = true)
+    {
+        // Calculate the current angle of the segment
+        double current_angle;
+        if (from_end)
+        {
+            current_angle = atan2(m_end.y() - m_start.y(), m_end.x() - m_start.x());
+        }
+        else
+        {
+            current_angle = atan2(m_start.y() - m_end.y(), m_start.x() - m_end.x());
+        }
+
+        // Convert degrees to radians and add to current angle
+        double total_angle_radians = current_angle + angle_degrees * (M_PI / 180.0);
+
+        // Calculate the delta x and delta y based on the total angle and length
+        double delta_x = length * cos(total_angle_radians);
+        double delta_y = length * sin(total_angle_radians);
+
+        if (from_end)
+        {
+            // Calculate the new end coordinate
+            Coordinate new_end(m_end.x() + delta_x, m_end.y() + delta_y, m_end.z());
+
+            // Create the new segment from the current end to the new end
+            return Segment(m_end, new_end);
+        }
+        else
+        {
+            // Calculate the new end coordinate
+            Coordinate new_end(m_start.x() + delta_x, m_start.y() + delta_y, m_start.z());
+
+            // Create the new segment from the current start to the new end
+            return Segment(m_start, new_end);
+        }
+    }
+
+    // Create a new segment by extending the current segment by a specified degree
     Segment createExtendedSegmentByDegree(double angle_degrees,
                                           double target_x = std::numeric_limits<double>::quiet_NaN(),
                                           double target_y = std::numeric_limits<double>::quiet_NaN(),
@@ -709,6 +766,9 @@ public:
                 // Calculate y using the known x
                 double delta_x = target_x - m_end.x();
                 double delta_y = tan(total_angle_radians) * delta_x;
+                // if total_andle_radains is M_PI/2 or -M_PI/2
+                if (deq(total_angle_radians, M_PI / 2) || deq(total_angle_radians, -M_PI / 2))
+                    throw std::invalid_argument("Angle results in an undefined delta_y (vertical line).");
                 new_end = Coordinate(target_x, m_end.y() + delta_y, m_end.z());
             }
             else if (!std::isnan(target_y))
@@ -717,7 +777,7 @@ public:
                 double delta_y = target_y - m_end.y();
                 double delta_x = delta_y / tan(total_angle_radians);
                 if (std::isinf(delta_x)) // Handle cases where tan returns infinity
-                    throw std::invalid_argument("Angle results in an undefined delta_x (vertical line).");
+                    throw std::invalid_argument("Angle results in an undefined delta_x (horizontal line).");
                 new_end = Coordinate(m_end.x() + delta_x, target_y, m_end.z());
             }
             else

@@ -48,7 +48,64 @@ Graph GraphManager::reverseGraph(Graph &g)
     }
     return rg;
 }
+
+void GraphManager::fixFlowResults()
+{
+    graph_traits<Graph>::edge_iterator ei, ei_end;
+    for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei)
+    {
+        int flow = capacity[*ei] - residual_capacity[*ei];
+        if (flow > 0)
+        {
+            stored_capacity_and_residual[*ei] =
+                std::make_pair(capacity[*ei], residual_capacity[*ei]); // 记录原始的容量和残余容量
+            residual_capacity[rev[*ei]] = 0; // 确保反向边的残余容量设置正确
+            capacity[*ei] = 0; // 固定流量结果，防止后续计算修改
+        }
+    }
+}
+
+void GraphManager::restoreFlowResults()
+{
+    for (const auto &pair : stored_capacity_and_residual)
+    {
+        capacity[pair.first] = pair.second.first;
+        residual_capacity[pair.first] = pair.second.second;
+    }
+}
+
+void GraphManager::addSource2Pins(Component &component, std::unordered_set<int> &pinset)
+
 // For DDR2DDR
+{
+    int num_pin_rows = component.pin_arr().size();
+    int num_pin_columns = component.pin_arr().at(0).size();
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
+        auto e = add_edge(u, v, g).first;
+        auto rev_e = add_edge(v, u, g).first;
+        capacity[e] = cap;
+        weight[e] = cost;
+        rev[e] = rev_e;
+        capacity[rev_e] = 0;
+        weight[rev_e] = -cost;
+        rev[rev_e] = e;
+    };
+    // Source to Pins
+    for (int i = 0; i < num_pin_rows; ++i)
+    {
+        for (int j = 0; j < num_pin_columns; ++j)
+        {
+            if (component.pin_arr().at(i).at(j))
+            {
+                if (pinset.count(component.pin_arr().at(i).at(j)->net_id()))
+                {
+
+                    add_edge_with_capacity(s, m_v.at(i).at(j), 1, 0);
+                }
+            }
+        }
+    }
+}
 void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, int expand, size_t maximum_layer)
 {
     if (component.is_cpu())
@@ -143,12 +200,14 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
         {
             int shift_i = base_tile_row_idx + i;
             int shift_j = base_tile_column_idx + j;
-            int top_cost = 1, bot_cost = 1;
 
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j).E(), 1, bot_cost);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j).S(), 1, top_cost);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j + 1).N(), 1, bot_cost);
-            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j + 1).W(), 1, top_cost);
+            int top_right_cost = 1, top_left_cost = 1;
+            int bot_right_cost = 1, bot_left_cost = 1;
+
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j).E(), 1, bot_left_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j).S(), 1, top_left_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i).at(shift_j + 1).N(), 1, bot_right_cost);
+            add_edge_with_capacity(m_v.at(i).at(j), m_tiles.at(shift_i + 1).at(shift_j + 1).W(), 1, top_right_cost);
         }
     }
     // Periphery tiles to periphery tiles and intra-edges
@@ -169,7 +228,7 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
             // periphery tiles to periphery tiles
 
             int bloat_tile_cost = 1;
-            bloat_tile_cost = j <= 3 ? 10 : 1;
+            // bloat_tile_cost = (j <= 3) ? 10 : 1;
 
             if (i > 0)
                 add_edge_with_capacity(m_tiles.at(i).at(j).S(), m_tiles.at(i - 1).at(j).N(), 1, 1 * bloat_tile_cost);
@@ -209,7 +268,9 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
         for (size_t j = 1; j < maximum_layer; ++j)
         {
             for (int cap = 1; cap <= (1 + maximum_via_count * 2); cap += 2)
-                add_edge_with_capacity(m_rows.at(i).at(j), m_d_rows.at(i).at(j), 1, cap);
+            {
+                add_edge_with_capacity(m_rows.at(i).at(j), m_d_rows.at(i).at(j), 1, 1);
+            }
         }
     }
     for (int i = 0; i < num_tile_columns; ++i)
@@ -217,17 +278,8 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
         for (size_t j = 1; j < maximum_layer; ++j)
         {
             for (int cap = 1; cap <= (1 + maximum_via_count * 2); cap += 2)
-                add_edge_with_capacity(m_columns.at(i).at(j), m_d_columns.at(i).at(j), 1, cap);
-        }
-    }
-    // Source to Pins
-    for (int i = 0; i < num_pin_rows; ++i)
-    {
-        for (int j = 0; j < num_pin_columns; ++j)
-        {
-            if (component.pin_arr().at(i).at(j))
             {
-                add_edge_with_capacity(s, m_v.at(i).at(j), 1, 0);
+                add_edge_with_capacity(m_columns.at(i).at(j), m_d_columns.at(i).at(j), 1, 1);
             }
         }
     }

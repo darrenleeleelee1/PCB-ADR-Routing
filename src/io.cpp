@@ -328,7 +328,13 @@ void EdgeParser::parse(DataManager &data_manager)
                 else if (key == "cpu2ddr")
                 {
                     bool fly_by = element.value("fly-by", false);
-                    data_manager.cpu2ddr_edges().push_back({from, to, fly_by});
+                    std::optional<int> T_topology_layer;
+                    if (!fly_by && element.contains("T_topology_layer"))
+                    {
+                        T_topology_layer = element["T_topology_layer"].get<int>();
+                    }
+
+                    data_manager.cpu2ddr_edges().push_back({from, to, fly_by, T_topology_layer});
                 }
             }
         }
