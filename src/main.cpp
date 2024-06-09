@@ -1,3 +1,4 @@
+#include "allegro.hpp"
 #include "gdt.hpp"
 #include "io.hpp"
 #include "log.hpp"
@@ -26,6 +27,7 @@ int main(int argc, char const *argv[])
     std::shared_ptr<DataManager> data_manager = std::make_shared<DataManager>();
     ParserManager parser_manager(data_manager);
     GDTWriter gdt_writer(*data_manager);
+    CLPWriter clp_writer(*data_manager);
 
     // Set case number
     std::string ADR_Path = case_path + case_number + "/" + case_number + ".adr";
@@ -62,12 +64,15 @@ int main(int argc, char const *argv[])
 #ifdef GDT
     gdt_writer.routing();
 #endif
+    clp_writer.DDR2DDR();
 
     utils::printlog("Area Routing DDR2DDR...");
     data_manager->AreaRouting();
 #ifdef GDT
     gdt_writer.areaRouting();
 #endif
+    clp_writer.areaRouting();
+
     // Analyze wirelength
     utils::printlog("Analyzing wirelength...");
     data_manager->analyzeWirelength();
@@ -77,6 +82,7 @@ gdt2gds:
     utils::printlog("Converting GDT to GDS...");
     gdt_writer.gdt2gds(case_number);
 #endif
+    clp_writer.moveClps(case_number);
     utils::printlog("--------------------------------------------------------");
     utils::printlog("                     Terminated...                      ");
     utils::printlog("--------------------------------------------------------");

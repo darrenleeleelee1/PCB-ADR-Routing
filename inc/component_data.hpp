@@ -394,7 +394,7 @@ private:
     std::unordered_map<std::string, std::unordered_set<int>>
         m_groups_nets; // check net_id in the group, group name, net_id
     Netlist m_netlists;
-    std::unordered_map<std::string, int> m_layers;
+    std::unordered_map<int, std::string> m_layers;
     std::vector<Obstacle> m_obstacles;
     std::shared_ptr<Router> m_area_router;
     std::string m_cpu_escape_boundry;
@@ -443,8 +443,8 @@ public:
     const Netlist &netlists() const { return m_netlists; }
     Netlist &netlists() { return m_netlists; }
     // Accessor for layers
-    const std::unordered_map<std::string, int> &layers() const { return m_layers; }
-    std::unordered_map<std::string, int> &layers() { return m_layers; }
+    const std::unordered_map<int, std::string> &layers() const { return m_layers; }
+    std::unordered_map<int, std::string> &layers() { return m_layers; }
     // Access for obstacles
     const std::vector<Obstacle> &obstacles() const { return m_obstacles; }
     std::vector<Obstacle> &obstacles() { return m_obstacles; }
@@ -507,6 +507,8 @@ public:
     void postprocess_ER();
     void AreaRouting();
     void analyzeWirelength();
+    // check and correct the segment is not correctly double value
+    void checkAndCorrectPinSegments();
 };
 
 class Via
@@ -594,6 +596,20 @@ public:
     // Access for net_id
     const int &net_id() const { return m_net_id; }
     int &net_id() { return m_net_id; }
+    // Access for layer, same as z, also check the z of start and end is the same
+    const int &layer() const
+    {
+        if (m_start.z() != m_end.z())
+        {
+            throw std::invalid_argument("Segment::layer Start and end z are not the same.");
+        }
+        return m_start.z();
+    }
+    void setLayer(int new_layer)
+    {
+        m_start.z() = new_layer;
+        m_end.z() = new_layer;
+    }
     // Methods
     double length() const
     {

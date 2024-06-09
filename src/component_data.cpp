@@ -594,6 +594,7 @@ void DataManager::CPU2DDR()
 
 void DataManager::postprocess_ER()
 {
+    checkAndCorrectPinSegments();
     for (auto comp_pair : m_components)
     {
         auto comp = comp_pair.second;
@@ -718,11 +719,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
                             ? cpu_ep.y()
                             : std::numeric_limits<double>::quiet_NaN());
                 }
-                // debug
-                if (!continued)
-                {
-                    int debug = 10;
-                }
+
                 // extent_segment end point 超出CPU邊界，y_bound_shift + 10
                 if ((m_cpu_escape_boundry == "W" && extent_segment.end().x() > cpu_ep.x()) ||
                     (m_cpu_escape_boundry == "E" && extent_segment.end().x() < cpu_ep.x()) ||
@@ -859,6 +856,189 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
         }
     }
 }
+std::map<std::pair<int, int>, std::vector<std::pair<int, int>>>
+groupDDREscapePoints(std::vector<std::pair<Coordinate, int>> &escape_points)
+{
+    // Lambda function to calculate the key
+    auto getKey = [](const Coordinate &point) {
+        return std::make_pair(static_cast<int>(std::floor(point.x())), static_cast<int>(std::floor(point.y())));
+    };
+    // Coordinate map to (layer, net_id)
+    std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> grouped_points;
+    // 將 escape points 分組
+    for (const auto &p : escape_points)
+    {
+        auto point = p.first;
+        auto key = getKey(point);
+        grouped_points[key].emplace_back(point.z(), p.second);
+    }
+
+    // 輸出結果
+#ifdef VERBOSE
+    // for (const auto &entry : grouped_points)
+    // {
+    //     std::cout << "Key: (" << entry.first.first << ", " << entry.first.second << ")" << std::endl;
+    //     for (const auto &point : entry.second)
+    //     {
+    //         std::cout << "  (" << point.first << ", " << point.second << ")" << std::endl;
+    //     }
+    // }
+#endif
+
+    return grouped_points;
+}
+
+void reorderCPUEscapePoints(std::vector<std::pair<Coordinate, int>> &cpu_ep, std::string turn_direction)
+{
+    if (turn_direction == "N")
+    {
+        std::sort(cpu_ep.begin(), cpu_ep.end(), [](auto a, auto b) { return a.first.y() > b.first.y(); });
+    }
+    else if (turn_direction == "E")
+    {
+        std::sort(cpu_ep.begin(), cpu_ep.end(), [](auto a, auto b) { return a.first.x() > b.first.x(); });
+    }
+    else if (turn_direction == "S")
+    {
+        std::sort(cpu_ep.begin(), cpu_ep.end(), [](auto a, auto b) { return a.first.y() < b.first.y(); });
+    }
+    else if (turn_direction == "W")
+    {
+        std::sort(cpu_ep.begin(), cpu_ep.end(), [](auto a, auto b) { return a.first.x() < b.first.x(); });
+    }
+}
+// switch net_id all from from_layer to to_layer
+void switchAllLayers(DataManager &datamanager, int net_id, int from_layer, int to_layer)
+{
+    // print net_id, from_layer, to_layer
+    std::cout << "net_id: " << net_id << " from_layer: " << from_layer << " to_layer: " << to_layer << std::endl;
+    for (auto &p_comp : datamanager.components())
+    {
+        auto &comp = p_comp.second;
+        for (auto &seg : comp->router()->segments())
+        {
+            if (seg.net_id() == net_id && seg.layer() == from_layer)
+            {
+                seg.setLayer(to_layer);
+            }
+        }
+        for (auto &via : comp->router()->vias())
+        {
+            if (via.net_id() == net_id && via.layer() == from_layer)
+            {
+                via.layer() = to_layer;
+            }
+        }
+        for (auto &ep : comp->escape_points().at(0))
+        {
+            if (ep.second == net_id && ep.first.z() == from_layer)
+            {
+                ep.first.z() = to_layer;
+            }
+        }
+        for (auto &ep : comp->escape_points().at(1))
+        {
+            if (ep.second == net_id && ep.first.z() == from_layer)
+            {
+                ep.first.z() = to_layer;
+            }
+        }
+    }
+    // area router
+    // for (auto &seg : datamanager.area_router()->segments())
+    // {
+    //     if (seg.net_id() == net_id && seg.layer() == from_layer)
+    //     {
+    //         seg.setLayer(to_layer);
+    //     }
+    // }
+}
+void switchDDREscapeLayers(DataManager &datamanager,
+                           std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                           std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> &&group)
+{
+    // 如果在同一個 group，他的 layer order 應在要在 cpu escape point 的 order是一致的
+    // 例如 net1, net2 在同 group, net 1 在 layer 1, net2 在 layer 0
+    // 可是 cpu escape point order 是 x, x, x, x, 1, x, x, x, 2, x, x, x, x
+    // 表示 net1應該要在layer 0, net2 要在 layer 1
+    // 我應該要確保 net_id 他的 layer order 在 cpu_ep 中是由小到大，讓他的layer order也是由小到大
+    for (auto &entry : group)
+    {
+        auto &layer_netIds = entry.second;
+        std::vector<int> layers;
+        for (const auto &ln : layer_netIds)
+        {
+            layers.push_back(ln.first);
+        }
+        sort(layers.begin(), layers.end()); // 收集 layers 並把他由大到小排序
+        std::vector<int> netIds;
+        for (const auto &ln : layer_netIds)
+        {
+            netIds.push_back(ln.second);
+        }
+        // sort netIds by their order in cpu_ep
+        std::sort(netIds.begin(), netIds.end(), [&cpu_ep](int a, int b) {
+            auto it_a = std::find_if(cpu_ep.begin(), cpu_ep.end(), [a](auto p) { return p.second == a; });
+            auto it_b = std::find_if(cpu_ep.begin(), cpu_ep.end(), [b](auto p) { return p.second == b; });
+            return std::distance(cpu_ep.begin(), it_a) < std::distance(cpu_ep.begin(), it_b);
+        });
+
+        // 如果跟原本 groups (layer, net) 不一樣，就要更新成新的 layer order
+        for (size_t i = 0; i < netIds.size(); i++)
+        {
+            if (layer_netIds[i].second != netIds[i])
+            {
+                for (size_t j = 0; j < netIds.size(); j++)
+                {
+                    if (layer_netIds[j].second == netIds[i])
+                    {
+                        switchAllLayers(datamanager, netIds[i], layer_netIds[j].first, layers[i]);
+                    }
+                }
+            }
+        }
+        // debug print layers, layer_netIds, netIds
+        std::cout << "Layers: ";
+        for (auto l : layers)
+        {
+            std::cout << l << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "Layer_netIds: ";
+        for (auto ln : layer_netIds)
+        {
+            std::cout << "(" << ln.first << ", " << ln.second << ") ";
+        }
+        std::cout << std::endl;
+        std::cout << "NetIds: ";
+        for (auto n : netIds)
+        {
+            std::cout << n << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+int getCPUEscapeBoundaryIndex(std::string cpu_escape_boundry)
+{
+    if (cpu_escape_boundry == "N")
+    {
+        return 0;
+    }
+    else if (cpu_escape_boundry == "E")
+    {
+        return 1;
+    }
+    else if (cpu_escape_boundry == "S")
+    {
+        return 2;
+    }
+    else if (cpu_escape_boundry == "W")
+    {
+        return 3;
+    }
+    return -1;
+}
 void DataManager::AreaRouting()
 {
     // DDR2DDR area routing
@@ -918,31 +1098,15 @@ void DataManager::AreaRouting()
         auto to_pair = std::get<1>(p); // 获取第二个组件对
         bool fly_by = std::get<2>(p);
         auto t_topology_layer = std::get<3>(p);
-        auto comp1 = m_components[from_pair.first];
+        auto &comp1 = m_components[from_pair.first];
 
         // cpu escape points
         // check m_cpu_escape_boundry is "N" or "E" or "S" or "W" to get the exact cpu_escape_points
-        int cpu_escape_boundry_idx = -1;
-        if (m_cpu_escape_boundry == "N")
-        {
-            cpu_escape_boundry_idx = 0;
-        }
-        else if (m_cpu_escape_boundry == "E")
-        {
-            cpu_escape_boundry_idx = 1;
-        }
-        else if (m_cpu_escape_boundry == "S")
-        {
-            cpu_escape_boundry_idx = 2;
-        }
-        else if (m_cpu_escape_boundry == "W")
-        {
-            cpu_escape_boundry_idx = 3;
-        }
+        int cpu_escape_boundry_idx = getCPUEscapeBoundaryIndex(m_cpu_escape_boundry);
         auto &cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
         if (fly_by)
         {
-            auto comp2 = m_components[to_pair.first];
+            auto &comp2 = m_components[to_pair.first];
             comp2->rotateAll(true);
             // find out which group contain the comp2
             std::string group_name;
@@ -961,6 +1125,15 @@ void DataManager::AreaRouting()
             if (to_pair.second == 'E' || to_pair.second == 'W')
             {
                 // *** comp2 is rotated
+                // from_pair.second to string
+                reorderCPUEscapePoints(cpu_escape_point, std::string(1, from_pair.second));
+                auto tmp_group = groupDDREscapePoints(comp2->escape_points().at(to_pair.second == 'E' ? 1 : 0));
+                switchDDREscapeLayers(*this, cpu_escape_point, std::move(tmp_group));
+                // debug show every net layer order
+                for (auto &ep : comp2->escape_points().at(to_pair.second == 'E' ? 1 : 0))
+                {
+                    std::cout << "Debuging Net ID: " << ep.second << " Layer: " << ep.first.z() << std::endl;
+                }
                 processDiagonalAndExtendSegment(to_pair.second, from_pair.second, comp2, cpu_escape_point, continued);
             }
             comp2->rotateAll(false);
@@ -1366,6 +1539,43 @@ void DataManager::analyzeWirelength()
                     " net_id: " + std::to_string(longest_net_id));
     utils::printlog("Shortest wirelength: " + std::to_string(shortest_wirelength) +
                     " net_id: " + std::to_string(shortest_net_id));
+}
+
+void DataManager::checkAndCorrectPinSegments()
+{
+    for (auto &comp_pair : m_components)
+    {
+        auto comp = comp_pair.second;
+        for (auto &s : comp->router()->segments())
+        {
+            for (auto &net : m_netlists.nets())
+            {
+                bool find = false;
+                if (net->net_id() == s.net_id())
+                {
+                    for (auto &pin : net->pins())
+                    {
+                        if (s.start().isCloseTo(pin->coordinate(), 1.0))
+                        {
+                            s.start() = pin->coordinate();
+                            find = true;
+                            break;
+                        }
+                        else if (s.end().isCloseTo(pin->coordinate(), 1.0))
+                        {
+                            s.end() = pin->coordinate();
+                            find = true;
+                            break;
+                        }
+                    }
+                }
+                if (find)
+                {
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void Router::addSegment(Segment segment)

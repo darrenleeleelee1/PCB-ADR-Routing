@@ -131,7 +131,7 @@ void LayerParser::parse(DataManager &data_manager)
             break;
         } // error reading number
 
-        data_manager.layers().emplace(layer_name, layer_number);
+        data_manager.layers().emplace(layer_number, layer_name);
     }
 
     return;
