@@ -1,6 +1,7 @@
 #include "component_data.hpp"
 #include "basic_ds.hpp"
 #include "graph.hpp"
+#include "grid.hpp"
 #include "log.hpp"
 #include "math.hpp"
 #include <cmath>
@@ -911,7 +912,9 @@ void reorderCPUEscapePoints(std::vector<std::pair<Coordinate, int>> &cpu_ep, std
 void switchAllLayers(DataManager &datamanager, int net_id, int from_layer, int to_layer)
 {
     // print net_id, from_layer, to_layer
-    std::cout << "net_id: " << net_id << " from_layer: " << from_layer << " to_layer: " << to_layer << std::endl;
+#ifdef VERBOSE
+    // std::cout << "net_id: " << net_id << " from_layer: " << from_layer << " to_layer: " << to_layer << std::endl;
+#endif
     for (auto &p_comp : datamanager.components())
     {
         auto &comp = p_comp.second;
@@ -953,6 +956,7 @@ void switchAllLayers(DataManager &datamanager, int net_id, int from_layer, int t
     //     }
     // }
 }
+
 void switchDDREscapeLayers(DataManager &datamanager,
                            std::vector<std::pair<Coordinate, int>> &cpu_ep,
                            std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> &&group)
@@ -998,24 +1002,27 @@ void switchDDREscapeLayers(DataManager &datamanager,
             }
         }
         // debug print layers, layer_netIds, netIds
-        std::cout << "Layers: ";
-        for (auto l : layers)
-        {
-            std::cout << l << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "Layer_netIds: ";
-        for (auto ln : layer_netIds)
-        {
-            std::cout << "(" << ln.first << ", " << ln.second << ") ";
-        }
-        std::cout << std::endl;
-        std::cout << "NetIds: ";
-        for (auto n : netIds)
-        {
-            std::cout << n << " ";
-        }
-        std::cout << std::endl;
+#ifdef VERBOSE
+        // std::cout << "switchDDREscapeLayers: " << std::endl;
+        // std::cout << "Layers: ";
+        // for (auto l : layers)
+        // {
+        //     std::cout << l << " ";
+        // }
+        // std::cout << std::endl;
+        // std::cout << "Layer_netIds: ";
+        // for (auto ln : layer_netIds)
+        // {
+        //     std::cout << "(" << ln.first << ", " << ln.second << ") ";
+        // }
+        // std::cout << std::endl;
+        // std::cout << "NetIds: ";
+        // for (auto n : netIds)
+        // {
+        //     std::cout << n << " ";
+        // }
+        // std::cout << std::endl;
+#endif
     }
 }
 
@@ -1039,7 +1046,158 @@ int getCPUEscapeBoundaryIndex(std::string cpu_escape_boundry)
     }
     return -1;
 }
-void DataManager::AreaRouting()
+
+void DataManager::createGrid(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                             const std::vector<std::pair<Coordinate, int>> &ddr_ep,
+                             const double &pitch)
+{
+    // find out which layers are in ddr_ep, create corresponding grid for each layer
+    std::set<int> layers;
+    for (const auto &ep : ddr_ep)
+    {
+        layers.insert(ep.first.z());
+    }
+    // traverse cpu_ep and ddr_ep to find out the bottom left and top right corner of the grid
+    double min_x = std::numeric_limits<double>::max();
+    double min_y = std::numeric_limits<double>::max();
+    double max_x = std::numeric_limits<double>::lowest();
+    double max_y = std::numeric_limits<double>::lowest();
+    for (const auto &ep : cpu_ep)
+    {
+        min_x = std::min(min_x, ep.first.x());
+        min_y = std::min(min_y, ep.first.y());
+        max_x = std::max(max_x, ep.first.x());
+        max_y = std::max(max_y, ep.first.y());
+    }
+    for (const auto &ep : ddr_ep)
+    {
+        min_x = std::min(min_x, ep.first.x());
+        min_y = std::min(min_y, ep.first.y());
+        max_x = std::max(max_x, ep.first.x());
+        max_y = std::max(max_y, ep.first.y());
+    }
+
+    for (const auto &layer : layers)
+    {
+        // m_grids[layer] =
+        // std::make_shared<A_Star::Grid>(Coordinate{min_x, min_y, layer}, Coordinate{max_x, max_y, layer}, pitch);
+        m_grids[layer] =
+            std::make_shared<A_Star::Grid>(Coordinate{0, 0, layer}, Coordinate{10000.0, 10000.0, layer}, pitch);
+    }
+}
+
+void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                                 const std::vector<std::pair<Coordinate, int>> &ddr_ep,
+                                 const A_Star::Point &parent)
+{
+    // ddr_ep is start point, cpu_ep is end point using net_id to find the pair
+    // and the using layer is depends on ddr_ep layer
+    for (const auto &d_ep : ddr_ep)
+    {
+        const auto &start = d_ep.first;
+        const auto &s_net_id = d_ep.second;
+        const auto &layer = d_ep.first.z();
+        auto &grid = m_grids[layer];
+        for (const auto &c_ep : cpu_ep)
+        {
+            const auto &end = c_ep.first;
+            const auto &e_net_id = c_ep.second;
+            if (s_net_id != e_net_id)
+            {
+                continue;
+            }
+
+            auto point_path = grid->a_star_search(start, end, parent);
+            auto segments = grid->points2segments(point_path, s_net_id, layer);
+            for (const auto &seg : segments)
+            {
+                m_area_router->addSegment(seg);
+            }
+            grid->addObstacle(point_path);
+        }
+    }
+}
+
+void DataManager::extendCPUEscapePoint(const std::string &extend_direction,
+                                       const double &spacing,
+                                       std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                                       std::vector<std::pair<Coordinate, int>> &ddr_ep)
+{
+    // group ddr_ep by their layer
+    // use <layer, net_id> to find the extend order
+    std::map<int, int> layer_count; // count the layer apperance
+    std::map<int, std::pair<int, int>> grouped_ddr_ep; // net_id -> (order, layer)
+    for (auto &ep : ddr_ep)
+    {
+        const auto &point = ep.first;
+        const auto &net_id = ep.second;
+
+        layer_count[point.z()]++;
+        grouped_ddr_ep[net_id] = std::make_pair(layer_count[point.z()], point.z());
+    }
+#ifdef VERBOSE
+    // print grouped_ddr_ep
+
+#endif
+    // extend CPU escape point by the order of ddr_ep
+    for (auto &ep : cpu_ep)
+    {
+        double x_offset = 0;
+        double y_offset = 0;
+        const auto &order = grouped_ddr_ep[ep.second].first;
+        const auto &layer = grouped_ddr_ep[ep.second].second;
+        if (extend_direction == "N")
+        {
+            y_offset = spacing * order;
+        }
+        else if (extend_direction == "E")
+        {
+            x_offset = spacing * order;
+        }
+        else if (extend_direction == "S")
+        {
+            y_offset = -spacing * order;
+        }
+        else if (extend_direction == "W")
+        {
+            x_offset = -spacing * order;
+        }
+        else
+        {
+            throw std::runtime_error("Error: CPU escape point extend direction not found");
+        }
+        m_area_router->addSegment(
+            Segment(ep.first, Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, ep.second));
+        m_area_router->addVia(
+            Via(Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, layer, ep.second));
+        ep.first =
+            Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, 0}; // 先讓他保持還是在 0，layer 從 ddr_ep 取
+    }
+}
+
+void DataManager::markExistingSegments()
+{
+    for (auto &comp_pair : m_components)
+    {
+        auto &comp = comp_pair.second;
+        for (auto &seg : comp->router()->segments())
+        {
+            if (m_grids.count(seg.layer()))
+            {
+                m_grids[seg.layer()]->addObstacle(seg);
+            }
+        }
+    }
+    for (auto &seg : m_area_router->segments())
+    {
+        if (m_grids.count(seg.layer()))
+        {
+            m_grids[seg.layer()]->addObstacle(seg);
+        }
+    }
+}
+
+void DataManager::DDR2DDRAreaRouting()
 {
     // DDR2DDR area routing
     for (auto p : m_ddr2ddr_edges)
@@ -1087,15 +1245,16 @@ void DataManager::AreaRouting()
             }
         }
     }
-    storeGroupLayer();
-    sumEscapeLength();
-    // cpu2ddr
+}
+
+void DataManager::CPU2DDRAreaRouting()
+{
     for (auto it = m_cpu2ddr_edges.begin(); it != m_cpu2ddr_edges.end(); ++it)
     {
         auto p = *it;
         bool continued = !(std::next(it) == m_cpu2ddr_edges.end());
-        auto from_pair = std::get<0>(p); // 获取第一个组件对
-        auto to_pair = std::get<1>(p); // 获取第二个组件对
+        auto from_pair = std::get<0>(p); // get the first component pair
+        auto to_pair = std::get<1>(p); // get the second component pair
         bool fly_by = std::get<2>(p);
         auto t_topology_layer = std::get<3>(p);
         auto &comp1 = m_components[from_pair.first];
@@ -1107,7 +1266,7 @@ void DataManager::AreaRouting()
         if (fly_by)
         {
             auto &comp2 = m_components[to_pair.first];
-            comp2->rotateAll(true);
+            auto &ddr_escape_point = comp2->escape_points().at(to_pair.second == 'E' ? 1 : 0);
             // find out which group contain the comp2
             std::string group_name;
             for (auto group : m_groups)
@@ -1121,22 +1280,28 @@ void DataManager::AreaRouting()
                     }
                 }
             }
+
+            comp2->rotateAll(true);
+            // sort comp2->escape_points() from top to bottom (a.y < b.y)
+            std::sort(ddr_escape_point.begin(), ddr_escape_point.end(), [](auto a, auto b) {
+                return a.first.y() > b.first.y();
+            });
+            comp2->rotateAll(false);
+
             // DDR expend
             if (to_pair.second == 'E' || to_pair.second == 'W')
             {
-                // *** comp2 is rotated
-                // from_pair.second to string
                 reorderCPUEscapePoints(cpu_escape_point, std::string(1, from_pair.second));
-                auto tmp_group = groupDDREscapePoints(comp2->escape_points().at(to_pair.second == 'E' ? 1 : 0));
+                auto tmp_group = groupDDREscapePoints(ddr_escape_point);
                 switchDDREscapeLayers(*this, cpu_escape_point, std::move(tmp_group));
-                // debug show every net layer order
-                for (auto &ep : comp2->escape_points().at(to_pair.second == 'E' ? 1 : 0))
-                {
-                    std::cout << "Debuging Net ID: " << ep.second << " Layer: " << ep.first.z() << std::endl;
-                }
-                processDiagonalAndExtendSegment(to_pair.second, from_pair.second, comp2, cpu_escape_point, continued);
+                const auto &pitch = (m_wire_spacing + m_wire_width) * std::sqrt(2);
+                extendCPUEscapePoint(m_cpu_escape_boundry, pitch, cpu_escape_point, ddr_escape_point);
+                createGrid(cpu_escape_point, ddr_escape_point, pitch);
+                markExistingSegments();
+                A_Star::Point parent;
+                A_Star::parentLookupTable(parent, std::string(1, to_pair.second), comp2->rotation_angle());
+                CPU2DDR_A_Star(cpu_escape_point, ddr_escape_point, parent);
             }
-            comp2->rotateAll(false);
         }
         else
         {
@@ -1486,6 +1651,14 @@ void DataManager::AreaRouting()
             }
         }
     }
+}
+
+void DataManager::AreaRouting()
+{
+    DDR2DDRAreaRouting();
+    storeGroupLayer();
+    sumEscapeLength();
+    CPU2DDRAreaRouting();
 }
 
 void DataManager::analyzeWirelength()

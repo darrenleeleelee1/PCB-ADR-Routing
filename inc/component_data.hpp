@@ -13,6 +13,12 @@
 #include <unordered_set>
 #include <vector>
 class Router;
+// Forward declaration of A_Star namespace and Grid class
+namespace A_Star
+{
+struct Point;
+class Grid;
+} // namespace A_Star
 
 // Float point comparison
 inline bool deq(double a, double b, double epsilon = 1e-4)
@@ -410,6 +416,7 @@ private:
     // escape wirelength by layer, [group name][net_id][(layer), (order)]
     std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>>
         m_group_escape_layer_order; // group name, escape length
+    std::unordered_map<int, std::shared_ptr<A_Star::Grid>> m_grids;
     // helper function
     void processDiagonalAndExtendSegment(char to_pair_second,
                                          char from_pair_second,
@@ -496,6 +503,9 @@ public:
     {
         return m_group_escape_layer_order;
     }
+    // Access for grids
+    const std::unordered_map<int, std::shared_ptr<A_Star::Grid>> &grids() const { return m_grids; }
+    std::unordered_map<int, std::shared_ptr<A_Star::Grid>> &grids() { return m_grids; }
     // Methods
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
@@ -505,6 +515,19 @@ public:
     void DDR2DDR();
     void CPU2DDR();
     void postprocess_ER();
+    void extendCPUEscapePoint(const std::string &extend_direction,
+                              const double &spacing,
+                              std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                              std::vector<std::pair<Coordinate, int>> &ddr_ep);
+    void createGrid(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                    const std::vector<std::pair<Coordinate, int>> &ddr_ep,
+                    const double &pitch);
+    void CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                        const std::vector<std::pair<Coordinate, int>> &ddr_ep,
+                        const A_Star::Point &parent);
+    void markExistingSegments();
+    void DDR2DDRAreaRouting();
+    void CPU2DDRAreaRouting();
     void AreaRouting();
     void analyzeWirelength();
     // check and correct the segment is not correctly double value

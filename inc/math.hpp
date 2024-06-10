@@ -1,12 +1,13 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 #include "component_data.hpp"
+#include "grid.hpp"
 #include <filesystem>
 #include <fstream>
 namespace math
 {
 Coordinate rotateCoordinate(const Coordinate &point, const double &angle);
-
+A_Star::Point rotatePoint(const A_Star::Point &point, const double &angle);
 class ILP
 {
 private:
