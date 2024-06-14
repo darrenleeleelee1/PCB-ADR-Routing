@@ -167,11 +167,13 @@ public:
     std::vector<Point> a_star_search(Point start, Point goal, const Point &parent);
     std::vector<Segment> points2segments(const std::vector<Point> &points, const int &net_id, const int &layer);
     std::vector<Point> segments2points(const std::vector<Segment> &segments);
-    void addObstacle(const Point &obstacle);
-    void addObstacle(const std::vector<Point> &obstacle);
+    void addObstacle(const Via &obstacle);
+    void addObstacle(const Obstacle &obstacle);
     void addObstacle(const Segment &obstacle);
     void addObstacle(std::vector<Segment> &obstacles);
-    void addObstacle(const Coordinate &start, const Coordinate &end);
+    void addObstacle(const Point &obstacle);
+    void addObstacle(const std::vector<Point> &obstacle);
+    void addObstacle(const Coordinate &obstacle);
 };
 } // namespace A_Star
 

@@ -69,6 +69,20 @@ public:
     {
         return m_z == other.z() && std::abs(m_x - other.x()) < tolerance && std::abs(m_y - other.y()) < tolerance;
     }
+
+    std::vector<Coordinate> getAdjacentCoordinates() const
+    {
+        std::vector<Coordinate> adjacents;
+        adjacents.emplace_back(m_x + 1, m_y, m_z);
+        adjacents.emplace_back(m_x - 1, m_y, m_z);
+        adjacents.emplace_back(m_x, m_y + 1, m_z);
+        adjacents.emplace_back(m_x, m_y - 1, m_z);
+        adjacents.emplace_back(m_x + 1, m_y + 1, m_z);
+        adjacents.emplace_back(m_x - 1, m_y - 1, m_z);
+        adjacents.emplace_back(m_x + 1, m_y - 1, m_z);
+        adjacents.emplace_back(m_x - 1, m_y + 1, m_z);
+        return adjacents;
+    }
 #ifdef VERBOSE
     std::string printCoordinate() const
     {
@@ -525,7 +539,7 @@ public:
     void CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                         const std::vector<std::pair<Coordinate, int>> &ddr_ep,
                         const A_Star::Point &parent);
-    void markExistingSegments();
+    void markExistingObstacles();
     void DDR2DDRAreaRouting();
     void CPU2DDRAreaRouting();
     void AreaRouting();
@@ -860,6 +874,46 @@ public:
             // Create the new segment from the current end to the new end
             return Segment(m_start, new_end);
         }
+    }
+    // Function to calculate the octile distance between two coordinates
+    static double calculateOctileDistance(const Coordinate &start, const Coordinate &end)
+    {
+        if (start.z() != end.z())
+        {
+            throw std::invalid_argument("Segment::calculateOctileDistance Start and end z are not the same.");
+        }
+        double dx = std::abs(end.x() - start.x());
+        double dy = std::abs(end.y() - start.y());
+        return std::max(dx, dy) + (sqrt(2) - 1) * std::min(dx, dy);
+    }
+
+    // Function to generate the path between two coordinates using octile distance
+    static std::vector<Segment> generatePath(const Coordinate &start, const Coordinate &end)
+    {
+        std::vector<Segment> path;
+        Coordinate current = start;
+
+        while (current != end)
+        {
+            std::vector<Coordinate> adjacents = current.getAdjacentCoordinates();
+            double min_distance = std::numeric_limits<double>::infinity();
+            Coordinate next;
+
+            for (const auto &adj : adjacents)
+            {
+                double distance = calculateOctileDistance(adj, end);
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    next = adj;
+                }
+            }
+
+            path.emplace_back(current, next);
+            current = next;
+        }
+
+        return path;
     }
 };
 

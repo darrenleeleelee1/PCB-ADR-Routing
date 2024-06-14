@@ -105,6 +105,7 @@ TEST_F(SegmentTest, CreateExtendedSegmentByDegreeAndLengthVariousAngles)
         expectCoordinateNear(extended_segment2.end(), test_case.expected_end);
     }
 }
+
 // Test case for createExtendedSegmentByDegree with various angles and initial segments
 TEST_F(SegmentTest, CreateExtendedSegmentByDegreeVariousAnglesAndInitialSegments)
 {
@@ -203,6 +204,71 @@ TEST_F(SegmentTest, CreateExtendedSegmentByDegreeVariousAnglesAndInitialSegments
         Segment extended_segment =
             segment.createExtendedSegmentByDegree(test_case.angle, test_case.target_x, test_case.target_y);
         expectCoordinateNear(extended_segment.end(), test_case.expected_end);
+    }
+}
+
+// Test Octile Distance Calculation
+TEST_F(SegmentTest, OctileDistance)
+{
+    Coordinate start(1, 2, 0);
+    Coordinate end(4, 6, 0);
+
+    // Calculate Octile distance
+    double distance = Segment::calculateOctileDistance(start, end);
+    EXPECT_DOUBLE_EQ(distance, 5.242640687119285); // Example expected value, adjust if necessary
+}
+
+// Test Path Generation
+TEST_F(SegmentTest, OctilePath)
+{
+    Coordinate start(1, 2, 0);
+    Coordinate end(4, 6, 0);
+
+    // Generate Path
+    std::vector<Segment> path = Segment::generatePath(start, end);
+
+    // Expected Path
+    std::vector<Segment> expected_path{Segment(Coordinate(1, 2, 0), Coordinate(2, 3, 0)),
+                                       Segment(Coordinate(2, 3, 0), Coordinate(3, 4, 0)),
+                                       Segment(Coordinate(3, 4, 0), Coordinate(4, 5, 0)),
+                                       Segment(Coordinate(4, 5, 0), Coordinate(4, 6, 0))};
+
+    ASSERT_EQ(path.size(), expected_path.size());
+
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        EXPECT_EQ(path[i].start(), expected_path[i].start());
+        EXPECT_EQ(path[i].end(), expected_path[i].end());
+    }
+}
+
+// Test Path Generation for specific coordinates
+TEST_F(SegmentTest, OctilePathSpecific)
+{
+    Coordinate start(10.512, 12.212, 0);
+    Coordinate end(20.123, 20.002, 0);
+
+    // Generate Path
+    std::vector<Segment> path = Segment::generatePath(start, end);
+
+    // Expected Path (example, adjust if necessary)
+    std::vector<Segment> expected_path{Segment(Coordinate(10.512, 12.212, 0), Coordinate(11.512, 13.212, 0)),
+                                       Segment(Coordinate(11.512, 13.212, 0), Coordinate(12.512, 14.212, 0)),
+                                       Segment(Coordinate(12.512, 14.212, 0), Coordinate(13.512, 15.212, 0)),
+                                       Segment(Coordinate(13.512, 15.212, 0), Coordinate(14.512, 16.212, 0)),
+                                       Segment(Coordinate(14.512, 16.212, 0), Coordinate(15.512, 17.212, 0)),
+                                       Segment(Coordinate(15.512, 17.212, 0), Coordinate(16.512, 18.212, 0)),
+                                       Segment(Coordinate(16.512, 18.212, 0), Coordinate(17.512, 19.212, 0)),
+                                       Segment(Coordinate(17.512, 19.212, 0), Coordinate(18.512, 20.212, 0)),
+                                       Segment(Coordinate(18.512, 20.212, 0), Coordinate(19.123, 20.002, 0)),
+                                       Segment(Coordinate(19.123, 20.002, 0), Coordinate(20.123, 20.002, 0))};
+
+    ASSERT_EQ(path.size(), expected_path.size());
+
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        EXPECT_EQ(path[i].start(), expected_path[i].start());
+        EXPECT_EQ(path[i].end(), expected_path[i].end());
     }
 }
 

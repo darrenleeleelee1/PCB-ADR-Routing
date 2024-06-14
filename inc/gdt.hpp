@@ -36,6 +36,7 @@ public:
     void preprocess();
     void routing();
     void areaRouting();
+    void areaRoutingWithGrid();
     void gdt2gds(std::string prefix);
 };
 

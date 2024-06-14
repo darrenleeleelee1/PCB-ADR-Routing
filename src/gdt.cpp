@@ -275,9 +275,9 @@ void GDTWriter::routing()
 void GDTWriter::areaRouting()
 {
     // mkdir GDT_files if not exists
-    std::string file_name = m_root_path + "areaRouting";
+    std::string file_name = m_root_path + __func__;
     std::ofstream file(file_name, std::ios::trunc);
-    m_gdt_files.push_back("areaRouting");
+    m_gdt_files.push_back(__func__);
 
     std::time_t current_time = std::time(nullptr);
     struct std::tm *time_info;
@@ -356,6 +356,113 @@ void GDTWriter::areaRouting()
     file << "}\n}\n";
     file.close();
 }
+
+void GDTWriter::areaRoutingWithGrid()
+{
+    std::string file_name = m_root_path + __func__;
+    std::ofstream file(file_name, std::ios::trunc);
+    m_gdt_files.push_back(__func__);
+
+    std::time_t current_time = std::time(nullptr);
+    struct std::tm *time_info;
+    char formatted_time[20]; // 20 characters are enough to hold "YYYY-MM-DD HH:MM:SS\0"
+
+    time_info = std::localtime(&current_time);
+    std::strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S", time_info);
+
+    std::string formatted_time_str(formatted_time);
+
+    file << "gds2{5\n";
+    file << "m=" << formatted_time_str << " a=" << formatted_time_str << "\nlib 'preprocessed' 0.001 1e-09\n";
+    file << "cell{c=" << formatted_time_str << " m=" << formatted_time_str << " 'pins and wires'\n";
+    for (auto comp_pair : m_data_manager.components())
+    {
+        auto &comp = comp_pair.second;
+        for (int i = comp->pin_arr().size() - 1; i >= 0; --i)
+        {
+            for (size_t j = 0; j < comp->pin_arr().at(i).size(); ++j)
+            {
+                if (comp->pin_arr().at(i).at(j))
+                {
+                    auto pin = comp->pin_arr().at(i).at(j);
+                    file << "b{0 dt" << pin->net_id() << " xy(" << generateCirclePoints(pin->coordinate()) << ")}\n";
+                    file << "t{255 tt" << pin->net_id() << " mc m2 xy(" << pin->coordinate().x() << ", "
+                         << pin->coordinate().y() << ") '" << pin->net_id() << "'}\n";
+                }
+                else
+                {
+                    Coordinate zero_degree_bottom_left_x =
+                        math::rotateCoordinate(comp->bottom_left(), -comp->rotation_angle());
+
+                    Coordinate missing_pin(j * comp->tile_width() + zero_degree_bottom_left_x.x(),
+                                           i * comp->tile_height() + zero_degree_bottom_left_x.y(),
+                                           0);
+
+                    missing_pin = math::rotateCoordinate(missing_pin, comp->rotation_angle());
+                    file << "b{0 dt255 xy(" << generateCirclePoints(missing_pin) << ")}\n";
+                }
+            }
+        }
+    }
+
+    for (auto comp_pair : m_data_manager.components())
+    {
+        auto comp = comp_pair.second;
+        auto router = comp->router();
+        for (auto &seg : router->segments())
+        {
+            file << "b{" << seg.start().z() << " dt" << seg.net_id() << " xy("
+                 << generateLinePoints(seg.start(), seg.end()) << ")}\n";
+        }
+        for (auto &via : router->vias())
+        {
+            for (int k = via.coordinate().z(); k <= via.layer(); k++)
+            {
+                file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate())
+                     << ")}\n";
+            }
+        }
+    }
+
+    auto router = m_data_manager.area_router();
+    for (auto &seg : router->segments())
+    {
+        file << "b{" << seg.start().z() << " dt" << seg.net_id() << " xy(" << generateLinePoints(seg.start(), seg.end())
+             << ")}\n";
+    }
+    for (auto &via : router->vias())
+    {
+        for (int k = via.coordinate().z(); k <= via.layer(); k++)
+        {
+            file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate()) << ")}\n";
+        }
+    }
+    // grid std::unordered_map<int, std::shared_ptr<A_Star::Grid>> m_grids;
+    for (const auto &grid_map : m_data_manager.grids())
+    {
+        const auto &layer = grid_map.first;
+        const auto &grid = grid_map.second;
+        // mark the obstacle girids with bottom_left and top_right and grid_width
+        Coordinate bottom_left = grid->bottome_left;
+        double grid_width = grid->grid_witdh;
+        for (int i = 0; i < grid->rows; ++i)
+        {
+            for (int j = 0; j < grid->cols; ++j)
+            {
+                if (grid->grid.at(i).at(j) == 1)
+                {
+                    Coordinate start(bottom_left.x() + i * grid_width, bottom_left.y() + j * grid_width, 0);
+                    Coordinate end(bottom_left.x() + (i + 1) * grid_width, bottom_left.y() + (j + 1) * grid_width, 0);
+                    file << "b{" << layer << " dt244 xy(" << generateRectanglePoints(start, end) << ")}\n";
+                }
+            }
+        }
+    }
+
+    file << "}\n}\n";
+    file.close();
+}
+
 void GDTWriter::gdt2gds(std::string prefix)
 {
     std::string command;

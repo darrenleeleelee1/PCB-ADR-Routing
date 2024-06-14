@@ -68,8 +68,10 @@ int main(int argc, char const *argv[])
 
     utils::printlog("Area Routing DDR2DDR...");
     data_manager->AreaRouting();
+
 #ifdef GDT
     gdt_writer.areaRouting();
+    // gdt_writer.areaRoutingWithGrid(); // debuging for grid
 #endif
     clp_writer.areaRouting();
 
