@@ -313,7 +313,7 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
                                double wire_spacing,
                                double wire_width,
                                double bump_ball_radius,
-                               std::string escape_boundry)
+                               std::string escape_boundary)
 {
     if (!component.is_cpu())
     {
@@ -449,7 +449,7 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
         }
     }
     // Tiles to Target and Pins to Target
-    for (auto character : escape_boundry)
+    for (auto character : escape_boundary)
     {
         switch (character)
         {
@@ -505,7 +505,7 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
                 }
             }
             break;
-        default: throw std::runtime_error("Invalid escape boundry character");
+        default: throw std::runtime_error("Invalid escape boundary character");
         }
     }
 }
@@ -630,7 +630,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
             }
         }
     }
-    // After via assignment, assign edges to boundry
+    // After via assignment, assign edges to boundary
     for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei)
     {
         long flow = capacity[*ei] - residual_capacity[*ei];
@@ -1192,7 +1192,7 @@ void tileDetailedRoute(std::shared_ptr<Router> router,
         throw std::runtime_error("Invalid from and to: " + std::string(1, from) + ", " + std::string(1, to));
     }
 }
-void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string escape_boundry)
+void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component, std::string escape_boundary)
 {
     std::regex vertex_pattern("v([0-9]{1,2})_([0-9]{1,2})");
     std::regex tile_pattern("([NSEWC])([0-9]{1,2})_([0-9]{1,2})");
@@ -1311,7 +1311,7 @@ void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component,
                     throw std::runtime_error("Pin not found");
                 }
 
-                if (escape_boundry.find('N') != std::string::npos)
+                if (escape_boundary.find('N') != std::string::npos)
                 {
                     router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
                                                           pin_bottom_left.y() + s_i * component.tile_height(),
@@ -1321,7 +1321,7 @@ void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component,
                                                           pin_bottom_left.z()),
                                                pin->net_id()});
                 }
-                else if (escape_boundry.find('S') != std::string::npos)
+                else if (escape_boundary.find('S') != std::string::npos)
                 {
                     router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
                                                           pin_bottom_left.y() + s_i * component.tile_height(),
@@ -1331,7 +1331,7 @@ void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component,
                                                           pin_bottom_left.z()),
                                                pin->net_id()});
                 }
-                else if (escape_boundry.find('E') != std::string::npos)
+                else if (escape_boundary.find('E') != std::string::npos)
                 {
                     router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
                                                           pin_bottom_left.y() + s_i * component.tile_height(),
@@ -1341,7 +1341,7 @@ void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component,
                                                           pin_bottom_left.z()),
                                                pin->net_id()});
                 }
-                else if (escape_boundry.find('W') != std::string::npos)
+                else if (escape_boundary.find('W') != std::string::npos)
                 {
                     router->addSegment(Segment{Coordinate(pin_bottom_left.x() + s_j * component.tile_width(),
                                                           pin_bottom_left.y() + s_i * component.tile_height(),
@@ -1353,32 +1353,32 @@ void GraphManager::CPU2DDR(std::shared_ptr<Router> router, Component &component,
                 }
                 else
                 {
-                    throw std::runtime_error("Invalid escape boundry character");
+                    throw std::runtime_error("Invalid escape boundary character");
                 }
             }
             if (std::regex_match(source_name, match_source, tile_pattern) && target_name == "t")
             {
                 int s_i = std::stoi(match_source[2].str());
                 int s_j = std::stoi(match_source[3].str());
-                if (escape_boundry.find('N') != std::string::npos)
+                if (escape_boundary.find('N') != std::string::npos)
                 {
                     v_tmp_tiles.at(s_i).at(s_j).direction[N][OUT] += flow;
                 }
-                else if (escape_boundry.find('S') != std::string::npos)
+                else if (escape_boundary.find('S') != std::string::npos)
                 {
                     v_tmp_tiles.at(s_i).at(s_j).direction[S][OUT] += flow;
                 }
-                else if (escape_boundry.find('E') != std::string::npos)
+                else if (escape_boundary.find('E') != std::string::npos)
                 {
                     v_tmp_tiles.at(s_i).at(s_j).direction[E][OUT] += flow;
                 }
-                else if (escape_boundry.find('W') != std::string::npos)
+                else if (escape_boundary.find('W') != std::string::npos)
                 {
                     v_tmp_tiles.at(s_i).at(s_j).direction[W][OUT] += flow;
                 }
                 else
                 {
-                    throw std::runtime_error("Invalid escape boundry character");
+                    throw std::runtime_error("Invalid escape boundary character");
                 }
             }
         }

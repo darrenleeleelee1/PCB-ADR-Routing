@@ -11,6 +11,7 @@ Point getDirection(const Point &prev, const Point &current)
     }
     return Point(current.x - prev.x, current.y - prev.y);
 }
+
 bool sameDirection(const Point &prev, const Point &current, const Point &new_direction)
 {
     if (prev == Point(-1, -1))
@@ -20,6 +21,7 @@ bool sameDirection(const Point &prev, const Point &current, const Point &new_dir
     Point direction(current.x - prev.x, current.y - prev.y);
     return direction == new_direction;
 }
+
 std::vector<Point> Grid::get_valid_directions(const Point &prev, const Point &current)
 {
     if (prev == Point(-1, -1))
@@ -245,13 +247,53 @@ std::vector<Point> Grid::segments2points(const std::vector<Segment> &segments)
     return points;
 }
 
-void Grid::addCost(const Point &point) { cost_grid[point.x][point.y] += path_cost; }
+void Grid::addCost(const Point &point, double cost) { cost_grid[point.x][point.y] += cost; }
 
 void Grid::addPathCost(const std::vector<Point> &path)
 {
     for (const auto &p : path)
     {
-        addCost(p);
+        addCost(p, path_cost);
+    }
+}
+
+void Grid::addHistoryCost(const std::vector<Point> &path)
+{
+    for (const auto &p : path)
+    {
+        addCost(p, history_cost);
+    }
+}
+
+bool Grid::isOverlap(const std::vector<Point> &path_1, const std::vector<Point> &path_2)
+{
+    for (const auto &p : path_1)
+    {
+        if (std::find(path_2.begin(), path_2.end(), p) != path_2.end())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<Point> Grid::overlapPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2){
+    std::vector<Point> overlap;
+    for (const auto &p : path_1)
+    {
+        if (std::find(path_2.begin(), path_2.end(), p) != path_2.end())
+        {
+            overlap.push_back(p);
+        }
+    }
+    return overlap;
+
+}
+
+void Grid::ripUpPath(const std::vector<Point> &path){
+    for (const auto &p : path)
+    {
+        cost_grid[p.x][p.y] -= path_cost;
     }
 }
 

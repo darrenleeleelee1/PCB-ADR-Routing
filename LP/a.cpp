@@ -16,14 +16,14 @@ void t(IloEnv &env, IloModel &model, IloNumVarArray &x, int n)
 {
     IloNumVarArray xoffset(env);
     int numOfTerminals = n;
-    int boundry = 1000000;
+    int boundary = 1000000;
     int terminalSpace = 100, terminalHeight = 100, terminalWidth = 100;
     int a = 8, b = 15, c = 8, d = 15;
     for (int i = 0; i < numOfTerminals; i++)
     {
         xoffset.add(IloNumVar(env));
         x.add(IloNumVar(
-            env, max(0, (a + 6 * i) - 2 * terminalSpace), min(boundry, (b + 6 * i) + 2 * terminalSpace), ILOINT));
+            env, max(0, (a + 6 * i) - 2 * terminalSpace), min(boundary, (b + 6 * i) + 2 * terminalSpace), ILOINT));
     }
     for (int i = 0; i < numOfTerminals; i++)
     {

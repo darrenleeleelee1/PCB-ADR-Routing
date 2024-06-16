@@ -233,7 +233,7 @@ void Component::calculateEscapePoints()
     if (m_is_cpu)
     {
         double boundary_point = 0;
-        if (m_cpu_escape_boundry == "N")
+        if (m_cpu_escape_boundary == "N")
         {
             boundary_point = m_top_right.y() + tile_height();
             for (auto &seg : m_router->segments())
@@ -252,7 +252,7 @@ void Component::calculateEscapePoints()
                 return a.first.x() < b.first.x();
             });
         }
-        else if (m_cpu_escape_boundry == "E")
+        else if (m_cpu_escape_boundary == "E")
         {
             boundary_point = m_top_right.x() + tile_width();
             for (auto &seg : m_router->segments())
@@ -271,7 +271,7 @@ void Component::calculateEscapePoints()
                 return a.first.y() > b.first.y();
             });
         }
-        else if (m_cpu_escape_boundry == "S")
+        else if (m_cpu_escape_boundary == "S")
         {
             boundary_point = m_bottom_left.y() - tile_height();
             for (auto &seg : m_router->segments())
@@ -290,7 +290,7 @@ void Component::calculateEscapePoints()
                 return a.first.x() > b.first.x();
             });
         }
-        else if (m_cpu_escape_boundry == "W")
+        else if (m_cpu_escape_boundary == "W")
         {
             boundary_point = m_bottom_left.x() - tile_width();
             for (auto &seg : m_router->segments())
@@ -311,11 +311,11 @@ void Component::calculateEscapePoints()
         }
         else
         {
-            throw std::runtime_error("Error: CPU escape boundry not found");
+            throw std::runtime_error("Error: CPU escape boundary not found");
         }
 
 #ifdef VERBOSE
-        std::cout << "CPU escape boundry: " << m_cpu_escape_boundry << std::endl;
+        std::cout << "CPU escape boundary: " << m_cpu_escape_boundary << std::endl;
         std::cout << "Boundary point: " << boundary_point << std::endl;
         std::cout << "# Escape points N: " << m_cpu_escape_points.at(0).size() << std::endl;
         std::cout << "# Escape points E: " << m_cpu_escape_points.at(1).size() << std::endl;
@@ -568,7 +568,7 @@ void DataManager::CPU2DDR()
         {
             graph_manager = std::make_shared<GraphManager>();
             graph_manager->CPU2DDRInit(
-                *this, *comp, m_wire_spacing, m_wire_width, bump_ball_radius, m_cpu_escape_boundry);
+                *this, *comp, m_wire_spacing, m_wire_width, bump_ball_radius, m_cpu_escape_boundary);
             flow = graph_manager->minCostMaxFlow();
 #ifdef VERBOSE
             // std::cout << "CPU2DDR: " << comp->comp_name() << std::endl;
@@ -576,7 +576,7 @@ void DataManager::CPU2DDR()
             // std::cout << "#pins = " << (long)comp->pins().size() << std::endl;
 #endif
             // escape routing
-            graph_manager->CPU2DDR(comp->router(), *comp, m_cpu_escape_boundry);
+            graph_manager->CPU2DDR(comp->router(), *comp, m_cpu_escape_boundary);
             try
             {
                 if (flow != (long)comp->pins().size())
@@ -655,7 +655,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
     {
         double y_bound_shift = 0, y_bound_shift_limit = 5000;
         double outtest_coordinate =
-            (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "E")
+            (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "E")
                 ? std::numeric_limits<double>::lowest()
                 : std::numeric_limits<double>::max(); // CPU, N: largest y, E: largest x, S: smallest y, W: smallest x
         bool stop = false;
@@ -714,34 +714,34 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
                 {
                     extent_segment = diagonal_segment.createExtendedSegmentByDegree(
                         0.0,
-                        (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "S")
+                        (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "S")
                             ? cpu_ep.x()
                             : std::numeric_limits<double>::quiet_NaN(),
-                        (m_cpu_escape_boundry == "W" || m_cpu_escape_boundry == "E")
+                        (m_cpu_escape_boundary == "W" || m_cpu_escape_boundary == "E")
                             ? cpu_ep.y()
                             : std::numeric_limits<double>::quiet_NaN());
                 }
 
                 // extent_segment end point 超出CPU邊界，y_bound_shift + 10
-                if ((m_cpu_escape_boundry == "W" && extent_segment.end().x() > cpu_ep.x()) ||
-                    (m_cpu_escape_boundry == "E" && extent_segment.end().x() < cpu_ep.x()) ||
-                    (m_cpu_escape_boundry == "N" && extent_segment.end().y() < cpu_ep.y()) ||
-                    (m_cpu_escape_boundry == "S" && extent_segment.end().y() > cpu_ep.y()))
+                if ((m_cpu_escape_boundary == "W" && extent_segment.end().x() > cpu_ep.x()) ||
+                    (m_cpu_escape_boundary == "E" && extent_segment.end().x() < cpu_ep.x()) ||
+                    (m_cpu_escape_boundary == "N" && extent_segment.end().y() < cpu_ep.y()) ||
+                    (m_cpu_escape_boundary == "S" && extent_segment.end().y() > cpu_ep.y()))
                 {
                     y_bound_shift += 10;
                     stop = false;
                     break;
                 }
                 // CPU, N: largest y, E: largest x, S: smallest y, W: smallest x
-                if (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "W")
+                if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "W")
                 {
-                    outtest_coordinate = m_cpu_escape_boundry == "N"
+                    outtest_coordinate = m_cpu_escape_boundary == "N"
                                              ? std::max(outtest_coordinate, extent_segment.end().y())
                                              : std::min(outtest_coordinate, extent_segment.end().y());
                 }
                 else
                 {
-                    outtest_coordinate = m_cpu_escape_boundry == "E"
+                    outtest_coordinate = m_cpu_escape_boundary == "E"
                                              ? std::max(outtest_coordinate, extent_segment.end().x())
                                              : std::min(outtest_coordinate, extent_segment.end().x());
                 }
@@ -767,7 +767,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
                     cpu_ep = ep.first;
                     if (continued)
                     {
-                        if (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "W")
+                        if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "W")
                         {
                             ep.first.y() = outtest_coordinate;
                         }
@@ -799,7 +799,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
             if (y_bound_shift > y_bound_shift_limit)
             {
                 Segment straight_segment = std::move(diagonal_segment);
-                if (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "W")
+                if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "W")
                 {
                     straight_segment.end() = Coordinate{cpu_ep.x(), straight_segment.start().y(), ep.z()};
                 }
@@ -828,10 +828,10 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
             {
                 extent_segment = diagonal_segment.createExtendedSegmentByDegree(
                     0.0,
-                    (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "S")
+                    (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "S")
                         ? cpu_ep.x()
                         : std::numeric_limits<double>::quiet_NaN(),
-                    (m_cpu_escape_boundry == "W" || m_cpu_escape_boundry == "E")
+                    (m_cpu_escape_boundary == "W" || m_cpu_escape_boundary == "E")
                         ? cpu_ep.y()
                         : std::numeric_limits<double>::quiet_NaN());
             }
@@ -841,7 +841,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
 
             if (continued)
             {
-                if (m_cpu_escape_boundry == "N" || m_cpu_escape_boundry == "W")
+                if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "W")
                 {
                     cpu_extend_to_drill_via.end().y() = outtest_coordinate;
                 }
@@ -858,6 +858,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
         }
     }
 }
+
 std::map<std::pair<int, int>, std::vector<std::pair<int, int>>>
 groupDDREscapePoints(std::vector<std::pair<Coordinate, int>> &escape_points)
 {
@@ -1037,21 +1038,21 @@ void switchDDREscapeLayers(DataManager &datamanager,
     }
 }
 
-int getCPUEscapeBoundaryIndex(std::string cpu_escape_boundry)
+int getCPUEscapeBoundaryIndex(std::string cpu_escape_boundary)
 {
-    if (cpu_escape_boundry == "N")
+    if (cpu_escape_boundary == "N")
     {
         return 0;
     }
-    else if (cpu_escape_boundry == "E")
+    else if (cpu_escape_boundary == "E")
     {
         return 1;
     }
-    else if (cpu_escape_boundry == "S")
+    else if (cpu_escape_boundary == "S")
     {
         return 2;
     }
-    else if (cpu_escape_boundry == "W")
+    else if (cpu_escape_boundary == "W")
     {
         return 3;
     }
@@ -1133,6 +1134,7 @@ void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &
 {
     // ddr_ep is start point, cpu_ep is end point using net_id to find the pair
     // and the using layer is depends on ddr_ep layer
+    std::unordered_map<int, RouteCandidate> route_information; // (net_id, route candidate)
     std::unordered_map<int, std::deque<RouteCandidate>> route_candidates; // (layer, deque<route candidates>)
     std::unordered_set<int> layers; // store all layers, later will route layer by layer
     std::unordered_map<int, A_Star::PathInfo> paths; // store all paths, (net_id, path)
@@ -1150,6 +1152,7 @@ void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &
             {
                 continue;
             }
+            route_information[s_net_id] = RouteCandidate{start, end, s_net_id, layer};
             route_candidates[layer].emplace_back(RouteCandidate{start, end, s_net_id, layer});
             break;
         }
@@ -1159,19 +1162,54 @@ void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &
         auto grid = m_grids[layer];
         while (!route_candidates[layer].empty())
         {
+#ifdef VERBOSE
+            std::cout << "Routing net_id: " << route_candidates[layer].front().net_id
+                      << " Layer: " << route_candidates[layer].front().layer 
+                      << " # of waiting: " << route_candidates[layer].size() << std::endl;
+#endif
             auto rc = route_candidates[layer].front();
             route_candidates[layer].pop_front();
             auto start = rc.start;
             auto end = rc.end;
             auto net_id = rc.net_id;
+
+            // have been routed, need rip-up the old path
+            if (paths.count(net_id)) {
+                grid->ripUpPath(paths[net_id].points_path);
+            }
+
             auto point_path = grid->a_star_search(start, end, parent_direction);
             if (point_path.size() == 0)
             {
                 continue;
             }
+            // overlap with other path, reroute the overlapped one
+            for (const auto &p : paths)
+            {
+                const auto &p_info = p.second;
+                if (p_info.layer != layer) continue;
+                if (p_info.net_id == net_id) continue;
+                if(grid->isOverlap(p_info.points_path, point_path)) {
+                    // If not in deque, add it to deque
+                    bool exist = false;
+                    for (const auto &dq : route_candidates[layer]) {
+                        if (dq.net_id == p_info.net_id) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (exist) continue;
+                    // print out overlap path
+#ifdef VERBOSE
+                    std::cout << net_id << " is Overlap with net_id: " << p_info.net_id << std::endl;
+
+#endif
+                    route_candidates[layer].emplace_back(route_information[p_info.net_id]);
+                    grid->addHistoryCost(grid->overlapPath(p_info.points_path, point_path));
+                }
+            }
             grid->addPathCost(point_path);
             paths[net_id] = A_Star::PathInfo{start, end, net_id, layer, point_path};
-            // addPointsPath2Segments(*grid, point_path, net_id, layer, start, end);
         }
     }
     for (auto &p_path : paths)
@@ -1359,9 +1397,9 @@ void DataManager::CPU2DDRAreaRouting()
         auto &comp1 = m_components[from_pair.first];
 
         // cpu escape points
-        // check m_cpu_escape_boundry is "N" or "E" or "S" or "W" to get the exact cpu_escape_points
-        int cpu_escape_boundry_idx = getCPUEscapeBoundaryIndex(m_cpu_escape_boundry);
-        auto &cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundry_idx);
+        // check m_cpu_escape_boundary is "N" or "E" or "S" or "W" to get the exact cpu_escape_points
+        int cpu_escape_boundary_idx = getCPUEscapeBoundaryIndex(m_cpu_escape_boundary);
+        auto &cpu_escape_point = comp1->cpu_escape_points().at(cpu_escape_boundary_idx);
         if (fly_by)
         {
             auto &comp2 = m_components[to_pair.first];
@@ -1397,7 +1435,7 @@ void DataManager::CPU2DDRAreaRouting()
                 // switch net_id all from from_layer to to_layer
                 switchDDREscapeLayers(*this, cpu_escape_point, std::move(tmp_group));
                 const auto &pitch = (m_wire_spacing + m_wire_width) * std::sqrt(2);
-                extendCPUEscapePoint(m_cpu_escape_boundry, pitch * 2.5, cpu_escape_point, ddr_escape_point);
+                extendCPUEscapePoint(m_cpu_escape_boundary, pitch * 2.5, cpu_escape_point, ddr_escape_point);
                 createGrid(cpu_escape_point, ddr_escape_point, pitch);
                 markExistingObstacles();
                 A_Star::Point parent_direction;
@@ -1407,7 +1445,7 @@ void DataManager::CPU2DDRAreaRouting()
         }
         else
         {
-            if (comp1->cpu_escape_boundry() == std::string(1, from_pair.second))
+            if (comp1->cpu_escape_boundary() == std::string(1, from_pair.second))
             {
                 // comp2 is ddr2dde_edge idx
                 auto ddr2ddr_edge = m_ddr2ddr_edges.at(std::stoi(to_pair.first));

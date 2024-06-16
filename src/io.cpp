@@ -229,23 +229,23 @@ void ComponentParser::parse(DataManager &data_manager)
             data_manager.components()[component["id"]]->is_cpu() = true;
             if (component["boundaries"]["N"])
             {
-                data_manager.cpu_escape_boundry() = "N";
-                data_manager.components()[component["id"]]->cpu_escape_boundry() = "N";
+                data_manager.cpu_escape_boundary() = "N";
+                data_manager.components()[component["id"]]->cpu_escape_boundary() = "N";
             }
             else if (component["boundaries"]["E"])
             {
-                data_manager.cpu_escape_boundry() = "E";
-                data_manager.components()[component["id"]]->cpu_escape_boundry() = "E";
+                data_manager.cpu_escape_boundary() = "E";
+                data_manager.components()[component["id"]]->cpu_escape_boundary() = "E";
             }
             else if (component["boundaries"]["S"])
             {
-                data_manager.cpu_escape_boundry() = "S";
-                data_manager.components()[component["id"]]->cpu_escape_boundry() = "S";
+                data_manager.cpu_escape_boundary() = "S";
+                data_manager.components()[component["id"]]->cpu_escape_boundary() = "S";
             }
             else if (component["boundaries"]["W"])
             {
-                data_manager.cpu_escape_boundry() = "W";
-                data_manager.components()[component["id"]]->cpu_escape_boundry() = "W";
+                data_manager.cpu_escape_boundary() = "W";
+                data_manager.components()[component["id"]]->cpu_escape_boundary() = "W";
             }
         }
         data_manager.groups()[component["group"]].push_back(data_manager.components()[component["id"]]);

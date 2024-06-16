@@ -180,7 +180,7 @@ private:
         m_cpu_escape_points; // pair<coordinate, net_id>, only m_is_cpu == true will be used
     std::shared_ptr<Router> m_router;
     std::pair<Coordinate, Coordinate> m_bounding_box; // wires bounding box
-    std::string m_cpu_escape_boundry; // only m_is_cpu == true will be used
+    std::string m_cpu_escape_boundary; // only m_is_cpu == true will be used
     // Private Methods
     std::vector<Coordinate> findBoundingBox();
     double calculateTileWidth(double y_tolerance = 5e-2);
@@ -291,9 +291,9 @@ public:
     // Access for bounding_box
     const std::pair<Coordinate, Coordinate> &bounding_box() const { return m_bounding_box; }
     std::pair<Coordinate, Coordinate> &bounding_box() { return m_bounding_box; }
-    // Access for cpu_escape_boundry
-    const std::string &cpu_escape_boundry() const { return m_cpu_escape_boundry; }
-    std::string &cpu_escape_boundry() { return m_cpu_escape_boundry; }
+    // Access for cpu_escape_boundary
+    const std::string &cpu_escape_boundary() const { return m_cpu_escape_boundary; }
+    std::string &cpu_escape_boundary() { return m_cpu_escape_boundary; }
     // Methods
     void addPin(std::shared_ptr<Pin> pin) { m_pins.push_back(pin); }
     void rotateComponentPins(bool clockwise = true);
@@ -418,7 +418,7 @@ private:
     std::unordered_map<int, std::string> m_layers;
     std::vector<Obstacle> m_obstacles;
     std::shared_ptr<Router> m_area_router;
-    std::string m_cpu_escape_boundry;
+    std::string m_cpu_escape_boundary;
     std::vector<Coordinate> m_pcb_bounding_box; // bottom_left, top_right
     double m_wire_spacing;
     double m_wire_width;
@@ -473,9 +473,9 @@ public:
     // Access for area_router
     const std::shared_ptr<Router> &area_router() const { return m_area_router; }
     std::shared_ptr<Router> &area_router() { return m_area_router; }
-    // Access for cpu_escape_boundry
-    const std::string &cpu_escape_boundry() const { return m_cpu_escape_boundry; }
-    std::string &cpu_escape_boundry() { return m_cpu_escape_boundry; }
+    // Access for cpu_escape_boundary
+    const std::string &cpu_escape_boundary() const { return m_cpu_escape_boundary; }
+    std::string &cpu_escape_boundary() { return m_cpu_escape_boundary; }
     // Access for PCB_bounding_box
     const std::vector<Coordinate> &pcb_bounding_box() const { return m_pcb_bounding_box; }
     std::vector<Coordinate> &pcb_bounding_box() { return m_pcb_bounding_box; }

@@ -152,6 +152,7 @@ public:
     Coordinate bottom_left, top_right;
     double grid_width; // grid_width = grid_height
     const double path_cost = 5.0;
+    const double history_cost = 2.0;
     const double bend_cost = 10.0;
     // Create an empty grid with the given size bottom_left, top_right, and the size of the grid
     Grid(Coordinate _bottom_left, Coordinate _top_right, double _grid_width)
@@ -169,8 +170,12 @@ public:
     std::vector<Point> a_star_search(Point start, Point goal, const Point &parent);
     std::vector<Segment> points2segments(const std::vector<Point> &points, const int &net_id, const int &layer);
     std::vector<Point> segments2points(const std::vector<Segment> &segments);
-    void addCost(const Point &point);
+    bool isOverlap(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
+    std::vector<Point> overlapPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
+    void ripUpPath(const std::vector<Point> &path);
+    void addCost(const Point &point, double cost);
     void addPathCost(const std::vector<Point> &path);
+    void addHistoryCost(const std::vector<Point> &path);
     void addObstacle(const Via &obstacle);
     void addObstacle(const Obstacle &obstacle);
     void addObstacle(const Segment &obstacle);
