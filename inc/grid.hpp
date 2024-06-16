@@ -148,25 +148,29 @@ class Grid
 public:
     int rows, cols;
     std::vector<std::vector<int>> grid;
-    Coordinate bottome_left, top_right;
-    double grid_witdh; // grid_width = grid_height
-
-    // Create an empty grid with the given size bottome_left, top_right, and the size of the grid
-    Grid(Coordinate _bottome_left, Coordinate _top_right, double _grid_witdh)
-        : bottome_left(_bottome_left)
+    std::vector<std::vector<double>> cost_grid;
+    Coordinate bottom_left, top_right;
+    double grid_width; // grid_width = grid_height
+    const double path_cost = 5.0;
+    const double bend_cost = 10.0;
+    // Create an empty grid with the given size bottom_left, top_right, and the size of the grid
+    Grid(Coordinate _bottom_left, Coordinate _top_right, double _grid_width)
+        : bottom_left(_bottom_left)
         , top_right(_top_right)
-        , grid_witdh(_grid_witdh)
+        , grid_width(_grid_width)
     {
-        rows = (top_right.x() - bottome_left.x()) / grid_witdh;
-        cols = (top_right.y() - bottome_left.y()) / grid_witdh;
+        rows = (top_right.x() - bottom_left.x()) / grid_width;
+        cols = (top_right.y() - bottom_left.y()) / grid_width;
         grid = std::vector<std::vector<int>>(rows, std::vector<int>(cols, 0));
+        cost_grid = std::vector<std::vector<double>>(rows, std::vector<double>(cols, 0.0));
     }
     std::vector<Point> get_valid_directions(const Point &prev, const Point &current);
     std::vector<Point> a_star_search(const Coordinate &start, const Coordinate &goal, const Point &parent);
-    std::vector<Point> a_star_search(Point start, Point goal);
     std::vector<Point> a_star_search(Point start, Point goal, const Point &parent);
     std::vector<Segment> points2segments(const std::vector<Point> &points, const int &net_id, const int &layer);
     std::vector<Point> segments2points(const std::vector<Segment> &segments);
+    void addCost(const Point &point);
+    void addPathCost(const std::vector<Point> &path);
     void addObstacle(const Via &obstacle);
     void addObstacle(const Obstacle &obstacle);
     void addObstacle(const Segment &obstacle);
@@ -174,6 +178,25 @@ public:
     void addObstacle(const Point &obstacle);
     void addObstacle(const std::vector<Point> &obstacle);
     void addObstacle(const Coordinate &obstacle);
+};
+
+class PathInfo
+{
+public:
+    Coordinate start;
+    Coordinate end;
+    int net_id;
+    int layer;
+    std::vector<Point> points_path;
+    PathInfo() = default;
+    PathInfo(const Coordinate &s, const Coordinate &e, const int &ni, const int &l, const std::vector<Point> &pp)
+        : start(s)
+        , end(e)
+        , net_id(ni)
+        , layer(l)
+        , points_path(pp)
+    {
+    }
 };
 } // namespace A_Star
 

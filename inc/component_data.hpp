@@ -8,6 +8,7 @@
 #include <cmath>
 #include <list>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -536,6 +537,12 @@ public:
     void createGrid(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                     const std::vector<std::pair<Coordinate, int>> &ddr_ep,
                     const double &pitch);
+    void addPointsPath2Segments(A_Star::Grid &grid,
+                                std::vector<A_Star::Point> &point_path,
+                                const int net_id,
+                                const int layer,
+                                const Coordinate &start,
+                                const Coordinate &end);
     void CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                         const std::vector<std::pair<Coordinate, int>> &ddr_ep,
                         const A_Star::Point &parent);
@@ -888,7 +895,7 @@ public:
     }
 
     // Function to generate the path between two coordinates using octile distance
-    static std::vector<Segment> generatePath(const Coordinate &start, const Coordinate &end)
+    static std::vector<Segment> generatePath(const Coordinate &start, const Coordinate &end, int net_id = -1)
     {
         std::vector<Segment> path;
         Coordinate current = start;
@@ -909,7 +916,7 @@ public:
                 }
             }
 
-            path.emplace_back(current, next);
+            path.emplace_back(current, next, net_id);
             current = next;
         }
 
@@ -953,6 +960,23 @@ public:
                 ++it;
             }
         }
+    }
+};
+
+class RouteCandidate
+{
+public:
+    Coordinate start;
+    Coordinate end;
+    int net_id;
+    int layer;
+    RouteCandidate() = default;
+    RouteCandidate(const Coordinate &s, const Coordinate &e, int ni, int l)
+        : start(s)
+        , end(e)
+        , net_id(ni)
+        , layer(l)
+    {
     }
 };
 #endif // COMPONENT_DATA_HPP

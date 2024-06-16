@@ -443,8 +443,8 @@ void GDTWriter::areaRoutingWithGrid()
         const auto &layer = grid_map.first;
         const auto &grid = grid_map.second;
         // mark the obstacle girids with bottom_left and top_right and grid_width
-        Coordinate bottom_left = grid->bottome_left;
-        double grid_width = grid->grid_witdh;
+        Coordinate bottom_left = grid->bottom_left;
+        double grid_width = grid->grid_width;
         for (int i = 0; i < grid->rows; ++i)
         {
             for (int j = 0; j < grid->cols; ++j)

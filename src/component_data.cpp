@@ -5,6 +5,7 @@
 #include "log.hpp"
 #include "math.hpp"
 #include <cmath>
+#include <deque>
 #include <fstream>
 #include <limits>
 #include <sstream>
@@ -439,7 +440,7 @@ void DataManager::sumEscapeLength()
                 longest.second = n->net_id();
             }
         }
-        unordered_map<int, int> count; //  layer, ordercount
+        unordered_map<int, int> count; //  layer, order count
         for (auto n : group_nets)
         {
             std::cout << "Net ID: " << n->net_id() << " Wirelength: " << n->group_escape_length().at(group.first)
@@ -746,7 +747,7 @@ void DataManager::processDiagonalAndExtendSegment(char to_pair_second,
                 }
             }
         }
-        // Digonal segment, extent segment and CPU extend to drill via
+        // Diagonal segment, extent segment and CPU extend to drill via
         for (auto &ep_pair : comp2->escape_points().at(to_pair_second == 'E' ? 1 : 0))
         {
 
@@ -955,13 +956,13 @@ void switchAllLayers(DataManager &datamanager, int net_id, int from_layer, int t
         }
     }
     // area router
-    // for (auto &seg : datamanager.area_router()->segments())
-    // {
-    //     if (seg.net_id() == net_id && seg.layer() == from_layer)
-    //     {
-    //         seg.setLayer(to_layer);
-    //     }
-    // }
+    for (auto &seg : datamanager.area_router()->segments())
+    {
+        if (seg.net_id() == net_id && seg.layer() == from_layer)
+        {
+            seg.setLayer(to_layer);
+        }
+    }
 }
 
 void switchDDREscapeLayers(DataManager &datamanager,
@@ -1095,19 +1096,52 @@ void DataManager::createGrid(const std::vector<std::pair<Coordinate, int>> &cpu_
             std::make_shared<A_Star::Grid>(Coordinate{0, 0, layer}, Coordinate{20000.0, 20000.0, layer}, pitch);
     }
 }
-
+void DataManager::addPointsPath2Segments(A_Star::Grid &grid,
+                                         std::vector<A_Star::Point> &point_path,
+                                         const int net_id,
+                                         const int layer,
+                                         const Coordinate &start,
+                                         const Coordinate &end)
+{
+    // remove the head and tail of point_path for not align with start and end
+    point_path.erase(point_path.begin());
+    point_path.pop_back();
+    auto segments = grid.points2segments(point_path, net_id, layer);
+    // add on grid segments
+    for (const auto &seg : segments)
+    {
+        m_area_router->addSegment(seg);
+    }
+    // add start to first point and last point to end
+    // add start to first point(DDR escape point to first point of the path)
+    std::vector<Segment> path_to_start = Segment::generatePath(start, segments.front().start(), net_id);
+    for (const auto &seg : path_to_start)
+    {
+        m_area_router->addSegment(seg);
+    }
+    // add last point to end(last point of the path to CPU escape point)
+    std::vector<Segment> path_to_end =
+        Segment::generatePath(segments.back().end(), Coordinate(end.x(), end.y(), layer), net_id); // end.z() = 0
+    for (const auto &seg : path_to_end)
+    {
+        m_area_router->addSegment(seg);
+    }
+}
 void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                                  const std::vector<std::pair<Coordinate, int>> &ddr_ep,
-                                 const A_Star::Point &parent)
+                                 const A_Star::Point &parent_direction)
 {
     // ddr_ep is start point, cpu_ep is end point using net_id to find the pair
     // and the using layer is depends on ddr_ep layer
+    std::unordered_map<int, std::deque<RouteCandidate>> route_candidates; // (layer, deque<route candidates>)
+    std::unordered_set<int> layers; // store all layers, later will route layer by layer
+    std::unordered_map<int, A_Star::PathInfo> paths; // store all paths, (net_id, path)
     for (const auto &d_ep : ddr_ep)
     {
         const auto &start = d_ep.first;
         const auto &s_net_id = d_ep.second;
         const auto &layer = d_ep.first.z();
-        auto &grid = m_grids[layer];
+        layers.insert(layer);
         for (const auto &c_ep : cpu_ep)
         {
             const auto &end = c_ep.first;
@@ -1116,43 +1150,36 @@ void DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &
             {
                 continue;
             }
-#ifdef VERBOSE
-            std::cout << "Net ID: " << s_net_id << " Layer: " << layer << std::endl;
-#endif
-            auto point_path = grid->a_star_search(start, end, parent);
-#ifdef VERBOSE
+            route_candidates[layer].emplace_back(RouteCandidate{start, end, s_net_id, layer});
+            break;
+        }
+    }
+    for (const auto &layer : layers)
+    {
+        auto grid = m_grids[layer];
+        while (!route_candidates[layer].empty())
+        {
+            auto rc = route_candidates[layer].front();
+            route_candidates[layer].pop_front();
+            auto start = rc.start;
+            auto end = rc.end;
+            auto net_id = rc.net_id;
+            auto point_path = grid->a_star_search(start, end, parent_direction);
             if (point_path.size() == 0)
             {
-                std::cout << "No path found" << std::endl;
-                return;
+                continue;
             }
-#endif
-            grid->addObstacle(point_path);
-
-            // remove the head and tail of point_path for not align with start and end
-            point_path.erase(point_path.begin());
-            point_path.pop_back();
-            auto segments = grid->points2segments(point_path, s_net_id, layer);
-            // add on grid segments
-            for (const auto &seg : segments)
-            {
-                m_area_router->addSegment(seg);
-            }
-            // add start to first point and last point to end
-            // add start to first point(DDR escape point to first point of the path)
-            std::vector<Segment> path_to_start = Segment::generatePath(start, segments.front().start());
-            for (const auto &seg : path_to_start)
-            {
-                m_area_router->addSegment(seg);
-            }
-            // add last point to end(last point of the path to CPU escape point)
-            std::vector<Segment> path_to_end =
-                Segment::generatePath(segments.back().end(), Coordinate(end.x(), end.y(), layer)); // end.z() = 0
-            for (const auto &seg : path_to_end)
-            {
-                m_area_router->addSegment(seg);
-            }
+            grid->addPathCost(point_path);
+            paths[net_id] = A_Star::PathInfo{start, end, net_id, layer, point_path};
+            // addPointsPath2Segments(*grid, point_path, net_id, layer, start, end);
         }
+    }
+    for (auto &p_path : paths)
+    {
+        auto &PathInfo = p_path.second;
+        auto grid = m_grids[PathInfo.layer];
+        addPointsPath2Segments(
+            *grid, PathInfo.points_path, PathInfo.net_id, PathInfo.layer, PathInfo.start, PathInfo.end);
     }
 }
 
@@ -1163,7 +1190,7 @@ void DataManager::extendCPUEscapePoint(const std::string &extend_direction,
 {
     // group ddr_ep by their layer
     // use <layer, net_id> to find the extend order
-    std::map<int, int> layer_count; // count the layer apperance
+    std::map<int, int> layer_count; // count the layer appearance
     std::map<int, std::pair<int, int>> grouped_ddr_ep; // net_id -> (order, layer)
     for (auto &ep : ddr_ep)
     {
@@ -1173,13 +1200,12 @@ void DataManager::extendCPUEscapePoint(const std::string &extend_direction,
         layer_count[point.z()]++;
         grouped_ddr_ep[net_id] = std::make_pair(layer_count[point.z()], point.z());
     }
-#ifdef VERBOSE
-    // print grouped_ddr_ep
 
-#endif
     // extend CPU escape point by the order of ddr_ep
+    int count = 0;
     for (auto &ep : cpu_ep)
     {
+        count++;
         double x_offset = 0;
         double y_offset = 0;
         const auto &order = grouped_ddr_ep[ep.second].first;
@@ -1204,12 +1230,19 @@ void DataManager::extendCPUEscapePoint(const std::string &extend_direction,
         {
             throw std::runtime_error("Error: CPU escape point extend direction not found");
         }
-        m_area_router->addSegment(
-            Segment(ep.first, Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, ep.second));
+        Segment extend_segment =
+            Segment(ep.first, Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, ep.second);
+
+        m_area_router->addSegment(extend_segment);
         m_area_router->addVia(
             Via(Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, layer, ep.second));
-        ep.first =
-            Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, 0}; // 先讓他保持還是在 0，layer 從 ddr_ep 取
+        // Segment extend_segment2 = extend_segment.createExtendedSegmentByDegreeAndLength(270, 30.0);
+        Segment extend_segment2 =
+            extend_segment.createExtendedSegmentByDegree(270, std::numeric_limits<double>::quiet_NaN(), 3450.0);
+        extend_segment2.start().z() = extend_segment2.end().z() = layer;
+        extend_segment2.net_id() = ep.second;
+        m_area_router->addSegment(extend_segment2);
+        ep.first = Coordinate{extend_segment2.end()}; // 先讓他保持還是在 0，layer 從 ddr_ep 取
     }
 }
 
@@ -1367,9 +1400,9 @@ void DataManager::CPU2DDRAreaRouting()
                 extendCPUEscapePoint(m_cpu_escape_boundry, pitch * 2.5, cpu_escape_point, ddr_escape_point);
                 createGrid(cpu_escape_point, ddr_escape_point, pitch);
                 markExistingObstacles();
-                A_Star::Point parent;
-                A_Star::parentLookupTable(parent, std::string(1, to_pair.second), comp2->rotation_angle());
-                CPU2DDR_A_Star(cpu_escape_point, ddr_escape_point, parent);
+                A_Star::Point parent_direction;
+                A_Star::parentLookupTable(parent_direction, std::string(1, to_pair.second), comp2->rotation_angle());
+                CPU2DDR_A_Star(cpu_escape_point, ddr_escape_point, parent_direction);
             }
         }
         else

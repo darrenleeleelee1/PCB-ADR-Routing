@@ -71,7 +71,7 @@ int main(int argc, char const *argv[])
 
 #ifdef GDT
     gdt_writer.areaRouting();
-    // gdt_writer.areaRoutingWithGrid(); // debuging for grid
+    gdt_writer.areaRoutingWithGrid(); // debuging for grid
 #endif
     clp_writer.areaRouting();
 

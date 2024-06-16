@@ -63,74 +63,11 @@ std::vector<Point> Grid::get_valid_directions(const Point &prev, const Point &cu
 }
 
 // A* start and goal are in Coordinate type, and Call the a_star_search function with Point type
-std::vector<Point> Grid::a_star_search(const Coordinate &start, const Coordinate &goal, const Point &parent)
+std::vector<Point> Grid::a_star_search(const Coordinate &start, const Coordinate &goal, const Point &parent_direction)
 {
-    Point start_point((start.x() - bottome_left.x()) / grid_witdh, (start.y() - bottome_left.y()) / grid_witdh);
-    Point goal_point((goal.x() - bottome_left.x()) / grid_witdh, (goal.y() - bottome_left.y()) / grid_witdh);
-    return a_star_search(start_point, goal_point, Point(start_point + parent));
-}
-// start point have 8 directions to go, and the cost is 0, and the priority is heuristic(start, goal)
-std::vector<Point> Grid::a_star_search(Point start, Point goal)
-{
-    int rows = grid.size();
-    int cols = grid[0].size();
-    std::priority_queue<Node, std::vector<Node>, std::greater<Node>> open_list;
-    Point parent(-1, -1);
-    open_list.emplace(start, 0, heuristic(start, goal), parent);
-    std::unordered_map<Point, Point, PointHash> came_from;
-    std::unordered_map<Point, double, PointHash> cost_so_far;
-    cost_so_far[start] = 0;
-
-    while (!open_list.empty())
-    {
-        Node current = open_list.top();
-        open_list.pop();
-        if (came_from.find(current.point) != came_from.end() && current.cost > cost_so_far[current.point])
-        {
-            continue;
-        }
-        came_from[current.point] = current.parent;
-
-        if (current.point == goal)
-        {
-            std::vector<Point> path;
-            Point temp = current.point;
-            while (temp.x != parent.x || temp.y != parent.y)
-            {
-                path.push_back(temp);
-                temp = came_from[temp];
-            }
-            std::reverse(path.begin(), path.end());
-            return path;
-        }
-
-        for (const auto &d : get_valid_directions(current.parent, current.point))
-        {
-            Point neighbor(current.point.x + d.x, current.point.y + d.y);
-
-            if (neighbor.x >= 0 && neighbor.x < rows && neighbor.y >= 0 && neighbor.y < cols &&
-                grid[neighbor.x][neighbor.y] == 0)
-            {
-                if (d.x != 0 && d.y != 0)
-                {
-                    if (grid[current.point.x][neighbor.y] == 1 && grid[neighbor.x][current.point.y] == 1)
-                    {
-                        continue;
-                    }
-                }
-                double new_cost = current.cost + ((d.x != 0 && d.y != 0) ? sqrt(2) : 1);
-
-                if (cost_so_far.find(neighbor) == cost_so_far.end() || new_cost < cost_so_far[neighbor])
-                {
-                    cost_so_far[neighbor] = new_cost;
-                    double priority = new_cost + heuristic(neighbor, goal);
-                    open_list.emplace(neighbor, new_cost, priority, current.point);
-                }
-            }
-        }
-    }
-
-    return {};
+    Point start_point((start.x() - bottom_left.x()) / grid_width, (start.y() - bottom_left.y()) / grid_width);
+    Point goal_point((goal.x() - bottom_left.x()) / grid_width, (goal.y() - bottom_left.y()) / grid_width);
+    return a_star_search(start_point, goal_point, Point(start_point + parent_direction));
 }
 
 // start point with parent, and goal point, and return the path
@@ -146,9 +83,17 @@ std::vector<Point> Grid::a_star_search(Point start, Point goal, const Point &par
     // mark start and goal point grid as 0
     grid[start.x][start.y] = 0;
     grid[goal.x][goal.y] = 0;
-
+    // count 如果超過 grid 的一半 就不要走了
+    int count = 0;
     while (!open_list.empty())
     {
+        // 正常A_Star不需要這個部分，單純加速過濾掉繞不出來的訊號
+        count++;
+        if (count > rows * cols / 2)
+        {
+            return {};
+        }
+
         Node current = open_list.top();
         open_list.pop();
         if (came_from.find(current.point) != came_from.end() && current.cost > cost_so_far[current.point])
@@ -198,12 +143,15 @@ std::vector<Point> Grid::a_star_search(Point start, Point goal, const Point &par
                     }
                 }
 
-                double new_cost = current.cost + ((d.x != 0 && d.y != 0) ? sqrt(2) : 1);
+                double new_cost =
+                    current.cost + ((d.x != 0 && d.y != 0) ? sqrt(2) : 1) + cost_grid[neighbor.x][neighbor.y];
+
                 // I want to keep the original direction, the cost will be lower
                 if (!sameDirection(current.parent, current.point, d))
                 {
-                    new_cost += 10;
+                    new_cost += bend_cost;
                 }
+
                 if (cost_so_far.find(neighbor) == cost_so_far.end() || new_cost < cost_so_far[neighbor])
                 {
                     cost_so_far[neighbor] = new_cost;
@@ -229,58 +177,58 @@ std::vector<Segment> Grid::points2segments(const std::vector<Point> &points, con
     // grid to grid connections are set in the middle
     for (size_t i = 0; i < points.size() - 1; i++)
     {
-        Coordinate start(points[i].x * grid_witdh + bottome_left.x() + grid_witdh / 2,
-                         points[i].y * grid_witdh + bottome_left.y() + grid_witdh / 2,
+        Coordinate start(points[i].x * grid_width + bottom_left.x() + grid_width / 2,
+                         points[i].y * grid_width + bottom_left.y() + grid_width / 2,
                          layer);
-        Coordinate end(points[i + 1].x * grid_witdh + bottome_left.x() + grid_witdh / 2,
-                       points[i + 1].y * grid_witdh + bottome_left.y() + grid_witdh / 2,
+        Coordinate end(points[i + 1].x * grid_width + bottom_left.x() + grid_width / 2,
+                       points[i + 1].y * grid_width + bottom_left.y() + grid_width / 2,
                        layer);
         segments.emplace_back(start, end, net_id);
     }
     return segments;
 }
-// Convert segments to points, need to follow the grid_witdh
+// Convert segments to points, need to follow the grid_width
 std::vector<Point> Grid::segments2points(const std::vector<Segment> &segments)
 {
     std::vector<Point> points;
     for (const auto &s : segments)
     {
         // traverse the segment from start to end follow by their slope, and add the points to the vector
-        // the traverse unit is grid_witdh
-        // Segment Coordinate transfer to points should calculate by the bottom left and grid_witdh
+        // the traverse unit is grid_width
+        // Segment Coordinate transfer to points should calculate by the bottom left and grid_width
         double slope = s.slope();
         if (slope == std::numeric_limits<double>::infinity())
         {
-            int start_y = (s.start().y() - bottome_left.y()) / grid_witdh;
-            int end_y = (s.end().y() - bottome_left.y()) / grid_witdh;
+            int start_y = (s.start().y() - bottom_left.y()) / grid_width;
+            int end_y = (s.end().y() - bottom_left.y()) / grid_width;
             if (start_y > end_y)
             {
                 std::swap(start_y, end_y);
             }
             for (int y = start_y; y <= end_y; y++)
             {
-                points.emplace_back((s.start().x() - bottome_left.x()) / grid_witdh, y);
+                points.emplace_back((s.start().x() - bottom_left.x()) / grid_width, y);
             }
         }
         else if (slope == 0.0)
         {
-            int start_x = (s.start().x() - bottome_left.x()) / grid_witdh;
-            int end_x = (s.end().x() - bottome_left.x()) / grid_witdh;
+            int start_x = (s.start().x() - bottom_left.x()) / grid_width;
+            int end_x = (s.end().x() - bottom_left.x()) / grid_width;
             if (start_x > end_x)
             {
                 std::swap(start_x, end_x);
             }
             for (int x = start_x; x <= end_x; x++)
             {
-                points.emplace_back(x, (s.start().y() - bottome_left.y()) / grid_witdh);
+                points.emplace_back(x, (s.start().y() - bottom_left.y()) / grid_width);
             }
         }
         else
         {
-            int start_x = (s.start().x() - bottome_left.x()) / grid_witdh;
-            int end_x = (s.end().x() - bottome_left.x()) / grid_witdh;
-            int start_y = (s.start().y() - bottome_left.y()) / grid_witdh;
-            int end_y = (s.end().y() - bottome_left.y()) / grid_witdh;
+            int start_x = (s.start().x() - bottom_left.x()) / grid_width;
+            int end_x = (s.end().x() - bottom_left.x()) / grid_width;
+            int start_y = (s.start().y() - bottom_left.y()) / grid_width;
+            int end_y = (s.end().y() - bottom_left.y()) / grid_width;
             if (start_x > end_x)
             {
                 std::swap(start_x, end_x);
@@ -297,18 +245,28 @@ std::vector<Point> Grid::segments2points(const std::vector<Segment> &segments)
     return points;
 }
 
+void Grid::addCost(const Point &point) { cost_grid[point.x][point.y] += path_cost; }
+
+void Grid::addPathCost(const std::vector<Point> &path)
+{
+    for (const auto &p : path)
+    {
+        addCost(p);
+    }
+}
+
 void Grid::addObstacle(const Via &obstacle) { addObstacle(obstacle.coordinate()); }
 
 void Grid::addObstacle(const Obstacle &obstacle)
 {
     // mark the whole area of the obstacle as 1
-    // obstacle's cooridnate is the bottom left and top right, and the grid_witdh is the unit
-    for (int x = (obstacle.bottom_left().x() - bottome_left.x()) / grid_witdh;
-         x <= (obstacle.top_right().x() - bottome_left.x()) / grid_witdh;
+    // obstacle's cooridnate is the bottom left and top right, and the grid_width is the unit
+    for (int x = (obstacle.bottom_left().x() - bottom_left.x()) / grid_width;
+         x <= (obstacle.top_right().x() - bottom_left.x()) / grid_width;
          x++)
     {
-        for (int y = (obstacle.bottom_left().y() - bottome_left.y()) / grid_witdh;
-             y <= (obstacle.top_right().y() - bottome_left.y()) / grid_witdh;
+        for (int y = (obstacle.bottom_left().y() - bottom_left.y()) / grid_width;
+             y <= (obstacle.top_right().y() - bottom_left.y()) / grid_width;
              y++)
         {
             grid[x][y] = 1;
@@ -335,7 +293,7 @@ void Grid::addObstacle(std::vector<Segment> &obstacles)
 
 void Grid::addObstacle(const Coordinate &obstacle)
 {
-    grid[(obstacle.x() - bottome_left.x()) / grid_witdh][(obstacle.y() - bottome_left.y()) / grid_witdh] = 1;
+    grid[(obstacle.x() - bottom_left.x()) / grid_width][(obstacle.y() - bottom_left.y()) / grid_width] = 1;
 }
 
 void Grid::addObstacle(const Point &obstacle) { grid[obstacle.x][obstacle.y] = 1; }
