@@ -274,10 +274,24 @@ bool Grid::isOverlap(const std::vector<Point> &path_1, const std::vector<Point> 
             return true;
         }
     }
+    // Diagonal overlap check
+    for (size_t i = 1; i < path_1.size(); ++i)
+    {
+        const Point &prev1 = path_1[i - 1];
+        const Point &curr1 = path_1[i];
+        // check cur1.x prev1.y and prev1.x cur1.y is in path_2
+        if (std::find(path_2.begin(), path_2.end(), Point(curr1.x, prev1.y)) != path_2.end() &&
+            std::find(path_2.begin(), path_2.end(), Point(prev1.x, curr1.y)) != path_2.end())
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
-std::vector<Point> Grid::overlapPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2){
+std::vector<Point> Grid::overlapPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2)
+{
     std::vector<Point> overlap;
     for (const auto &p : path_1)
     {
@@ -287,10 +301,10 @@ std::vector<Point> Grid::overlapPath(const std::vector<Point> &path_1, const std
         }
     }
     return overlap;
-
 }
 
-void Grid::ripUpPath(const std::vector<Point> &path){
+void Grid::ripUpPath(const std::vector<Point> &path)
+{
     for (const auto &p : path)
     {
         cost_grid[p.x][p.y] -= path_cost;

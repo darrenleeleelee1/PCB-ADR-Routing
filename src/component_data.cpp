@@ -1274,13 +1274,14 @@ void DataManager::extendCPUEscapePoint(const std::string &extend_direction,
         m_area_router->addSegment(extend_segment);
         m_area_router->addVia(
             Via(Coordinate{ep.first.x() + x_offset, ep.first.y() + y_offset, ep.first.z()}, layer, ep.second));
+        ep.first = Coordinate{extend_segment.end()};
         // Segment extend_segment2 = extend_segment.createExtendedSegmentByDegreeAndLength(270, 30.0);
-        Segment extend_segment2 =
-            extend_segment.createExtendedSegmentByDegree(270, std::numeric_limits<double>::quiet_NaN(), 3450.0);
-        extend_segment2.start().z() = extend_segment2.end().z() = layer;
-        extend_segment2.net_id() = ep.second;
-        m_area_router->addSegment(extend_segment2);
-        ep.first = Coordinate{extend_segment2.end()}; // 先讓他保持還是在 0，layer 從 ddr_ep 取
+        // Segment extend_segment2 =
+        //     extend_segment.createExtendedSegmentByDegree(270, std::numeric_limits<double>::quiet_NaN(), 3450.0);
+        // extend_segment2.start().z() = extend_segment2.end().z() = layer;
+        // extend_segment2.net_id() = ep.second;
+        // m_area_router->addSegment(extend_segment2);
+        // ep.first = Coordinate{extend_segment2.end()}; // 先讓他保持還是在 0，layer 從 ddr_ep 取
     }
 }
 

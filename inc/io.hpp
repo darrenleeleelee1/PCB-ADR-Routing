@@ -72,6 +72,18 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
+class SubDrawingParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit SubDrawingParser(const std::string &filename);
+    ~SubDrawingParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
 class ParserManager
 {
 private:
