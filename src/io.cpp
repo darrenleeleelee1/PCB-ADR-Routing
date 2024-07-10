@@ -132,6 +132,7 @@ void LayerParser::parse(DataManager &data_manager)
         } // error reading number
 
         data_manager.layers().emplace(layer_number, layer_name);
+        data_manager.layers_names().emplace(layer_name, layer_number);
     }
 
     return;
@@ -216,13 +217,13 @@ void ComponentParser::parse(DataManager &data_manager)
         data_manager.components()[component["id"]]->is_vertical_stack() = component["is_vertical_stack"];
         if (data_manager.components()[component["id"]]->is_vertical_stack())
         {
-            data_manager.components()[component["id"]]->neighboors().at(0) = component["boundaries"]["N"];
-            data_manager.components()[component["id"]]->neighboors().at(1) = component["boundaries"]["S"];
+            data_manager.components()[component["id"]]->neighbors().at(0) = component["boundaries"]["N"];
+            data_manager.components()[component["id"]]->neighbors().at(1) = component["boundaries"]["S"];
         }
         else
         {
-            data_manager.components()[component["id"]]->neighboors().at(0) = component["boundaries"]["W"];
-            data_manager.components()[component["id"]]->neighboors().at(1) = component["boundaries"]["E"];
+            data_manager.components()[component["id"]]->neighbors().at(0) = component["boundaries"]["W"];
+            data_manager.components()[component["id"]]->neighbors().at(1) = component["boundaries"]["E"];
         }
         if (component["group"] == "CPU")
         {
@@ -268,8 +269,8 @@ void ComponentParser::parse(DataManager &data_manager)
     //     std::cout << "Group: " << component.second->group() << std::endl;
     //     std::cout << "Rotation Angle: " << component.second->rotation_angle() << std::endl;
     //     std::cout << "Is Vertical Stack: " << component.second->is_vertical_stack() << std::endl;
-    //     std::cout << "Neighboors: " << component.second->neighboors().at(0) << " "
-    //               << component.second->neighboors().at(1) << std::endl;
+    //     std::cout << "neighbors: " << component.second->neighbors().at(0) << " "
+    //               << component.second->neighbors().at(1) << std::endl;
     //     std::cout << "Is CPU: " << component.second->is_cpu() << std::endl;
     // }
 #endif
@@ -309,11 +310,11 @@ void EdgeParser::parse(DataManager &data_manager)
             {
                 std::pair<std::string, char> from = {
                     element["from"]["comp_name"],
-                    element["from"]["escaepe_dir"].get<std::string>()[0] // string to char
+                    element["from"]["escape_dir"].get<std::string>()[0] // string to char
                 };
                 std::pair<std::string, char> to = {
                     element["to"]["comp_name"],
-                    element["to"]["escaepe_dir"].get<std::string>()[0] // string to char
+                    element["to"]["escape_dir"].get<std::string>()[0] // string to char
                 };
 
                 // if (!data_manager.components().count(from.first) || !data_manager.components().count(to.first))
@@ -345,4 +346,89 @@ void EdgeParser::parse(DataManager &data_manager)
     }
 
     return;
+}
+
+SubDrawingParser::SubDrawingParser(const std::string &filename)
+{
+    file.open(filename);
+    if (!file.is_open())
+    {
+        // just return
+        return;
+        throw std::runtime_error("Could not open " + filename);
+    }
+}
+
+SubDrawingParser::~SubDrawingParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
+
+void SubDrawingParser::parse(DataManager &data_manager) {
+    if (!file.is_open()) {
+        return;
+        throw std::runtime_error("File not open");
+    }
+
+    std::vector<std::vector<Segment>> segments;
+    std::regex pathStartRegex(R"(_clpPathStart\s*\(list\s*\(_clpAdjustPt\s*([0-9.]+):([0-9.]+)\s*_clp_cinfo\))");
+    std::regex pathLineRegex(R"(\t_clp_cinfo->t_to_units\) \(_clpAdjustPt\s+([0-9.]+):([0-9.]+)\s+_clp_cinfo\)\))");
+    // Regular expression to match the layer name in the line:
+    // _clp_dbid = _clpDBCreatePath(_clp_path "ETCH/layer_name" nil _clp_sym _clpPl)
+    // where layer_name is the name of the layer of the path
+    std::regex LayerRegex(R"(_clp_dbid\s=\s_clpDBCreatePath\(_clp_path\s+\"ETCH/([^\"]+)\"\s+nil\s+_clp_sym\s+_clpPl\))");
+
+
+    std::smatch match;
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string content = buffer.str();
+
+    std::istringstream stream(content);
+    std::string line;
+    std::vector<Segment> currentPath;
+    Coordinate current_point = {0.0, 0.0, -1};
+
+    while (std::getline(stream, line)) {
+        if (std::regex_search(line, match, pathStartRegex)) {
+            current_point.x() = std::stod(match[1].str());
+            current_point.y() = std::stod(match[2].str());
+        } else if (std::regex_search(line, match, pathLineRegex)) {
+            Coordinate next_point = {std::stod(match[1].str()), std::stod(match[2].str()), -1};
+            currentPath.emplace_back(Segment{current_point, next_point, 255});
+            current_point = next_point;
+        } else if (std::regex_search(line, match, LayerRegex)) {
+            // change all the segments to the new layer
+            if (!data_manager.layers_names().count(match[1].str())) {
+                currentPath.clear();
+                break;
+            }
+            int layer = data_manager.layers_names()[match[1].str()];
+            for (auto &seg : currentPath) {
+                seg.setLayer(layer);
+            }
+            if (!currentPath.empty()) {
+                segments.push_back(currentPath);
+                currentPath.clear();
+            }
+        }
+    }
+
+    // Here you can use the segments vector to populate the data_manager or further processing
+    // Example: data_manager.setSegments(segments);
+    data_manager.data_signals() = segments;
+#ifdef VERBOSE
+    // Example print out
+    for (const auto &path : segments) {
+        // std::cout << "New Path:" << std::endl;
+        // for (const auto &seg : path) {
+        //     std::cout << "  Segment from (" << seg.start().x() << ", " << seg.start().y() << ", " << seg.layer() << ") to ("
+        //               << seg.end().x() << ", " << seg.end().y() << ", " << seg.layer() << ")" << std::endl;
+        // }
+    }
+#endif
 }

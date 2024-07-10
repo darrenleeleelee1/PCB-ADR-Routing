@@ -7,13 +7,17 @@
 #endif
 #include <cmath>
 #include <list>
+#include <map>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+class GDTWriter;
 class Router;
+class Segment;
 // Forward declaration of A_Star namespace and Grid class
 namespace A_Star
 {
@@ -168,9 +172,9 @@ private:
     Coordinate m_bottom_left, m_top_left, m_top_right, m_bottom_right; // pin array bounding box
     double m_tile_width, m_tile_height;
     bool m_is_cpu;
-    bool m_is_vertical_stack; // true for vericle stack, false for horizontal stack
+    bool m_is_vertical_stack; // true for vertical stack, false for horizontal stack
     double m_rotation_angle; // 0, 45, 90, 135, 180, 225, 270, 315
-    std::vector<bool> m_neighboors; // 0 for left/top, 1 for right/bottom
+    std::vector<bool> m_neighbors; // 0 for left/top, 1 for right/bottom
     // wires bound for calculate escape point
     std::vector<double> m_wire_bound; // 0 for left x/ top y, 1 for right x/ bottom y
     // escape point
@@ -193,7 +197,7 @@ public:
         : m_comp_name(comp_name)
         , m_is_cpu(false)
         , m_is_vertical_stack(false)
-        , m_neighboors(2, false)
+        , m_neighbors(2, false)
         , m_wire_bound(2, 0)
         , m_escape_points(2)
         , m_cpu_escape_points(4)
@@ -270,9 +274,9 @@ public:
     // Access for rotation_angle
     const double &rotation_angle() const { return m_rotation_angle; }
     double &rotation_angle() { return m_rotation_angle; }
-    // Access for neighboor
-    const std::vector<bool> &neighboors() const { return m_neighboors; }
-    std::vector<bool> &neighboors() { return m_neighboors; }
+    // Access for neighbor
+    const std::vector<bool> &neighbors() const { return m_neighbors; }
+    std::vector<bool> &neighbors() { return m_neighbors; }
     // Access for wire_bound
     const std::vector<double> &wire_bound() const { return m_wire_bound; }
     std::vector<double> &wire_bound() { return m_wire_bound; }
@@ -401,6 +405,7 @@ public:
     // Access for top_right
     const Coordinate &top_right() const { return m_top_right; }
     Coordinate &top_right() { return m_top_right; }
+    // Access for width
     // Access for layer
     const int &layer() const { return m_layer; }
     int &layer() { return m_layer; }
@@ -411,11 +416,12 @@ class DataManager
 {
 private:
     std::unordered_map<std::string, std::shared_ptr<Component>> m_components;
-    std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_groups;
+    std::map<std::string, std::vector<std::shared_ptr<Component>>> m_groups; // group name, components
     std::unordered_map<std::string, std::unordered_set<int>>
         m_groups_nets; // check net_id in the group, group name, net_id
     Netlist m_netlists;
     std::unordered_map<int, std::string> m_layers;
+    std::unordered_map<std::string, int> m_layers_names;
     std::vector<Obstacle> m_obstacles;
     std::shared_ptr<Router> m_area_router;
     std::string m_cpu_escape_boundary;
@@ -432,6 +438,7 @@ private:
     std::unordered_map<std::string, std::unordered_map<int, std::pair<int, int>>>
         m_group_escape_layer_order; // group name, escape length
     std::unordered_map<int, std::shared_ptr<A_Star::Grid>> m_grids;
+    std::vector<std::vector<Segment>> m_data_signals;
     // helper function
     void processDiagonalAndExtendSegment(char to_pair_second,
                                          char from_pair_second,
@@ -456,8 +463,8 @@ public:
     const std::unordered_map<std::string, std::shared_ptr<Component>> &components() const { return m_components; }
     std::unordered_map<std::string, std::shared_ptr<Component>> &components() { return m_components; }
     // Access for groups
-    const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() const { return m_groups; }
-    std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> &groups() { return m_groups; }
+    const std::map<std::string, std::vector<std::shared_ptr<Component>>> &groups() const { return m_groups; }
+    std::map<std::string, std::vector<std::shared_ptr<Component>>> &groups() { return m_groups; }
     // Access for groups_nets
     const std::unordered_map<std::string, std::unordered_set<int>> &groups_nets() const { return m_groups_nets; }
     std::unordered_map<std::string, std::unordered_set<int>> &groups_nets() { return m_groups_nets; }
@@ -467,6 +474,9 @@ public:
     // Accessor for layers
     const std::unordered_map<int, std::string> &layers() const { return m_layers; }
     std::unordered_map<int, std::string> &layers() { return m_layers; }
+    // Accessor for layers_names
+    const std::unordered_map<std::string, int> &layers_names() const { return m_layers_names; }
+    std::unordered_map<std::string, int> &layers_names() { return m_layers_names; }
     // Access for obstacles
     const std::vector<Obstacle> &obstacles() const { return m_obstacles; }
     std::vector<Obstacle> &obstacles() { return m_obstacles; }
@@ -498,8 +508,9 @@ public:
         return m_ddr2ddr_edges;
     }
     // Access for cpu2ddr_edges
-    const std::vector<std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool, std::optional<int>>>
-        &cpu2ddr_edges() const
+    const std::vector<
+        std::tuple<std::pair<std::string, char>, std::pair<std::string, char>, bool, std::optional<int>>> &
+    cpu2ddr_edges() const
     {
         return m_cpu2ddr_edges;
     }
@@ -521,19 +532,26 @@ public:
     // Access for grids
     const std::unordered_map<int, std::shared_ptr<A_Star::Grid>> &grids() const { return m_grids; }
     std::unordered_map<int, std::shared_ptr<A_Star::Grid>> &grids() { return m_grids; }
+    // Access for data_signals
+    const std::vector<std::vector<Segment>> &data_signals() const { return m_data_signals; }
+    std::vector<std::vector<Segment>> &data_signals() { return m_data_signals; }
     // Methods
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
     void sumEscapeLength();
     void storeGroupLayer();
+    void distributeLayerByGroup();
     void preprocess_ER();
     void DDR2DDR();
     void CPU2DDR();
     void postprocess_ER();
-    void extendCPUEscapePoint(const std::string &extend_direction,
-                              const double &spacing,
-                              std::vector<std::pair<Coordinate, int>> &cpu_ep,
-                              std::vector<std::pair<Coordinate, int>> &ddr_ep);
+    void extendCPUEscapePoint(const double &outtest_coordinate,
+                              std::vector<std::pair<Coordinate, int>> &cpu_escape_point);
+    void turnCPUEscapePoint(const std::string &extend_direction,
+                            const double &spacing,
+                            std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                            std::vector<std::pair<Coordinate, int>> &ddr_ep,
+                            double &outtest_coordinate);
     void createGrid(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                     const std::vector<std::pair<Coordinate, int>> &ddr_ep,
                     const double &pitch);
@@ -543,9 +561,10 @@ public:
                                 const int layer,
                                 const Coordinate &start,
                                 const Coordinate &end);
-    void CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+    bool CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                         const std::vector<std::pair<Coordinate, int>> &ddr_ep,
-                        const A_Star::Point &parent);
+                        const A_Star::Point &parent,
+                        const int &max_routing_attempts = 1e9);
     void markExistingObstacles();
     void DDR2DDRAreaRouting();
     void CPU2DDRAreaRouting();
@@ -553,6 +572,8 @@ public:
     void analyzeWirelength();
     // check and correct the segment is not correctly double value
     void checkAndCorrectPinSegments();
+    // return CPU component
+    std::shared_ptr<Component> getCPUComponent();
 };
 
 class Via
@@ -826,7 +847,7 @@ public:
                 // Calculate y using the known x
                 double delta_x = target_x - m_end.x();
                 double delta_y = tan(total_angle_radians) * delta_x;
-                // if total_andle_radains is M_PI/2 or -M_PI/2
+                // if total_angle_radians is M_PI/2 or -M_PI/2
                 if (deq(total_angle_radians, M_PI / 2) || deq(total_angle_radians, -M_PI / 2))
                     throw std::invalid_argument("Angle results in an undefined delta_y (vertical line).");
                 new_end = Coordinate(target_x, m_end.y() + delta_y, m_end.z());

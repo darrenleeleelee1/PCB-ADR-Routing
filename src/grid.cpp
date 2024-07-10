@@ -124,7 +124,7 @@ std::vector<Point> Grid::a_star_search(Point start, Point goal, const Point &par
                 pre_direction = temp_direction;
             }
 #ifdef VERBOSE
-            std::cout << "Bend: " << bend << std::endl;
+            // std::cout << "Bend: " << bend << std::endl;
 #endif
             std::reverse(path.begin(), path.end());
             return path;
@@ -274,6 +274,12 @@ bool Grid::isOverlap(const std::vector<Point> &path_1, const std::vector<Point> 
             return true;
         }
     }
+
+    return false;
+}
+
+bool Grid::isCrossing(const std::vector<Point> &path_1, const std::vector<Point> &path_2)
+{
     // Diagonal overlap check
     for (size_t i = 1; i < path_1.size(); ++i)
     {
@@ -301,6 +307,26 @@ std::vector<Point> Grid::overlapPath(const std::vector<Point> &path_1, const std
         }
     }
     return overlap;
+}
+
+std::vector<Point> Grid::crossingPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2)
+{
+    std::vector<Point> crossing;
+    for (size_t i = 1; i < path_1.size(); ++i)
+   {
+       const Point &prev1 = path_1[i - 1];
+       const Point &curr1 = path_1[i];
+       // check cur1.x prev1.y and prev1.x cur1.y is in path_2
+       if (std::find(path_2.begin(), path_2.end(), Point(curr1.x, prev1.y)) != path_2.end() &&
+           std::find(path_2.begin(), path_2.end(), Point(prev1.x, curr1.y)) != path_2.end())
+       {
+           crossing.push_back(curr1);
+           crossing.push_back(prev1);
+           crossing.push_back(Point(curr1.x, prev1.y));
+           crossing.push_back(Point(prev1.x, curr1.y));
+       }
+   }
+    return crossing;
 }
 
 void Grid::ripUpPath(const std::vector<Point> &path)

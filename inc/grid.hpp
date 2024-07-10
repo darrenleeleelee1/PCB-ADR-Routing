@@ -153,7 +153,7 @@ public:
     double grid_width; // grid_width = grid_height
     const double path_cost = 5.0;
     const double history_cost = 2.0;
-    const double bend_cost = 10.0;
+    const double bend_cost = 15.0;
     // Create an empty grid with the given size bottom_left, top_right, and the size of the grid
     Grid(Coordinate _bottom_left, Coordinate _top_right, double _grid_width)
         : bottom_left(_bottom_left)
@@ -171,7 +171,9 @@ public:
     std::vector<Segment> points2segments(const std::vector<Point> &points, const int &net_id, const int &layer);
     std::vector<Point> segments2points(const std::vector<Segment> &segments);
     bool isOverlap(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
+    bool isCrossing(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
     std::vector<Point> overlapPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
+    std::vector<Point> crossingPath(const std::vector<Point> &path_1, const std::vector<Point> &path_2);
     void ripUpPath(const std::vector<Point> &path);
     void addCost(const Point &point, double cost);
     void addPathCost(const std::vector<Point> &path);

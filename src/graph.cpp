@@ -80,7 +80,8 @@ void GraphManager::addSource2Pins(Component &component, std::unordered_set<int> 
 {
     int num_pin_rows = component.pin_arr().size();
     int num_pin_columns = component.pin_arr().at(0).size();
-    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost)
+    {
         auto e = add_edge(u, v, g).first;
         auto rev_e = add_edge(v, u, g).first;
         capacity[e] = cap;
@@ -183,7 +184,8 @@ void GraphManager::DDR2DDRInit(DataManager &data_manager, Component &component, 
     residual_capacity = get(edge_residual_capacity, g);
     rev = get(edge_reverse, g);
 
-    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost)
+    {
         auto e = add_edge(u, v, g).first;
         auto rev_e = add_edge(v, u, g).first;
         capacity[e] = cap;
@@ -377,7 +379,8 @@ void GraphManager::CPU2DDRInit(DataManager &data_manager,
     residual_capacity = get(edge_residual_capacity, g);
     rev = get(edge_reverse, g);
 
-    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost) {
+    auto add_edge_with_capacity = [&](Traits::vertex_descriptor u, Traits::vertex_descriptor v, long cap, long cost)
+    {
         auto e = add_edge(u, v, g).first;
         auto rev_e = add_edge(v, u, g).first;
         capacity[e] = cap;
@@ -651,7 +654,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                 m_component->wire_bound().at(1) =
                     tile_bottom_left.x() + (m_component->tile_width() * (m_component->columns() + shift_columns)) +
                     m_component->tile_width();
-                if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
+                if (m_component->neighbors().at(0) && m_component->neighbors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -681,7 +684,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{first_bend, second_bend, -1});
                     router->addSegment(Segment{second_bend, right_bound, -1});
                 }
-                else if (m_component->neighboors().at(0))
+                else if (m_component->neighbors().at(0))
                 {
                     // left have neighboor
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
@@ -697,7 +700,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{via_coor, first_bend, -1});
                     router->addSegment(Segment{first_bend, left_bound, -1});
                 }
-                else if (m_component->neighboors().at(1))
+                else if (m_component->neighbors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -726,7 +729,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                                                   (m_component->tile_height() * (m_component->rows() + shift_rows)) +
                                                   m_component->tile_height();
                 m_component->wire_bound().at(1) = tile_bottom_left.y() - m_component->tile_height();
-                if (m_component->neighboors().at(0) && m_component->neighboors().at(1))
+                if (m_component->neighbors().at(0) && m_component->neighbors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -756,7 +759,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{first_bend, second_bend, -1});
                     router->addSegment(Segment{second_bend, bottom_bound, -1});
                 }
-                else if (m_component->neighboors().at(0))
+                else if (m_component->neighbors().at(0))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),
@@ -772,7 +775,7 @@ std::pair<Coordinate, Coordinate> GraphManager::DDR2DDR(std::shared_ptr<Router> 
                     router->addSegment(Segment{via_coor, first_bend, -1});
                     router->addSegment(Segment{first_bend, top_bound, -1});
                 }
-                else if (m_component->neighboors().at(1))
+                else if (m_component->neighbors().at(1))
                 {
                     Coordinate via_coor = Coordinate{tile_bottom_left.x() + (s_j * m_component->tile_width()),
                                                      tile_bottom_left.y() + (s_i * m_component->tile_height()),

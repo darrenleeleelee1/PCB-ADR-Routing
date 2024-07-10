@@ -81,5 +81,10 @@
         "semaphore": "cpp",
         "span": "cpp",
         "stop_token": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "adjacents",
+        "outtest",
+        "printlog"
+    ]
 }

@@ -35,6 +35,7 @@ int main(int argc, char const *argv[])
     std::string Obstacles_Path = case_path + case_number + "/" + case_number + ".obs";
     std::string Component_Path = case_path + case_number + "/" + case_number + ".component";
     std::string Edge_Path = case_path + case_number + "/" + case_number + ".edge";
+    std::string SubDrawing_Path = case_path + case_number + "/" + case_number + "_DATA.clp";
 
     // Parser order is matter, Orders: ObstaclesParser, ADRParser, LayerParser
     parser_manager.addParser(std::make_unique<ObstaclesParser>(Obstacles_Path));
@@ -42,6 +43,7 @@ int main(int argc, char const *argv[])
     parser_manager.addParser(std::make_unique<LayerParser>(Layer_Path));
     parser_manager.addParser(std::make_unique<ComponentParser>(Component_Path));
     parser_manager.addParser(std::make_unique<EdgeParser>(Edge_Path));
+    parser_manager.addParser(std::make_unique<SubDrawingParser>(SubDrawing_Path));
 
     if (parser_manager.run())
     {
@@ -71,7 +73,7 @@ int main(int argc, char const *argv[])
 
 #ifdef GDT
     gdt_writer.areaRouting();
-    gdt_writer.areaRoutingWithGrid(); // debuging for grid
+    gdt_writer.areaRoutingWithGrid(); // debugging for grid
 #endif
     clp_writer.areaRouting();
 
