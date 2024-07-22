@@ -65,7 +65,7 @@
       "group": "group2",
       "boundaries": {
         "N": false,
-        "E": false,
+        "E": true,
         "S": false,
         "W": true
       },

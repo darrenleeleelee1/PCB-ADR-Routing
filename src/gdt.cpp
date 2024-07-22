@@ -358,7 +358,7 @@ void GDTWriter::areaRouting()
     file.close();
 }
 
-void GDTWriter::debugging(const int & loop_count)
+void GDTWriter::debugging(const int &loop_count)
 {
     // mkdir GDT_files if not exists
     std::string file_name = m_root_path + __func__ + std::to_string(loop_count);
@@ -523,12 +523,11 @@ void GDTWriter::areaRoutingWithGrid()
             file << "b{" << k << " dt" << via.net_id() << " xy(" << generateSquarePoints(via.coordinate()) << ")}\n";
         }
     }
-    // grid std::unordered_map<int, std::shared_ptr<A_Star::Grid>> m_grids;
     for (const auto &grid_map : m_data_manager.grids())
     {
         const auto &layer = grid_map.first;
         const auto &grid = grid_map.second;
-        // mark the obstacle girids with bottom_left and top_right and grid_width
+        // mark the obstacle grids with bottom_left and top_right and grid_width
         Coordinate bottom_left = grid->bottom_left;
         double grid_width = grid->grid_width;
         for (int i = 0; i < grid->rows; ++i)

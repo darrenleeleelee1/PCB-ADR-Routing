@@ -547,8 +547,7 @@ public:
     void postprocess_ER();
     void extendCPUEscapePoint(const double &outtest_coordinate,
                               std::vector<std::pair<Coordinate, int>> &cpu_escape_point);
-    void turnCPUEscapePoint(const std::string &extend_direction,
-                            const double &spacing,
+    void turnCPUEscapePoint(const double &spacing,
                             std::vector<std::pair<Coordinate, int>> &cpu_ep,
                             std::vector<std::pair<Coordinate, int>> &ddr_ep,
                             double &outtest_coordinate);

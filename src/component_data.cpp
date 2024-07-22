@@ -3,6 +3,7 @@
 #include "gdt.hpp"
 #include "graph.hpp"
 #include "grid.hpp"
+#include "io.hpp"
 #include "log.hpp"
 #include "math.hpp"
 #include <cmath>
@@ -1167,7 +1168,6 @@ void DataManager::addPointsPath2Segments(A_Star::Grid &grid,
                                          const Coordinate &start,
                                          const Coordinate &end)
 {
-
     // remove the head and tail of point_path for not align with start and end
     point_path.erase(point_path.begin());
     point_path.pop_back();
@@ -1192,6 +1192,7 @@ void DataManager::addPointsPath2Segments(A_Star::Grid &grid,
         m_area_router->addSegment(seg);
     }
 }
+
 bool DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                                  const std::vector<std::pair<Coordinate, int>> &ddr_ep,
                                  const A_Star::Point &parent_direction,
@@ -1230,9 +1231,9 @@ bool DataManager::CPU2DDR_A_Star(const std::vector<std::pair<Coordinate, int>> &
         {
             num_routes++;
 #ifdef VERBOSE
+#endif
             if (num_routes % 75 == 0)
                 std::cout << "num of routes: " << num_routes << std::endl;
-#endif
             if (num_routes > max_routing_attempts)
             {
                 return false;
@@ -1400,8 +1401,7 @@ void DataManager::extendCPUEscapePoint(const double &outtest_coordinate,
     }
 }
 
-void DataManager::turnCPUEscapePoint(const std::string &extend_direction,
-                                     const double &spacing,
+void DataManager::turnCPUEscapePoint(const double &spacing,
                                      std::vector<std::pair<Coordinate, int>> &cpu_ep,
                                      std::vector<std::pair<Coordinate, int>> &ddr_ep,
                                      double &outtest_coordinate)
@@ -1409,7 +1409,7 @@ void DataManager::turnCPUEscapePoint(const std::string &extend_direction,
 #ifdef VERBOSE
     // print out extend direction and spacing
     std::cout << "function turnCPUEscapePoint: " << std::endl;
-    std::cout << "extend direction: " << extend_direction << std::endl;
+    std::cout << "extend direction: " << m_cpu_escape_boundary << std::endl;
     std::cout << "spacing: " << spacing << std::endl;
 #endif
     // group ddr_ep by their layer
@@ -1428,12 +1428,12 @@ void DataManager::turnCPUEscapePoint(const std::string &extend_direction,
     double upper_bound = 0.0, lower_bound = 0.0; // E/W upper bound/lower bound is for top/bottom, N/S is for right/left
     // get getCPUComponent
     std::shared_ptr<Component> cpu_component = getCPUComponent();
-    if (extend_direction == "N" || extend_direction == "S")
+    if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "S")
     {
         upper_bound = cpu_component->top_right().x() + spacing;
         lower_bound = cpu_component->bottom_left().x() - spacing;
     }
-    else if (extend_direction == "E" || extend_direction == "W")
+    else if (m_cpu_escape_boundary == "E" || m_cpu_escape_boundary == "W")
     {
         upper_bound = cpu_component->top_right().y() + spacing;
         lower_bound = cpu_component->bottom_left().y() - spacing;
@@ -1456,19 +1456,19 @@ void DataManager::turnCPUEscapePoint(const std::string &extend_direction,
         // print out the net_id, order, layer
         std::cout << "net_id: " << ep.second << " order: " << order << " layer: " << layer << std::endl;
 #endif
-        if (extend_direction == "N")
+        if (m_cpu_escape_boundary == "N")
         {
             y_offset = spacing * order;
         }
-        else if (extend_direction == "E")
+        else if (m_cpu_escape_boundary == "E")
         {
             x_offset = spacing * order;
         }
-        else if (extend_direction == "S")
+        else if (m_cpu_escape_boundary == "S")
         {
             y_offset = -spacing * order;
         }
-        else if (extend_direction == "W")
+        else if (m_cpu_escape_boundary == "W")
         {
             x_offset = -spacing * order;
         }
@@ -1496,16 +1496,22 @@ void DataManager::turnCPUEscapePoint(const std::string &extend_direction,
                                                               : std::min(outtest_coordinate, extend_segment.end().x());
         }
         // Segment extend_segment2;
-        // if (extend_direction == "N" || extend_direction == "S") {
-
+        // if (m_cpu_escape_boundary == "N" || m_cpu_escape_boundary == "S")
+        // {
+        //     // extend_segment2 =
+        //     //     extend_segment.createExtendedSegmentByDegree(90, lower_bound,
+        //     //     std::numeric_limits<double>::quiet_NaN());
+        //     // extend_segment2 = extend_segment.createExtendedSegmentByDegree(
+        //     //     270, upper_bound, std::numeric_limits<double>::quiet_NaN());
         // }
-        // else if (extend_direction == "E" || extend_direction == "W") {
-        //     extend_segment2 =
-        //         extend_segment.createExtendedSegmentByDegree(90, std::numeric_limits<double>::quiet_NaN(),
-        //         upper_bound);
+        // else if (m_cpu_escape_boundary == "E" || m_cpu_escape_boundary == "W")
+        // {
+        //     // extend_segment2 =
+        //     //     extend_segment.createExtendedSegmentByDegree(90, std::numeric_limits<double>::quiet_NaN(),
+        //     //     lower_bound);
         //     // extend_segment2 =
         //     // extend_segment.createExtendedSegmentByDegree(270, std::numeric_limits<double>::quiet_NaN(),
-        //     lower_bound);
+        //     // lower_bound);
         // }
         // extend_segment2.start().z() = extend_segment2.end().z() = layer;
         // extend_segment2.net_id() = ep.second;
@@ -1700,8 +1706,11 @@ void DataManager::CPU2DDRAreaRouting()
                                                 ? std::numeric_limits<double>::lowest()
                                                 : std::numeric_limits<double>::max(); // CPU, N: largest y, E: largest
                                                                                       // x, S: smallest y, W: smallest x
-                turnCPUEscapePoint(
-                    m_cpu_escape_boundary, pitch * 2.5, cpu_escape_point, ddr_escape_point, outtest_coordinate);
+                turnCPUEscapePoint(pitch * 2.5, cpu_escape_point, ddr_escape_point, outtest_coordinate);
+
+                global_routing_manager->writeADREscapePoints(
+                    this, cpu_escape_point, ddr_escape_point); // for Area Global Routing
+
                 createGrid(cpu_escape_point, ddr_escape_point, pitch);
                 markExistingObstacles();
                 A_Star::Point parent_direction;
@@ -1944,17 +1953,17 @@ void DataManager::CPU2DDRAreaRouting()
                         (area_wirelength - (cpu_group_escape_points.size() - 1) * wire_spacing - 2 * peak_height) / 2;
                     double current_y = start_y + area_wire_bottom_y;
                     double current_x = 0.0;
-                    double cpu_x_shift = 0.0, cpu_x_increment = 5.0;
-                    if (current_y < cpu_group_escape_points.at(0).first.y())
-                    {
-                        cpu_x_shift = 0.0;
-                        cpu_x_increment = 5.0;
-                    }
-                    else
-                    {
-                        cpu_x_shift = cpu_x_increment * (cpu_group_escape_points.size() - 1);
-                        cpu_x_increment = -5.0;
-                    }
+                    // double cpu_x_shift = 0.0, cpu_x_increment = 5.0;
+                    // if (current_y < cpu_group_escape_points.at(0).first.y())
+                    // {
+                    //     cpu_x_shift = 0.0;
+                    //     cpu_x_increment = 5.0;
+                    // }
+                    // else
+                    // {
+                    //     cpu_x_shift = cpu_x_increment * (cpu_group_escape_points.size() - 1);
+                    //     cpu_x_increment = -5.0;
+                    // }
                     // find segments include current_y and net_id
                     for (auto &cgep : cpu_group_escape_points)
                     {

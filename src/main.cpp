@@ -8,34 +8,35 @@ int main(int argc, char const *argv[])
 {
     if (argc != 3)
     {
-        std::cerr << "Usage: " << argv[0] << " <case_path> <case_number>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <case_path> <case_name>" << std::endl;
         return 1;
     }
     // argv[1] is case path
     std::string case_path = argv[1]; // /DATA/darren/PCB/PCB-ADR-Routing/case/
     // argv[2] is case number
-    std::string case_number = argv[2];
+    std::string case_name = argv[2];
 
     std::cout << std::boolalpha;
     utils::printlog("--------------------------------------------------------");
     utils::printlog("          ADR Signal for PCB Routing Project            ");
     utils::printlog("--------------------------------------------------------");
     utils::printlog("Case path: " + case_path);
-    utils::printlog("Case number: " + case_number);
+    utils::printlog("Case name: " + case_name);
 
     // Declare DataManager, ParserManager, GDTWriter
     std::shared_ptr<DataManager> data_manager = std::make_shared<DataManager>();
     ParserManager parser_manager(data_manager);
     GDTWriter gdt_writer(*data_manager);
     CLPWriter clp_writer(*data_manager);
+    global_routing_manager = new GlobalRoutingManager(case_name);
 
     // Set case number
-    std::string ADR_Path = case_path + case_number + "/" + case_number + ".adr";
-    std::string Layer_Path = case_path + case_number + "/" + case_number + ".layer";
-    std::string Obstacles_Path = case_path + case_number + "/" + case_number + ".obs";
-    std::string Component_Path = case_path + case_number + "/" + case_number + ".component";
-    std::string Edge_Path = case_path + case_number + "/" + case_number + ".edge";
-    std::string SubDrawing_Path = case_path + case_number + "/" + case_number + "_DATA.clp";
+    std::string ADR_Path = case_path + case_name + "/" + case_name + ".adr";
+    std::string Layer_Path = case_path + case_name + "/" + case_name + ".layer";
+    std::string Obstacles_Path = case_path + case_name + "/" + case_name + ".obs";
+    std::string Component_Path = case_path + case_name + "/" + case_name + ".component";
+    std::string Edge_Path = case_path + case_name + "/" + case_name + ".edge";
+    std::string SubDrawing_Path = case_path + case_name + "/" + case_name + "_DATA.clp";
 
     // Parser order is matter, Orders: ObstaclesParser, ADRParser, LayerParser
     parser_manager.addParser(std::make_unique<ObstaclesParser>(Obstacles_Path));
@@ -84,9 +85,13 @@ int main(int argc, char const *argv[])
 #ifdef GDT
 gdt2gds:
     utils::printlog("Converting GDT to GDS...");
-    gdt_writer.gdt2gds(case_number);
+    gdt_writer.gdt2gds(case_name);
 #endif
-    clp_writer.moveClps(case_number);
+    clp_writer.moveClps(case_name);
+
+    // post process
+    delete global_routing_manager;
+
     utils::printlog("--------------------------------------------------------");
     utils::printlog("                     Terminated...                      ");
     utils::printlog("--------------------------------------------------------");

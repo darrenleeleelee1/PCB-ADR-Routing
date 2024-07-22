@@ -1,13 +1,15 @@
 #include "io.hpp"
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 using json = nlohmann::json;
-
+GlobalRoutingManager *global_routing_manager = nullptr;
 ADRParser::ADRParser(const std::string &filename)
 {
     file.open(filename);
@@ -367,8 +369,10 @@ SubDrawingParser::~SubDrawingParser()
     }
 }
 
-void SubDrawingParser::parse(DataManager &data_manager) {
-    if (!file.is_open()) {
+void SubDrawingParser::parse(DataManager &data_manager)
+{
+    if (!file.is_open())
+    {
         return;
         throw std::runtime_error("File not open");
     }
@@ -379,8 +383,8 @@ void SubDrawingParser::parse(DataManager &data_manager) {
     // Regular expression to match the layer name in the line:
     // _clp_dbid = _clpDBCreatePath(_clp_path "ETCH/layer_name" nil _clp_sym _clpPl)
     // where layer_name is the name of the layer of the path
-    std::regex LayerRegex(R"(_clp_dbid\s=\s_clpDBCreatePath\(_clp_path\s+\"ETCH/([^\"]+)\"\s+nil\s+_clp_sym\s+_clpPl\))");
-
+    std::regex LayerRegex(
+        R"(_clp_dbid\s=\s_clpDBCreatePath\(_clp_path\s+\"ETCH/([^\"]+)\"\s+nil\s+_clp_sym\s+_clpPl\))");
 
     std::smatch match;
 
@@ -393,25 +397,34 @@ void SubDrawingParser::parse(DataManager &data_manager) {
     std::vector<Segment> currentPath;
     Coordinate current_point = {0.0, 0.0, -1};
 
-    while (std::getline(stream, line)) {
-        if (std::regex_search(line, match, pathStartRegex)) {
+    while (std::getline(stream, line))
+    {
+        if (std::regex_search(line, match, pathStartRegex))
+        {
             current_point.x() = std::stod(match[1].str());
             current_point.y() = std::stod(match[2].str());
-        } else if (std::regex_search(line, match, pathLineRegex)) {
+        }
+        else if (std::regex_search(line, match, pathLineRegex))
+        {
             Coordinate next_point = {std::stod(match[1].str()), std::stod(match[2].str()), -1};
             currentPath.emplace_back(Segment{current_point, next_point, 255});
             current_point = next_point;
-        } else if (std::regex_search(line, match, LayerRegex)) {
+        }
+        else if (std::regex_search(line, match, LayerRegex))
+        {
             // change all the segments to the new layer
-            if (!data_manager.layers_names().count(match[1].str())) {
+            if (!data_manager.layers_names().count(match[1].str()))
+            {
                 currentPath.clear();
                 break;
             }
             int layer = data_manager.layers_names()[match[1].str()];
-            for (auto &seg : currentPath) {
+            for (auto &seg : currentPath)
+            {
                 seg.setLayer(layer);
             }
-            if (!currentPath.empty()) {
+            if (!currentPath.empty())
+            {
                 segments.push_back(currentPath);
                 currentPath.clear();
             }
@@ -423,12 +436,90 @@ void SubDrawingParser::parse(DataManager &data_manager) {
     data_manager.data_signals() = segments;
 #ifdef VERBOSE
     // Example print out
-    for (const auto &path : segments) {
-        // std::cout << "New Path:" << std::endl;
-        // for (const auto &seg : path) {
-        //     std::cout << "  Segment from (" << seg.start().x() << ", " << seg.start().y() << ", " << seg.layer() << ") to ("
-        //               << seg.end().x() << ", " << seg.end().y() << ", " << seg.layer() << ")" << std::endl;
-        // }
+    for (const auto &path : segments)
+    {
+        std::cout << "New Path:" << std::endl;
+        for (const auto &seg : path)
+        {
+            std::cout << "  Segment from (" << seg.start().x() << ", " << seg.start().y() << ", " << seg.layer()
+                      << ") to (" << seg.end().x() << ", " << seg.end().y() << ", " << seg.layer() << ")" << std::endl;
+        }
     }
 #endif
+}
+
+std::pair<int, int> GlobalRoutingManager::findCell(const double &x,
+                                                   const double &y,
+                                                   const double &left_bottom_x,
+                                                   const double &left_bottom_y,
+                                                   const double &cell_width,
+                                                   const double &cell_height)
+{
+    // 計算相對於左下角的偏移
+    double relative_x = x - left_bottom_x;
+    double relative_y = y - left_bottom_y;
+
+    // 計算在哪個格子，因為學姊的 col j 代表 x 軸，row i 代表 y 軸
+    int i = std::floor(relative_x / cell_width);
+    int j = std::floor(relative_y / cell_height);
+
+    // 返回 pair<i, j>
+    return std::make_pair(i, j);
+}
+
+void GlobalRoutingManager::writeADREscapePoints(DataManager *data_manager,
+                                                const std::vector<std::pair<Coordinate, int>> &cpu_ep,
+                                                const std::vector<std::pair<Coordinate, int>> &ddr_ep)
+{
+    std::string file_name = m_output_directory + "/" + m_prefix + "_adr_escape_points.txt";
+    std::ofstream file(file_name, std::ios::trunc);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Could not open " + file_name);
+    }
+
+    // Create a structure to hold sorted data
+    struct EscapePoint
+    {
+        Coordinate coord;
+        bool is_cpu;
+    };
+    std::map<int, std::vector<EscapePoint>> sorted_points;
+
+    // Populate the map with DDR escape points first
+    for (const auto &ep : ddr_ep)
+    {
+        sorted_points[ep.second].push_back({ep.first, false});
+    }
+
+    // Populate the map with CPU escape points, adjusting z coordinate
+    for (const auto &ep : cpu_ep)
+    {
+        auto &points = sorted_points[ep.second];
+        if (!points.empty())
+        {
+            // Adjust z coordinate to match DDR point
+            Coordinate adjusted_coord = ep.first;
+            adjusted_coord.z() = points[0].coord.z();
+            points.insert(points.begin(), {adjusted_coord, true});
+        }
+        else
+        {
+            // If no DDR point exists, add CPU point as is
+            points.push_back({ep.first, true});
+        }
+    }
+
+    // Write sorted data to file
+    for (const auto &[net_id, points] : sorted_points)
+    {
+        file << "Net name: " << data_manager->netlists().nets().at(net_id)->net_name() << std::endl;
+        for (const auto &point : points)
+        {
+            const auto [cell_row, cell_col] = findCell(point.coord.x(), point.coord.y());
+            file << (point.is_cpu ? "CPU: " : "DDR: ") << cell_row << " " << cell_col << " " << point.coord.z()
+                 << std::endl;
+        }
+        file << std::endl; // Add a blank line between nets
+    }
 }
