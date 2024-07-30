@@ -85,6 +85,18 @@ public:
     void parse(DataManager &data_manager) override;
 };
 
+class SERParser : public IParser
+{
+private:
+    std::ifstream file;
+
+public:
+    explicit SERParser(const std::string &filename);
+    ~SERParser() override;
+
+    void parse(DataManager &data_manager) override;
+};
+
 class ParserManager
 {
 private:
@@ -129,12 +141,7 @@ public:
         std::filesystem::create_directories(m_output_directory);
     }
     ~GlobalRoutingManager() {}
-    std::pair<int, int> findCell(const double &x,
-                                 const double &y,
-                                 const double &left_bottom_x = 3571.03,
-                                 const double &left_bottom_y = 2271.24,
-                                 const double &cell_width = 72.10,
-                                 const double &cell_height = 72.10);
+
     void writeADREscapePoints(DataManager *data_manager,
                               const std::vector<std::pair<Coordinate, int>> &cpu_ep,
                               const std::vector<std::pair<Coordinate, int>> &ddr_ep);

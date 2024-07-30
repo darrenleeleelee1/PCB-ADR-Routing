@@ -1706,7 +1706,7 @@ void DataManager::CPU2DDRAreaRouting()
                                                 ? std::numeric_limits<double>::lowest()
                                                 : std::numeric_limits<double>::max(); // CPU, N: largest y, E: largest
                                                                                       // x, S: smallest y, W: smallest x
-                turnCPUEscapePoint(pitch * 2.5, cpu_escape_point, ddr_escape_point, outtest_coordinate);
+                turnCPUEscapePoint(pitch * 3, cpu_escape_point, ddr_escape_point, outtest_coordinate);
 
                 global_routing_manager->writeADREscapePoints(
                     this, cpu_escape_point, ddr_escape_point); // for Area Global Routing
@@ -2173,6 +2173,22 @@ void DataManager::checkAndCorrectPinSegments()
             }
         }
     }
+}
+
+std::pair<int, int> DataManager::findCell(const double &x, const double &y)
+{
+    // 計算相對於左下角的偏移
+    double left_bottom_x = m_GR_Left_Bottom.first;
+    double left_bottom_y = m_GR_Left_Bottom.second;
+    double relative_x = x - left_bottom_x;
+    double relative_y = y - left_bottom_y;
+
+    // 計算在哪個格子，因為學姊的 col j 代表
+    int i = std::floor(relative_x / m_GR_cell_width);
+    int j = std::floor(relative_y / m_GR_cell_height);
+
+    // 返回 pair<i, j>
+    return std::make_pair(i, j);
 }
 
 std::shared_ptr<Component> DataManager::getCPUComponent()

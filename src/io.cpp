@@ -448,23 +448,50 @@ void SubDrawingParser::parse(DataManager &data_manager)
 #endif
 }
 
-std::pair<int, int> GlobalRoutingManager::findCell(const double &x,
-                                                   const double &y,
-                                                   const double &left_bottom_x,
-                                                   const double &left_bottom_y,
-                                                   const double &cell_width,
-                                                   const double &cell_height)
+SERParser::SERParser(const std::string &filename)
+    : file(filename)
 {
-    // 計算相對於左下角的偏移
-    double relative_x = x - left_bottom_x;
-    double relative_y = y - left_bottom_y;
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Unable to open file: " + filename);
+    }
+}
 
-    // 計算在哪個格子，因為學姊的 col j 代表 x 軸，row i 代表 y 軸
-    int i = std::floor(relative_x / cell_width);
-    int j = std::floor(relative_y / cell_height);
+SERParser::~SERParser()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+}
 
-    // 返回 pair<i, j>
-    return std::make_pair(i, j);
+void SERParser::parse(DataManager &data_manager)
+{
+    std::string line;
+
+    // 讀取第一行
+    if (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string temp;
+        int cell_width, cell_height;
+
+        iss >> temp >> cell_width >> temp >> cell_height;
+        data_manager.GR_cell_width() = static_cast<double>(cell_width) / 100.0;
+        data_manager.GR_cell_height() = static_cast<double>(cell_height) / 100.0;
+    }
+
+    // 讀取第二行
+    if (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string temp;
+        int left, bottom;
+
+        iss >> temp >> temp >> temp >> left >> bottom;
+        data_manager.GR_Left_Bottom() =
+            std::make_pair(static_cast<double>(left) / 100.0, static_cast<double>(bottom) / 100.0);
+    }
 }
 
 void GlobalRoutingManager::writeADREscapePoints(DataManager *data_manager,
@@ -478,48 +505,53 @@ void GlobalRoutingManager::writeADREscapePoints(DataManager *data_manager,
         throw std::runtime_error("Could not open " + file_name);
     }
 
-    // Create a structure to hold sorted data
-    struct EscapePoint
+    // Create a structure to hold paired data
+    struct EscapePointPair
     {
-        Coordinate coord;
-        bool is_cpu;
+        std::pair<Coordinate, int> ddr;
+        std::optional<std::pair<Coordinate, int>> cpu;
     };
-    std::map<int, std::vector<EscapePoint>> sorted_points;
+    std::vector<EscapePointPair> paired_points;
 
-    // Populate the map with DDR escape points first
-    for (const auto &ep : ddr_ep)
-    {
-        sorted_points[ep.second].push_back({ep.first, false});
-    }
-
-    // Populate the map with CPU escape points, adjusting z coordinate
+    // Create a map to quickly find CPU points
+    std::map<int, std::vector<std::pair<Coordinate, int>>> cpu_map;
     for (const auto &ep : cpu_ep)
     {
-        auto &points = sorted_points[ep.second];
-        if (!points.empty())
-        {
-            // Adjust z coordinate to match DDR point
-            Coordinate adjusted_coord = ep.first;
-            adjusted_coord.z() = points[0].coord.z();
-            points.insert(points.begin(), {adjusted_coord, true});
-        }
-        else
-        {
-            // If no DDR point exists, add CPU point as is
-            points.push_back({ep.first, true});
-        }
+        cpu_map[ep.second].push_back(ep);
     }
 
-    // Write sorted data to file
-    for (const auto &[net_id, points] : sorted_points)
+    // Pair DDR points with CPU points, maintaining DDR order
+    for (const auto &ddr : ddr_ep)
     {
-        file << "Net name: " << data_manager->netlists().nets().at(net_id)->net_name() << std::endl;
-        for (const auto &point : points)
+        EscapePointPair pair;
+        pair.ddr = ddr;
+
+        auto cpu_it = cpu_map.find(ddr.second);
+        if (cpu_it != cpu_map.end() && !cpu_it->second.empty())
         {
-            const auto [cell_row, cell_col] = findCell(point.coord.x(), point.coord.y());
-            file << (point.is_cpu ? "CPU: " : "DDR: ") << cell_row << " " << cell_col << " " << point.coord.z()
-                 << std::endl;
+            pair.cpu = cpu_it->second.front();
+            // Adjust CPU z coordinate to match DDR z coordinate
+            pair.cpu->first.z() = ddr.first.z();
+            cpu_it->second.erase(cpu_it->second.begin());
         }
+
+        paired_points.push_back(pair);
+    }
+
+    // Write paired data to file
+    for (const auto &pair : paired_points)
+    {
+        file << "Net name: " << data_manager->netlists().nets().at(pair.ddr.second)->net_name() << std::endl;
+
+        const auto [ddr_cell_row, ddr_cell_col] = data_manager->findCell(pair.ddr.first.x(), pair.ddr.first.y());
+        file << "DDR: " << ddr_cell_row << " " << ddr_cell_col << " " << pair.ddr.first.z() << std::endl;
+
+        if (pair.cpu)
+        {
+            const auto [cpu_cell_row, cpu_cell_col] = data_manager->findCell(pair.cpu->first.x(), pair.cpu->first.y());
+            file << "CPU: " << cpu_cell_row << " " << cpu_cell_col << " " << pair.cpu->first.z() << std::endl;
+        }
+
         file << std::endl; // Add a blank line between nets
     }
 }

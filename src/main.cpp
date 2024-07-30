@@ -37,6 +37,7 @@ int main(int argc, char const *argv[])
     std::string Component_Path = case_path + case_name + "/" + case_name + ".component";
     std::string Edge_Path = case_path + case_name + "/" + case_name + ".edge";
     std::string SubDrawing_Path = case_path + case_name + "/" + case_name + "_DATA.clp";
+    std::string SER_Path = case_path + case_name + "/" + case_name + ".ser";
 
     // Parser order is matter, Orders: ObstaclesParser, ADRParser, LayerParser
     parser_manager.addParser(std::make_unique<ObstaclesParser>(Obstacles_Path));
@@ -45,6 +46,7 @@ int main(int argc, char const *argv[])
     parser_manager.addParser(std::make_unique<ComponentParser>(Component_Path));
     parser_manager.addParser(std::make_unique<EdgeParser>(Edge_Path));
     parser_manager.addParser(std::make_unique<SubDrawingParser>(SubDrawing_Path));
+    parser_manager.addParser(std::make_unique<SERParser>(SER_Path));
 
     if (parser_manager.run())
     {

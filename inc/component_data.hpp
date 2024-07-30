@@ -439,6 +439,10 @@ private:
         m_group_escape_layer_order; // group name, escape length
     std::unordered_map<int, std::shared_ptr<A_Star::Grid>> m_grids;
     std::vector<std::vector<Segment>> m_data_signals;
+    // GR
+    double m_GR_cell_width;
+    double m_GR_cell_height;
+    std::pair<double, double> m_GR_Left_Bottom;
     // helper function
     void processDiagonalAndExtendSegment(char to_pair_second,
                                          char from_pair_second,
@@ -535,6 +539,15 @@ public:
     // Access for data_signals
     const std::vector<std::vector<Segment>> &data_signals() const { return m_data_signals; }
     std::vector<std::vector<Segment>> &data_signals() { return m_data_signals; }
+    // Access for GR_cell_width
+    const double &GR_cell_width() const { return m_GR_cell_width; }
+    double &GR_cell_width() { return m_GR_cell_width; }
+    // Access for GR_cell_height
+    const double &GR_cell_height() const { return m_GR_cell_height; }
+    double &GR_cell_height() { return m_GR_cell_height; }
+    // Access for GR_Left_Bottom
+    const std::pair<double, double> &GR_Left_Bottom() const { return m_GR_Left_Bottom; }
+    std::pair<double, double> &GR_Left_Bottom() { return m_GR_Left_Bottom; }
     // Methods
     void addCompPin(std::string comp_name, std::shared_ptr<Pin> pin);
     void addObstacle(const Obstacle &obstacle) { m_obstacles.push_back(obstacle); }
@@ -569,6 +582,7 @@ public:
     void CPU2DDRAreaRouting();
     void AreaRouting();
     void analyzeWirelength();
+    std::pair<int, int> findCell(const double &x, const double &y);
     // check and correct the segment is not correctly double value
     void checkAndCorrectPinSegments();
     // return CPU component
